@@ -1,0 +1,88 @@
+# List the items that can be generated at the current floor (2) and their chances of being generated (1)
+
+# Items loot chances (1)
+items:
+- 30: arrow
+- 10: sword
+- 10: staff
+- 10: scroll
+- 10: potion-of-healing
+- 10: the-fool-card
+- 10: chest
+- 10: armor
+
+
+
+
+# Item list (2)
+arrow:
+- name: arrow
+- description: Use them to unleash the true power of any distance weapon
+- price: 5
+- type: consumable
+- actions: []
+
+sword:
+- name: sword
+- description: A generally single handed weapon that inflicts physical wounds to enemies
+- price: 20
+- type: weapon
+- actions: [attack]
+- durability: 15
+- statistics:
+  - strength: 7
+
+staff:
+- name: staff
+- description: A magic catalist that improves significantly its owner's magic power
+- price: 20
+- type: weapon
+- actions: [attack, cast]
+- durability: 12
+- statistics:
+  - strength: 3
+  - magic: 7
+
+scroll:
+- name: scroll
+- description: An ancient paper on which is carved magic runes
+- price: 30
+- type: container
+- actions: [use, read]
+- spells: 1
+
+potion-of-healing:
+- name: potion of healing
+- description: A bright red potion used to restore a small quantity of health
+- price: 30
+- type: consumable
+- actions: [drink, throw]
+- statistics:
+  - health: 10
+
+the-fool-card:
+- name: 0. The Fool
+- description: The first tarot card. It is said that it contains the power of the fool
+- price: 15
+- type: container
+- actions: [use]
+- spells: the-fool
+
+chest:
+- name: chest
+- description: A simple chest made of wood. Especially usefull to store items
+- price: 0
+- type: container
+- actions: [open]
+- items: [2, 3]
+
+armor:
+- name: armor
+- description: An equipment that you can equip to protect your body from wounds
+- price: 15
+- type: equipment
+- actions: [equip]
+- durability: 20
+- statistics:
+  - defense: 5
+

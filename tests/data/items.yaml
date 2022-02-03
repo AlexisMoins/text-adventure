@@ -1,0 +1,16 @@
+# Items sample used in unit tests
+
+mock_item:
+  name: my item
+  description: a basic item
+  price: 10
+  actions: [buy]
+
+mock_consumable:
+  name: my consumable
+  description: a basic consumable
+  price: 10
+  actions: [drink, thow]
+  statistics:
+    health: 15
+

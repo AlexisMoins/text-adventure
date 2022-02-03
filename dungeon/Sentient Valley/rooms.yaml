@@ -1,0 +1,27 @@
+# List the rooms that can be generated at the current floor (2) and their chances of being generated (1)
+
+# Room generation chances (1)
+rooms:
+- 10: room1
+- 10: room2
+- 10: room3
+- 10: room4
+- 10: room5
+- 11: room6
+- 10: room7
+- 10: room8
+- 10: room9
+- 10: room10
+
+# Room list (2)
+room1:
+- description: a room's description
+# - items: [x, x]
+- enemies: [0, 2]
+# - npc: [x, x]
+
+room2:
+- description: a room's description
+- items: [1, 2]
+- enemies: 2
+# - npc: [x, x]

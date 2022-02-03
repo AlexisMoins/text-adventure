@@ -1,1 +1,3 @@
-session.vim
+.DS_Store
+.vim-session
+__pycache__
