@@ -8,6 +8,7 @@ authors = ["AlexisMoins <moinsalexis@gmail.com>"]
 python = "^3.10"
 PyYAML = "^6.0"
 pytest = "^6.2.5"
+black = "^22.1.0"
 
 [tool.poetry.dev-dependencies]
 

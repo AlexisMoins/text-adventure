@@ -1,35 +1,28 @@
-
 from typing import List, Dict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
 
 @dataclass(kw_only=True)
 class Item:
+    """Class representing a generic item"""
+
     name: str
+    price: int = 0
     description: str
-    price: int
-    actions: List[str]
+    actions: List[str] = field(default_factory=list)
+
 
 @dataclass(kw_only=True)
 class Consumable(Item):
-    statistics: Dict[str, int]
+    """Class representing a general"""
+
+    statistics: Dict[str, int] = field(default_factory=dict)
+
 
 @dataclass(kw_only=True)
 class Spell(Consumable):
     """Class representing spells"""
+
+    damage: int
     spell_type: str
     spell_range: str
-
-    def execute(self, character: str) -> None:
-        """Execute the current spell on the given character"""
-        pass
-
-@dataclass(kw_only=True)
-class Equipment(Item):
-    """Class representing any equipment or weapon"""
-    durability: int
-    statistics: Dict[str, int]
-    body_part: str
-
-    def __post_init__(self) -> None:
-        """Additional steps to initialize the instance"""
-        self.max_durability = self.durability
