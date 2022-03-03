@@ -1,8 +1,9 @@
-from typing import Dict, List
-from random import randint
 from yaml import safe_load
+from random import randint
+from typing import Dict, List
 
-import text_adventure.items.equipments as equipments
+from text_adventure.items.items import *
+from text_adventure.items.equipments import *
 
 
 class ItemGenerator:
@@ -16,7 +17,7 @@ class ItemGenerator:
         self.total_weight = sum(self.generation_table.values())
         self.items = data
 
-    def generate_item(self, luck: int = 0) -> equipments.Item | None:
+    def generate_one(self, luck: int = 0) -> Item | None:
         """Generates a random item"""
         number = min(self.total_weight, randint(1, self.total_weight) + luck)
         for item, weight in self.generation_table.items():
@@ -24,15 +25,15 @@ class ItemGenerator:
                 return self.deserialize_item(dict(self.items[item]))
             number -= weight
 
-    def deserialize_item(self, data: Dict) -> equipments.Item | None:
+    def deserialize_item(self, data: Dict) -> Item | None:
         """Returns the item deserialized from the given data"""
         item_type = data.pop("type")
         if item_type == "weapon":
-            return equipments.Weapon(**data)
+            return Weapon(**data)
         if item_type == "armor":
-            return equipments.Armor(**data)
+            return Armor(**data)
         return None
 
-    def generate_items(self, n: int, luck: int = 0) -> List[equipments.Item]:
+    def generate_many(self, n: int, luck: int = 0) -> List[Item]:
         """Generates n random items"""
         return [self.generate_item(luck) for item in range(n)]
