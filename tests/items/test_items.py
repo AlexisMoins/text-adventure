@@ -1,6 +1,7 @@
 from typing import Dict
 from text_adventure.items.items import Item, Consumable, Spell
 
+
 def test_new_item(items: Dict) -> None:
     """Test to ensure the creation of a new object Item is working"""
     data: Dict = items["mock_item"]
@@ -48,6 +49,6 @@ def new_spell_test(item: Spell, data: Dict) -> None:
     """Ensure the Spell instance was correctly created"""
     new_consumable_test(item, data)
 
-    assert item.damage == data['damage']
+    assert item.damage == data["damage"]
     assert item.spell_type == data["spell_type"]
     assert item.spell_range == data["spell_range"]

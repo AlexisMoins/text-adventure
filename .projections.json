@@ -1,0 +1,5 @@
+{
+  "*": {"make": "poetry run black {}"},
+  "text_adventure/items/*.py": {"alternate": "tests/items/test_{}.py"},
+  "tests/items/test_*.py": {"alternate": "text_adventure/items/{}.py"}
+}

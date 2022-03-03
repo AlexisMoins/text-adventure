@@ -1,3 +1,8 @@
+# Files
 .DS_Store
 .vim-session
-__pycache__
+.projections.json
+
+# Directories
+__pycache__/
+.pytest_cache/
