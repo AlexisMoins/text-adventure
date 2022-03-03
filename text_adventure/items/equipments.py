@@ -38,4 +38,4 @@ class SpellBook(Equipment):
 
     def __post_init__(self) -> None:
         """Additional steps to initialize the instance"""
-        self.body_part = 'spellbook'
+        self.body_part = "spellbook"
