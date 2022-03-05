@@ -10,13 +10,16 @@ from text_adventure.generators.item_generator import ItemGenerator
 class RoomGenerator:
     """Class generating rooms based on the provided configuration files"""
 
-    def __init__(self, item_generator: ItemGenerator) -> None:
+    def __init__(self, path: str) -> None:
         """Constructor creating a new generator of rooms"""
-        self.item_generator = item_generator
-        self.floor_path = self.item_generator.floor_path
-        with open(f'{self.floor_path}/rooms.yaml', 'r') as file:
-            data = safe_load(file)
+        self.path = path
+        self.item_generator = ItemGenerator(path)
 
+    def load_floor(self, floor: str) -> None:
+        """Loads a floor into the floor generator"""
+        self.item_generator.load_floor(floor)
+        with open(f'{self.path}/{floor}/rooms.yaml', 'r') as file:
+            data = safe_load(file)
         self.generation_table = data.pop('generation')
         self.rooms = data
 
@@ -32,8 +35,6 @@ class RoomGenerator:
         number = randint(1, self.total_weight())
         for room, weight in self.generation_table.items():
             if number <= weight:
-                print(f"Rolled a {number}")
-                print(f"Found {room} with weight {weight}\n")
                 return self.__deserialize_room(self.__pop_room(room))
             number -= weight
 

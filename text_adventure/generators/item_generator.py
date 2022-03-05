@@ -9,13 +9,15 @@ from text_adventure.items.equipments import *
 class ItemGenerator:
     """Class generating items based on the provided configuration files"""
 
-    def __init__(self, floor_path: str) -> None:
-        """Constructor creating a new generator of items"""
-        self.floor_path = floor_path
-        with open(f"{self.floor_path}/items.yaml", "r") as file:
-            data = safe_load(file)
+    def __init__(self, path: str) -> None:
+        """Parameterised constructor creating a new generator of items"""
+        self.path = path
 
-        self.generation_table = data.pop("generation")
+    def load_floor(self, floor: str) -> None:
+        """Loads a floor into the floor generator"""
+        with open(f'{self.path}/{floor}/items.yaml', 'r') as file:
+            data = safe_load(file)
+        self.generation_table = data.pop('generation')
         self.total_weight = sum(self.generation_table.values())
         self.items = data
 

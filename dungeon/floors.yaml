@@ -1,7 +1,10 @@
-# List of the different floors of the game and where to find them (path)
-1: Stone Valley
-2: 
-  - 50: Crimson Forest
-  - 50: Soul Ground
-3: Whispering Castle
+# List of the different floors of the dungeon (path)
 
+# Floor 1
+- Sentient Valley
+
+# Floor 2 (random)
+- {Crimson Forest: 50, Soul Ground: 50}
+
+# Floor 3
+- Whispering Castle
