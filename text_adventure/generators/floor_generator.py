@@ -11,16 +11,14 @@ from text_adventure.generators.room_generator import RoomGenerator
 class FloorGenerator:
     """Class generating floors based on the provided configuration files"""
 
-    def __init__(self, room_generator: RoomGenerator) -> None:
+    def __init__(self) -> None:
         """Constructor creating a new generator of floors"""
-        self.room_generator = room_generator
-        self.load_floor(room_generator.floor_path, cascade=False)
+        self.room_generator = RoomGenerator()
 
-    def load_floor(self, path: str, cascade=True) -> None:
-        """Loads a new floor into the floor generator"""
+    def load_floor(self, path: str) -> None:
+        """Loads a floor into the floor generator"""
         self.floor_path = path
-        if cascade:
-            self.room_generator.load_floor(path)
+        self.room_generator.load_floor(path)
         with open(f'{path}/rules.yaml', 'r') as file:
             self.rules = safe_load(file)
 
