@@ -2,9 +2,9 @@
 
 # 1: Items loot chances
 generation:
-  sword: 30
+  sword: 60
   staff: 30
-  armor: 30
+  armor: 10
 
 
 # 2: Item list
