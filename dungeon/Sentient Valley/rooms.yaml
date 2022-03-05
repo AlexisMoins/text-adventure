@@ -2,10 +2,16 @@
 
 # 1: Rooms generation chances
 generation:
-  room1: 100
+  room1: 60
+  room2: 40
 
 # 2: Room list
 room1:
   description: As you progress through the dungeon, you find a pond of clear water.
     As you get closer, you see something glowing at the very bottom of the pond.
-  items: [0, 1]
+  items: [0, 2]
+
+room2:
+  description: As you progress through the dungeon, you find a pond of clear water.
+    As you get closer, you see something glowing at the very bottom of the pond.
+  items: [armor]

@@ -1,36 +1,7 @@
-# Generation table (rules) of the current floor
+# General rules of the floor
 
-nbRooms: 15
+# Number of rooms generated at this floor
+room_number: 2
 
-items:
-- 80:
-  - item1
-  - noAffixes
-- 10: item2
-- 10: item3
-
-spells:
-- 30: spell1
-- 20: spell2
-- 20: spell3
-- 20: spell4
-- 10: spell5
-
-affixes:
-- 50: affix1
-- 35: affix2
-- 15: affix3
-
-enemies:
-- 10: enemy1
-- 10: enemy2
-- 10: enemy3
-- 10: enemy4
-- 10: enemy5
-- 10: enemy6
-- 10: enemy7
-- 10: enemy8
-- 10: enemy9
-- 10: enemy10
-
-boss: enemy11
+# The room from which the floor starts
+# first_room: room1
