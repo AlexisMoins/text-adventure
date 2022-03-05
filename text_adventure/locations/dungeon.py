@@ -8,10 +8,10 @@ from text_adventure.generators.floor_generator import FloorGenerator
 class Dungeon:
     """Class representing a dungeon with its list of floors"""
 
-    def __init__(self, floors: List[str]) -> None:
+    def __init__(self, floors: List[str], path: str) -> None:
         """Parameterised constructor creating a new dungeon"""
         self.floors = floors
-        self.floor_generator = FloorGenerator()
+        self.floor_generator = FloorGenerator(path)
 
     def start(self, player) -> None:
         """Starts the ascension of the dungeon"""

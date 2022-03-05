@@ -11,15 +11,15 @@ from text_adventure.generators.room_generator import RoomGenerator
 class FloorGenerator:
     """Class generating floors based on the provided configuration files"""
 
-    def __init__(self) -> None:
+    def __init__(self, path: str) -> None:
         """Constructor creating a new generator of floors"""
-        self.room_generator = RoomGenerator()
+        self.path = path
+        self.room_generator = RoomGenerator(path)
 
-    def load_floor(self, path: str) -> None:
+    def load_floor(self, floor: str) -> None:
         """Loads a floor into the floor generator"""
-        self.floor_path = path
-        self.room_generator.load_floor(path)
-        with open(f'{path}/rules.yaml', 'r') as file:
+        self.room_generator.load_floor(floor)
+        with open(f'{self.path}/{floor}/rules.yaml', 'r') as file:
             self.rules = safe_load(file)
 
     def generate_one(self) -> Floor:
@@ -31,7 +31,7 @@ class FloorGenerator:
         return Floor(rooms)
 
     def __create_layout(self, n: int) -> Dict[Coordinates, Room]:
-        """"""
+        """Return the map of the floor, comprised of coordinates and their associated room"""
         rooms = self.room_generator.generate_many(n)
         coordinates = [Coordinates(0, 0)]
 

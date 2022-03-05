@@ -10,14 +10,15 @@ from text_adventure.generators.item_generator import ItemGenerator
 class RoomGenerator:
     """Class generating rooms based on the provided configuration files"""
 
-    def __init__(self) -> None:
+    def __init__(self, path: str) -> None:
         """Constructor creating a new generator of rooms"""
-        self.item_generator = ItemGenerator()
+        self.path = path
+        self.item_generator = ItemGenerator(path)
 
-    def load_floor(self, path: str) -> None:
+    def load_floor(self, floor: str) -> None:
         """Loads a floor into the floor generator"""
-        self.item_generator.load_floor(path)
-        with open(f'{path}/rooms.yaml', 'r') as file:
+        self.item_generator.load_floor(floor)
+        with open(f'{self.path}/{floor}/rooms.yaml', 'r') as file:
             data = safe_load(file)
         self.generation_table = data.pop('generation')
         self.rooms = data

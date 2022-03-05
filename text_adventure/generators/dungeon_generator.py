@@ -9,25 +9,25 @@ class DungeonGenerator:
     """Class representing a generator of dungeons"""
 
     @staticmethod
-    def generate_one(path: str = 'dungeon') -> Dungeon:
+    def generate(path: str) -> Dungeon:
         """Returns a new dungeon generated using the data in the given path"""
         with open(f'{path}/floors.yaml', 'r') as file:
             data = safe_load(file)
         floors = DungeonGenerator.__floor_list(data)
-        floor_paths = [f'{path}/{floor}' for floor in floors]
-        return Dungeon(floor_paths)
+        return Dungeon(floors, path)
 
     @staticmethod
     def __floor_list(data: Dict[str, Any]) -> List[str]:
-        """Returns a list of (almost) randomly generated floor paths"""
+        """Returns a list of (almost) randomly generated floor name"""
         return [
-            DungeonGenerator.__choose(floor) if type(floor) == dict else floor
+            DungeonGenerator.__choose_one(
+                floor) if type(floor) == dict else floor
             for floor in data
         ]
 
     @staticmethod
-    def __choose(selection: Dict[str, int]) -> str | None:
-        """Returns a floor path after it has been randomly choosen from the items in the given selection"""
+    def __choose_one(selection: Dict[str, int]) -> str | None:
+        """Returns a floor name after it has been randomly choosen from the items in the given selection"""
         total_weight = sum(selection.values())
         number = randint(1, total_weight)
         for floor, weight in selection.items():
