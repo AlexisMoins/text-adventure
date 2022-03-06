@@ -1,6 +1,6 @@
 from typing import Dict
 from .test_items import new_item_test
-from text_adventure.items.equipments import Equipment, Armor, Weapon
+from modules.items.equipments import Equipment, Armor, Weapon
 
 
 def test_new_equipment(items: Dict) -> None:

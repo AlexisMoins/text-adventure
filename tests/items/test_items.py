@@ -1,5 +1,5 @@
 from typing import Dict
-from text_adventure.items.items import Item, Consumable, Spell
+from modules.items.items import Item, Consumable, Spell
 
 
 def test_new_item(items: Dict) -> None:

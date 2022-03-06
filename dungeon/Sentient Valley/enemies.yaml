@@ -1,0 +1,13 @@
+# List the enemies that can spawn at the current floor (2) and their chances of spawning (1)
+
+# 1: Rooms generation chances
+generation:
+  wolf: 100
+
+# 2: Enemy list
+wolf:
+  name: wolf
+  statistics: { health: 10, strength: 4, resistance: 2, speed: 5 }
+  inventory: [sword]
+  gold: 20
+

@@ -2,7 +2,7 @@ from yaml import safe_load
 from random import randint
 from typing import Any, Dict, List
 
-from text_adventure.locations.dungeon import Dungeon
+from modules.locations.dungeon import Dungeon
 
 
 class DungeonGenerator:

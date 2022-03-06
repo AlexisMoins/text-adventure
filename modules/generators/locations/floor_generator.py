@@ -2,10 +2,10 @@ from typing import Dict
 from yaml import safe_load
 from random import randint, choice
 
-from text_adventure.locations.room import Room
-from text_adventure.locations.floor import Floor
-from text_adventure.locations.coordinates import Coordinates
-from text_adventure.generators.room_generator import RoomGenerator
+from modules.locations.room import Room
+from modules.locations.floor import Floor
+from modules.locations.coordinates import Coordinates
+from modules.generators.locations.room_generator import RoomGenerator
 
 
 class FloorGenerator:

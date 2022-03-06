@@ -23,7 +23,7 @@ sword:
   description: A generally single handed weapon that inflicts physical wounds to enemies
   price: 20
   type: weapon
-  actions: [attack]
+  actions: [attack, equip]
   durability: 15
   damage: 7
 
@@ -32,6 +32,6 @@ staff:
   description: A magic catalist that improves significantly its owner's magic power
   price: 20
   type: weapon
-  actions: [attack, cast]
+  actions: [attack, cast, equip]
   durability: 12
   damage: 7

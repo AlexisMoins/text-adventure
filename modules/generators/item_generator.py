@@ -2,8 +2,8 @@ from yaml import safe_load
 from random import randint
 from typing import Dict, List
 
-from text_adventure.items.items import *
-from text_adventure.items.equipments import *
+from modules.items.items import *
+from modules.items.equipments import *
 
 
 class ItemGenerator:
@@ -47,3 +47,15 @@ class ItemGenerator:
         if item not in self.items.keys():
             return None
         return self.__deserialize_item(dict(self.items[item]))
+
+    def generate_field(self, data: List[str | int] | int) -> List[Item]:
+        """Returns a list of the data deserialized using the given generator"""
+        if not data:
+            return []
+        if type(data) == int:
+            return self.generate_many(data)
+        if type(data) == list:
+            if type(data[0]) == int and len(data) > 1:
+                return self.generate_many(randint(data[0], data[1]))
+            if type(data[0]) == str:
+                return [self.generate(item) for item in data]

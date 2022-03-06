@@ -2,7 +2,7 @@ from typing import List
 from yaml import safe_load
 from random import randint
 
-from text_adventure.generators.floor_generator import FloorGenerator
+from modules.generators.locations.floor_generator import FloorGenerator
 
 
 class Dungeon:

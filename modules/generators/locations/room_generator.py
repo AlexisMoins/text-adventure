@@ -2,9 +2,10 @@ from yaml import safe_load
 from random import randint
 from typing import Dict, List, Any
 
-from text_adventure.items.items import Item
-from text_adventure.locations.room import Room
-from text_adventure.generators.item_generator import ItemGenerator
+from modules.items.items import Item
+from modules.locations.room import Room
+from modules.generators.item_generator import ItemGenerator
+from modules.generators.characters.enemy_generator import EnemyGenerator
 
 
 class RoomGenerator:
@@ -14,10 +15,13 @@ class RoomGenerator:
         """Constructor creating a new generator of rooms"""
         self.path = path
         self.item_generator = ItemGenerator(path)
+        self.enemy_generator = EnemyGenerator(path, self.item_generator)
 
     def load_floor(self, floor: str) -> None:
         """Loads a floor into the floor generator"""
-        self.item_generator.load_floor(floor)
+        for generator in [self.item_generator, self.enemy_generator]:
+            generator.load_floor(floor)
+
         with open(f'{self.path}/{floor}/rooms.yaml', 'r') as file:
             data = safe_load(file)
         self.generation_table = data.pop('generation')
@@ -35,14 +39,17 @@ class RoomGenerator:
         number = randint(1, self.total_weight())
         for room, weight in self.generation_table.items():
             if number <= weight:
+                if not room in self.rooms:
+                    return None
                 return self.__deserialize_room(self.__pop_room(room))
             number -= weight
 
     def __deserialize_room(self, data: Dict[str, Any]) -> Room:
         """Returns the room deserialized from the given data"""
         room = Room(**data)
-        room.items = self.__generate_field(room.items, self.item_generator)
-        # room.enemies = self.__generate_field(room.enemies, self.enemy_generator)
+        room.items = self.item_generator.generate_field(room.items)
+        room.enemies = self.__generate_field(
+            room.enemies, self.enemy_generator)
         # room.npc = self.__generate_field(room.npc, self.npc_generator)
         return room
 
@@ -60,7 +67,7 @@ class RoomGenerator:
 
     def generate_many(self, n: int) -> List[Room]:
         """Generates n random rooms"""
-        return [self.generate_one() for i in range(min(len(self.rooms), n))]
+        return [self.generate_one() for i in range(min(len(self.generation_table), n))]
 
     def generate(self, room: str) -> Room | None:
         """Returns the given room after it has been generated"""

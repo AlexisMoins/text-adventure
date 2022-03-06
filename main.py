@@ -1,4 +1,4 @@
-from text_adventure.generators.dungeon_generator import DungeonGenerator
+from modules.generators.locations.dungeon_generator import DungeonGenerator
 
 if __name__ == '__main__':
     dungeon = DungeonGenerator.generate('dungeon')
