@@ -2,19 +2,22 @@ from random import randint
 from typing import Any, Dict, List
 from yaml import safe_load
 
-from modules.characters.character import Character
-from modules.characters.npc import NPC
-from modules.generators.item_generator import ItemGenerator
 from modules.items.inventory import Inventory
 
+from modules.characters.npc import NPC
+from modules.characters.character import Character
 
-class EnemyGenerator:
+from modules.generators.generator import Generator
+from modules.generators.items.item_generator import ItemGenerator
+
+
+class EnemyGenerator(Generator):
     """Class generating enemies based on the provided configuration files"""
 
     def __init__(self, path: str, item_generator: ItemGenerator) -> None:
         """Constructor creating a new generator of enemies"""
         self.path = path
-        self.item_generator = item_generator
+        self.item_generator = ItemGenerator(path)
 
     def load_floor(self, floor: str) -> None:
         """Loads a floor into the enemy generator"""

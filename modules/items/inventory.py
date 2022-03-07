@@ -18,4 +18,4 @@ class Inventory:
 
     def equip_item(self, item: Equipment) -> None:
         """Equips the given item into the corresponding equipment slot"""
-        self.equipments[item.body_part] = item
+        self.equipments[item.slot] = item

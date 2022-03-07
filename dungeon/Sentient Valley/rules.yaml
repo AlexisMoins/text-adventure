@@ -7,4 +7,4 @@ room_number: 2
 # first_room: room1
 
 # Maximum number of enemies spawning at this floor
-enemy_number: 2
+# enemy_number: 2

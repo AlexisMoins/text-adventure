@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
 from typing import Dict
+from dataclasses import dataclass, field
 
 from modules.items.inventory import Inventory
 from modules.items.equipments import Equipment

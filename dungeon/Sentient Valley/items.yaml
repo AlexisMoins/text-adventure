@@ -6,17 +6,16 @@ generation:
   staff: 30
   armor: 10
 
-
 # 2: Item list
 armor:
   name: armor
   description: An equipment that you can equip to protect your body from wounds
   price: 15
   type: armor
+  slot: chest
   actions: [equip]
   durability: 20
   protection: 5
-  body_part: 'chest'
 
 sword:
   name: sword

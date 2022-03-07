@@ -19,11 +19,7 @@ class DungeonGenerator:
     @staticmethod
     def __floor_list(data: Dict[str, Any]) -> List[str]:
         """Returns a list of (almost) randomly generated floor name"""
-        return [
-            DungeonGenerator.__choose_one(
-                floor) if type(floor) == dict else floor
-            for floor in data
-        ]
+        return [DungeonGenerator.__choose_one(floor) if type(floor) == dict else floor for floor in data]
 
     @staticmethod
     def __choose_one(selection: Dict[str, int]) -> str | None:

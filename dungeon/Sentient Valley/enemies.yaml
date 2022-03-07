@@ -7,7 +7,6 @@ generation:
 # 2: Enemy list
 wolf:
   name: wolf
-  statistics: { health: 10, strength: 4, resistance: 2, speed: 5 }
+  statistics: {health: 10, strength: 4, resistance: 2, speed: 5}
   inventory: [sword]
   gold: 20
-

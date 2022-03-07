@@ -16,7 +16,7 @@ class Equipment(Item):
 @dataclass(kw_only=True)
 class Armor(Equipment):
     """Class representing any armor"""
-    body_part: str
+    slot: str
     protection: int
 
 
@@ -27,7 +27,7 @@ class Weapon(Equipment):
 
     def __post_init__(self) -> None:
         """Additional steps to initialize the instance"""
-        self.body_part = 'weapon'
+        self.slot = 'weapon'
 
 
 @dataclass(kw_only=True)
@@ -38,4 +38,4 @@ class SpellBook(Equipment):
 
     def __post_init__(self) -> None:
         """Additional steps to initialize the instance"""
-        self.body_part = 'spellbook'
+        self.slot = 'spellbook'

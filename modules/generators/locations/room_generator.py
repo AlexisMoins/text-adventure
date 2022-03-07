@@ -4,7 +4,8 @@ from typing import Dict, List, Any
 
 from modules.items.items import Item
 from modules.locations.room import Room
-from modules.generators.item_generator import ItemGenerator
+
+from modules.generators.items.item_generator import ItemGenerator
 from modules.generators.characters.enemy_generator import EnemyGenerator
 
 
@@ -48,22 +49,9 @@ class RoomGenerator:
         """Returns the room deserialized from the given data"""
         room = Room(**data)
         room.items = self.item_generator.generate_field(room.items)
-        room.enemies = self.__generate_field(
-            room.enemies, self.enemy_generator)
+        room.enemies = self.enemy_generator.generate_field(room.enemies)
         # room.npc = self.__generate_field(room.npc, self.npc_generator)
         return room
-
-    def __generate_field(self, data: Any, generator) -> List[Item]:
-        """Returns a list of the data deserialized using the given generator"""
-        if not data:
-            return []
-        if type(data) == int:
-            return generator.generate_many(data)
-        if type(data) == list:
-            if type(data[0]) == int:
-                return generator.generate_many(randint(data[0], data[1]))
-            if type(data[0]) == str:
-                return [generator.generate(item) for item in data]
 
     def generate_many(self, n: int) -> List[Room]:
         """Generates n random rooms"""
