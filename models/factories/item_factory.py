@@ -1,9 +1,9 @@
 from typing import Dict, Callable, Any
 
-from modules.items.items import Item
+from models.items.items import Item
 
-# List of item types and their corresponding class
-items: Dict[str, Callable[..., Item]] = {}
+"""List of item types and their corresponding class"""
+items: Dict[str, Callable[..., Item]] = dict()
 
 
 def register(item_type: str, function: Callable[..., Item]) -> None:
@@ -12,7 +12,7 @@ def register(item_type: str, function: Callable[..., Item]) -> None:
 
 
 def create(data: Dict[str, Any]) -> Item:
-    """Creates """
+    """Create a new item based on the item type retreived from the given data"""
     copy = data.copy()
     item_type = copy.pop('type')
     create: Callable[..., Item] = items[item_type]

@@ -11,8 +11,7 @@ mock_consumable:
   description: a basic consumable
   price: 20
   actions: [drink, thow]
-  statistics:
-    health: 15
+  statistics: {health: 15}
 
 mock_spell:
   name: my spell
@@ -33,7 +32,7 @@ mock_armor:
   price: 70
   durability: 24
   protection: 12
-  body_part: torso
+  slot: torso
 
 mock_weapon:
   name: my weapon
@@ -41,5 +40,3 @@ mock_weapon:
   price: 50
   durability: 56
   damage: 12
-
-

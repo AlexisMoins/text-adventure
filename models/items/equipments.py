@@ -1,6 +1,7 @@
-from .items import Item, Spell
 from typing import List
 from dataclasses import dataclass, field
+
+from models.items.items import Item, Spell
 
 
 @dataclass(kw_only=True)

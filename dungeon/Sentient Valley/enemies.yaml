@@ -2,10 +2,10 @@
 
 # 1: Rooms generation chances
 generation:
-  wolf: 100
+  enemy1: 100
 
 # 2: Enemy list
-wolf:
+enemy1:
   name: wolf
   statistics: {health: 10, strength: 4, resistance: 2, speed: 5}
   inventory: [sword]

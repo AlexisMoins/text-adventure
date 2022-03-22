@@ -29,10 +29,15 @@ class Coordinates:
     def __eq__(self, other: Any) -> bool:
         """Returns true if the current coordinates is equal to the other coordinates"""
         return (
-            isinstance(other, Coordinates) and other.x == self.x and other.y == self.y
+            isinstance(
+                other, Coordinates) and other.x == self.x and other.y == self.y
         )
 
     def __hash__(self) -> int:
         """Returns the hashed value of the current coordinates"""
         coordinates = (self.x, self.y)
         return hash(coordinates)
+
+    def __repr__(self) -> str:
+        """Return the representation of the current coordinate"""
+        return f'Coordinates(x={self.x}, y={self.y})'

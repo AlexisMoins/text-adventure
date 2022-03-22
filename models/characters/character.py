@@ -1,8 +1,8 @@
 from typing import Dict
 from dataclasses import dataclass, field
 
-from modules.items.inventory import Inventory
-from modules.items.equipments import Equipment
+from models.items.inventory import Inventory
+from models.items.equipments import Equipment
 
 
 @dataclass(kw_only=True)
@@ -14,8 +14,8 @@ class Character:
 
     def __post_init__(self) -> None:
         """Additional steps to initialize the instance"""
-        self.max_health = self.get_statistic('health')
-        self.max_mana = self.get_statistic('mana')
+        self.statistics['max_health'] = self.get_statistic('health')
+        self.statistics['max_mana'] = self.get_statistic('mana')
 
     def get_statistic(self, statistic: str) -> int:
         """Returns the value of the given statistic for the current character"""
@@ -25,3 +25,7 @@ class Character:
         """Equips the given item into the corresponding equipment slot"""
         if 'equip' in item.actions:
             self.inventory.equip_item(item)
+
+    def is_alive(self) -> bool:
+        """Return true if the current character is alive, return false otherwise"""
+        return self.get_statistic('health') > 0

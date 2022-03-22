@@ -6,19 +6,15 @@ authors = ["AlexisMoins <moinsalexis@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pytest = "^7.0.1"
 PyYAML = "^6.0"
-jedi = "^0.18.1"
+pytest = "^7.1.1"
 autopep8 = "^1.6.0"
+colorama = "^0.4.4"
 
 [tool.poetry.dev-dependencies]
 
 [tool.autopep8]
-# max_line_length = 120
-# ignore = "E501,W6"  # or ["E501", "W6"]
-# in-place = true
-# recursive = true
-# aggressive = 3
+max_line_length = 120
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
