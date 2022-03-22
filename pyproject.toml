@@ -7,15 +7,14 @@ authors = ["AlexisMoins <moinsalexis@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 PyYAML = "^6.0"
-pytest = "^6.2.5"
-black = "^22.1.0"
+pytest = "^7.1.1"
+autopep8 = "^1.6.0"
+colorama = "^0.4.4"
 
 [tool.poetry.dev-dependencies]
-black = {version = "^22.1.0", allow-prereleases = true}
-autopep8 = "^1.6.0"
 
-[tool.black]
-skip-string-normalization = true
+[tool.autopep8]
+max_line_length = 120
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

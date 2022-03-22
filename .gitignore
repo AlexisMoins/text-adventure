@@ -1,9 +1,7 @@
 # Files
 .DS_Store
-.vim-session
-.projections.json
 
 # Directories
+.venv/
 __pycache__/
 .pytest_cache/
-.vscode/
