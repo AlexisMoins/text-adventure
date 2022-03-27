@@ -1,5 +1,6 @@
 from typing import List
 from dataclasses import dataclass, field
+from colorama import Fore
 
 from modules.items.items import Item, Spell
 
@@ -20,6 +21,10 @@ class Armor(Equipment):
     slot: str
     protection: int
 
+    def __str__(self) -> str:
+        """Return the string representation of the armor"""
+        return f'{super().__str__()} {Fore.CYAN}(def +{self.protection}){Fore.WHITE}'
+
 
 @dataclass(kw_only=True)
 class Weapon(Equipment):
@@ -29,6 +34,11 @@ class Weapon(Equipment):
     def __post_init__(self) -> None:
         """Additional steps to initialize the instance"""
         self.slot = 'weapon'
+
+    def __str__(self) -> str:
+        """Return the string representation of the armor"""
+        damage_type = 'mag' if 'cast' in self.actions else 'atk'
+        return f'{super().__str__()} {Fore.RED}({damage_type} +{self.damage}){Fore.WHITE}'
 
 
 @dataclass(kw_only=True)

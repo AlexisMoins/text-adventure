@@ -9,9 +9,9 @@ generation:
 room1:
   description: You enter in a long corridor. The floor seems to be covered with
     crushed bones, you smell a terrible sent of rotten flesh.
-  enemies: 1
+  items: [2, 3]
 
 room2:
   description: As you progress through the dungeon, you find a pond of clear water.
     As you get closer, you see something glowing at the very bottom of the pond.
-  items: 1
+  items: [2, 3]

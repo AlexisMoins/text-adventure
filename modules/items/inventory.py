@@ -19,3 +19,7 @@ class Inventory:
     def equip_item(self, item: Equipment) -> None:
         """Equips the given item into the corresponding equipment slot"""
         self.equipments[item.slot] = item
+
+    def wearable_items(self) -> List[Item]:
+        """"""
+        return [item for item in self.filter('equip') if item not in self.equipments.values()]
