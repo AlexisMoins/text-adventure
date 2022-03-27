@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-from models.items.items import Item, Consumable, Spell
+from modules.items.items import Item, Consumable, Spell
 
 
 def test_new_item(items: Dict[str, Any]) -> None:

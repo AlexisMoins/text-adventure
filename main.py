@@ -1,14 +1,14 @@
 from colorama import Fore
 from textwrap import wrap
 
-from utils import clear_screen
-from models.locations.room import Room
-from models.locations.dungeon import Dungeon
-from models.characters.character import Character
+from modules import utils
+from modules.locations.room import Room
+from modules.locations.dungeon import Dungeon
+from modules.characters.character import Character
 
-from models.factories import generator_factory
-from models.generators.locations import dungeon_generator
-from models.generators.characters import player_generator
+from modules.factories import generators
+from modules.generators.locations import dungeon_generator
+from modules.generators.characters import player_generator
 
 
 class RoomView:
@@ -22,7 +22,9 @@ class RoomView:
     def display(self) -> None:
         """Run the controller and start the game"""
         while True:  # self.player.is_alive():
-            self._display_room()
+            utils.clear_screen()
+            print(self.player.status_bar)
+            print(self.room)
 
             user_input = input('\n> ').lower()
             if self._handle_input(user_input):
@@ -32,22 +34,6 @@ class RoomView:
         """Handle the input received by the controller"""
         if user_input == 'q':
             return True
-
-    def _display_room(self) -> None:
-        clear_screen()
-        health = f'health: {Fore.MAGENTA}{self.player.get_statistic("health")}{Fore.WHITE} ({Fore.MAGENTA}{self.player.get_statistic("max_health")}{Fore.WHITE})'
-        print(f'{health}',
-              end='    ')
-
-        print(
-            f'mana: {Fore.MAGENTA}{self.player.get_statistic("mana")}{Fore.WHITE} ({Fore.MAGENTA}{self.player.get_statistic("max_mana")}{Fore.WHITE})', end='    ')
-
-        print(f'gold: {Fore.MAGENTA}{self.player.inventory.gold}{Fore.WHITE}\n')
-
-        for line in wrap(self.room.description):
-            print(line)
-
-        print(f'\n[{Fore.CYAN}q{Fore.WHITE}] quit')
 
 
 class DungeonController:
@@ -69,8 +55,8 @@ class DungeonController:
 
 if __name__ == '__main__':
 
-    path = 'dungeon'
-    generator_factory.initialize(path)
+    path = 'resources/dungeon'
+    generators.initialize(path)
 
     dungeon = dungeon_generator.generate(path)
 
