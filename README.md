@@ -36,4 +36,4 @@ Once the environment is ready, simply launch the main script and you're good to 
 python main.py
 ```
 
-Disclaimer: the game and the repo are still in early development phase !
+**Disclaimer**: the game and the repo are still in early development phase !
