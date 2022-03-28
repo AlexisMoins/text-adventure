@@ -18,6 +18,9 @@ class Character:
         self.statistics['max_health'] = self.get_statistic('health')
         self.statistics['max_mana'] = self.get_statistic('mana')
 
+        for item in self.inventory.filter('equip'):
+            self.equip_item(item)
+
     def get_statistic(self, statistic: str) -> int:
         """Returns the value of the given statistic for the current character"""
         return self.statistics[statistic] if statistic in self.statistics else 0
@@ -25,7 +28,7 @@ class Character:
     def equip_item(self, item: Equipment) -> None:
         """Equips the given item into the corresponding equipment slot"""
         if 'equip' in item.actions:
-            self.inventory.equip_item(item)
+            self.inventory.equip_one(item)
 
     def is_alive(self) -> bool:
         """Return true if the current character is alive, return false otherwise"""
@@ -35,8 +38,8 @@ class Character:
     def status_bar(self) -> str:
         """"""
         return 'health: {}{}{} ({}{}{})    mana: {}{}{} ({}{}{})    gold: {}{}{}\n'.format(
-            Fore.MAGENTA, self.get_statistic('health'), Fore.WHITE,
-            Fore.MAGENTA, self.get_statistic('max_health'), Fore.WHITE,
-            Fore.MAGENTA, self.get_statistic('mana'), Fore.WHITE,
-            Fore.MAGENTA, self.get_statistic('max_mana'), Fore.WHITE,
-            Fore.MAGENTA, self.inventory.gold, Fore.WHITE)
+            Fore.RED, self.get_statistic('health'), Fore.WHITE,
+            Fore.RED, self.get_statistic('max_health'), Fore.WHITE,
+            Fore.GREEN, self.get_statistic('mana'), Fore.WHITE,
+            Fore.GREEN, self.get_statistic('max_mana'), Fore.WHITE,
+            Fore.YELLOW, self.inventory.gold, Fore.WHITE)

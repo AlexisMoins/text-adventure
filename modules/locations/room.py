@@ -31,6 +31,7 @@ class Room:
         """Display the possible actions available in the current room"""
         print(f'\n[{Fore.CYAN}q{Fore.WHITE}] Leave the dungeon')
         print(f'[{Fore.CYAN}i{Fore.WHITE}] Open the inventory')
+        print(f'[{Fore.CYAN}c{Fore.WHITE}] Continue your exploration')
 
     def display_items(self) -> None:
         """Display the items present in the room"""

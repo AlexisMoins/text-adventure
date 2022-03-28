@@ -23,7 +23,7 @@ class Armor(Equipment):
 
     def __str__(self) -> str:
         """Return the string representation of the armor"""
-        return f'{super().__str__()} {Fore.CYAN}(def +{self.protection}){Fore.WHITE}'
+        return f'{super().__str__()} {Fore.MAGENTA}[def +{self.protection}]{Fore.WHITE}'
 
 
 @dataclass(kw_only=True)
@@ -38,7 +38,7 @@ class Weapon(Equipment):
     def __str__(self) -> str:
         """Return the string representation of the armor"""
         damage_type = 'mag' if 'cast' in self.actions else 'atk'
-        return f'{super().__str__()} {Fore.RED}({damage_type} +{self.damage}){Fore.WHITE}'
+        return f'{super().__str__()} {Fore.MAGENTA}[{damage_type} +{self.damage}]{Fore.WHITE}'
 
 
 @dataclass(kw_only=True)

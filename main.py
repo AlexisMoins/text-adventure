@@ -27,7 +27,9 @@ class InventoryView:
         print(self.player.status_bar)
 
         if self.inventory.items:
-            print('Your inventory contains:')
+            print(
+                f'Occupied slots: {Fore.YELLOW}{len(self.inventory.items)}{Fore.WHITE} ({Fore.YELLOW}{self.inventory.capacity}{Fore.WHITE})')
+            print('Your inventory contains:\n')
 
         for item in self.inventory.items:
             indicator = f'{Fore.GREEN}*{Fore.WHITE}' if item in self.inventory.equipments.values() else ' '
@@ -67,12 +69,19 @@ class InventoryController:
         """Handle the input received by the controller"""
         if user_input == 'q':
             return True
+        if user_input == 'l':
+            selected_item = choose_one(
+                'Select the equipment you want to take a look at:', self.inventory.items)
+            if selected_item:
+                selected_item.display()
         if user_input == 'w':
             selected_items = choose_many(
-                '\nSelect the equipment(s) you want to wear or handle:', self.inventory.wearable_items())
-            if selected_items:
-                for item in selected_items:
-                    self.inventory.equip_item(item)
+                'Select the equipment(s) you want to wear or handle:', self.inventory.wearable_items())
+            self.inventory.equip_many(selected_items)
+        if user_input == 't':
+            selected_items = choose_many(
+                'Select the equipment(s) you want to take off:', self.inventory.equipments.values())
+            self.inventory.remove_many(selected_items)
 
 
 def _display(message: str, items: List) -> None:
@@ -153,6 +162,10 @@ class RoomController:
             return True
         if user_input == 'i':
             self.inventory_controller.run()
+        # if user_input == 'c':
+        #     accessible_rooms =
+        #     next_room = choose_one(
+        #         '\nWhere do you want to go ?', self.room)
 
 
 class DungeonController:

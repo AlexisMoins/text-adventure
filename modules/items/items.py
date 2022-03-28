@@ -21,6 +21,11 @@ class Item:
         """String representation of the item"""
         return f'{determiner(self.name)} {self.name}'
 
+    def display(self) -> None:
+        """"""
+        print(f'Name: {self.name}    price: {self.price}')
+        input()
+
 
 @dataclass(kw_only=True)
 class Consumable(Item):
