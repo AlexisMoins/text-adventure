@@ -1,5 +1,7 @@
 # text-adventure
 
+**Disclaimer**: the game and the repo are still in early development phase !
+
 text-adventure is, as its name suggests, a text based adventure on the terminal entirely written in python. The game aims at being modular as almost every aspects of the game can be modified by the users by editing the appropriate configuration files.
 
 ## How to play
@@ -35,5 +37,3 @@ Once the environment is ready, simply launch the main script and you're good to 
 # Embark on a new adventure !
 python main.py
 ```
-
-**Disclaimer**: the game and the repo are still in early development phase !
