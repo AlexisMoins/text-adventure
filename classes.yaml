@@ -1,6 +1,0 @@
-# List the pre-made classes the player can embody
-class1:
-  name: barbarian
-  statistics: {health: 8, strength: 14, resistance: 12, speed: 5}
-  inventory: [sword]
-  gold: 20

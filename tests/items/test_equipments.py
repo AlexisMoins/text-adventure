@@ -1,7 +1,7 @@
 from typing import Dict, Any
 
 from tests.items.test_items import new_item_test
-from models.items.equipments import Equipment, Armor, Weapon
+from modules.items.equipments import Equipment, Armor, Weapon
 
 
 def test_new_equipment(items: Dict[str, Any]) -> None:
