@@ -2,13 +2,13 @@
 
 # 1: Rooms generation chances
 generation:
-  room1: 60
-  room2: 40
+  room1: 50
+  room2: 50
 
 # 2: Room list
 room1:
   description: You enter in a long corridor. The floor seems to be covered with
-    crushed bones, you smell a terrible sent of rotten flesh.
+    crushed bones and you smell a terrible sent of rotten flesh.
   items: [0, 1]
   enemies: [enemy1]
 

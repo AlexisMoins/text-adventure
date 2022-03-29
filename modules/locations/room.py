@@ -29,7 +29,9 @@ class Room:
     def display_actions(self) -> None:
         """Display the possible actions available in the current room"""
         print(f'\n[{Fore.CYAN}q{Fore.WHITE}] Leave the dungeon')
-        print(f'[{Fore.CYAN}i{Fore.WHITE}] Open the inventory')
+        print(f'[{Fore.CYAN}i{Fore.WHITE}] Open your inventory')
+        if self.items:
+            print(f'[{Fore.CYAN}l{Fore.WHITE}] Look at specific items')
         print(f'[{Fore.CYAN}c{Fore.WHITE}] Continue your exploration')
 
     def display_entities(self) -> None:

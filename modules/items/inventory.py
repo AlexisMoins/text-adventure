@@ -39,6 +39,26 @@ class Inventory:
             for item in items:
                 self.remove_one(item)
 
+    def drop_item(self, item: Item) -> Item | None:
+        """"""
+        if self.item_is_equipped(item):
+            self.remove_one(item)
+        return self.items.pop(self.items.index(item))
+
     def wearable_items(self) -> List[Item]:
         """Return the list of items that can be wore but are not currenlty"""
         return [item for item in self.filter('equip') if item not in self.equipments.values()]
+
+    def contains(self, the_item: Item) -> bool:
+        """Return true if the given item is in the inventory"""
+        for item in self.items:
+            if the_item is item:
+                return True
+        return False
+
+    def item_is_equipped(self, the_item: Item) -> bool:
+        """"""
+        for item in self.equipments.values():
+            if the_item is item:
+                return True
+        return False

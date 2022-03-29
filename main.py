@@ -1,8 +1,5 @@
-from typing import Any, List
-from colorama import Fore
-
 from modules import utils
-from modules.controllers.inventory_controller import InventoryController
+from modules.controllers.inventory_controller import InventoryController, ItemController
 from modules.locations.room import Room
 from modules.locations.dungeon import Dungeon
 from modules.characters.character import Character
@@ -10,6 +7,7 @@ from modules.characters.character import Character
 from modules.factories import generators
 from modules.generators.locations import dungeon_generator
 from modules.generators.characters import player_generator
+from modules.views.selection_view import selection_view
 
 
 class RoomController:
@@ -38,10 +36,16 @@ class RoomController:
             return True
         if user_input == 'i':
             self.inventory_controller.run()
-        # if user_input == 'c':
-        #     accessible_rooms =
-        #     next_room = choose_one(
-        #         '\nWhere do you want to go ?', self.room)
+        if user_input == 'l':
+            selection_view.message = 'Select the equipment you want to take a look at:'
+            selected_item = selection_view.choose_one(self.room.items)
+            if selected_item:
+                if ItemController(selected_item, self.player.inventory).run():
+                    self.room.items.append(self.inventory.drop_one(self.view.dropped_item))
+            # if user_input == 'c':
+            #     accessible_rooms =
+            #     next_room = choose_one(
+            #         '\nWhere do you want to go ?', self.room)
 
 
 class DungeonController:

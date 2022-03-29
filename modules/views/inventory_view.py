@@ -22,7 +22,7 @@ class InventoryView:
             print(f'slots: {self.slot_bar()}\n')
 
         for item in self.inventory.items:
-            indicator = f'{Fore.GREEN}*{Fore.WHITE}' if item in self.inventory.equipments.values() else ' '
+            indicator = f'{Fore.RED}e{Fore.WHITE}' if item in self.inventory.equipments.values() else ' '
             print(f'[{indicator}] x{item.quantity} {utils.indefinite_determiner(str(item))}')
 
         print(f'\n[{Fore.CYAN}q{Fore.WHITE}] Close the inventory')

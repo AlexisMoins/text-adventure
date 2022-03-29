@@ -1,4 +1,6 @@
+from textwrap import wrap
 from typing import List, Dict
+from colorama import Fore
 from dataclasses import dataclass, field
 
 
@@ -14,11 +16,6 @@ class Item:
     def __str__(self) -> str:
         """String representation of the item"""
         return f'{self.name}'
-
-    def display(self) -> None:
-        """"""
-        print(f'Name: {self.name}    price: {self.price}')
-        input()
 
 
 @dataclass(kw_only=True)

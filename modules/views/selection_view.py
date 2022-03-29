@@ -15,7 +15,7 @@ class SelectionView:
 
     def _display(self, items: List) -> None:
         utils.clear_screen()
-        print(f'\n{self.message}\n')
+        print(f'{self.message}\n')
 
         for index, item in enumerate(items):
             print(f'[{Fore.CYAN}{index}{Fore.WHITE}] {item}')
@@ -25,7 +25,7 @@ class SelectionView:
     def _display_selection(self, items: List, selection: List):
         """"""
         utils.clear_screen()
-        print(f'\n{self.message}\n')
+        print(f'{self.message}\n')
 
         for index, item in enumerate(items):
             indicator = f'{Fore.GREEN}*{Fore.WHITE}' if selection[index] else ' '
