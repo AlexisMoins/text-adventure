@@ -2,12 +2,6 @@ from typing import List, Dict
 from dataclasses import dataclass, field
 
 
-def determiner(item_name: str) -> str:
-    """"""
-    vowels = 'aeiouy'
-    return 'an' if item_name[0] in vowels else 'a'
-
-
 @dataclass(kw_only=True)
 class Item:
     """Class representing a generic item"""
@@ -19,7 +13,7 @@ class Item:
 
     def __str__(self) -> str:
         """String representation of the item"""
-        return f'{determiner(self.name)} {self.name}'
+        return f'{self.name}'
 
     def display(self) -> None:
         """"""

@@ -37,9 +37,19 @@ class Character:
     @property
     def status_bar(self) -> str:
         """"""
-        return 'health: {}{}{} ({}{}{})    mana: {}{}{} ({}{}{})    gold: {}{}{}\n'.format(
-            Fore.RED, self.get_statistic('health'), Fore.WHITE,
-            Fore.RED, self.get_statistic('max_health'), Fore.WHITE,
+        return 'health: {}    mana: {}\n'.format(
+            self.health_bar(), self.mana_bar(),
             Fore.GREEN, self.get_statistic('mana'), Fore.WHITE,
-            Fore.GREEN, self.get_statistic('max_mana'), Fore.WHITE,
-            Fore.YELLOW, self.inventory.gold, Fore.WHITE)
+            Fore.GREEN, self.get_statistic('max_mana'), Fore.WHITE)
+
+    def health_bar(self) -> str:
+        """"""
+        percentage = round(self.get_statistic('health') / self.get_statistic('max_health') * 10)
+        bar = '[' + Fore.RED + '=' * percentage + Fore.WHITE + ' ' * (10 - percentage) + ']'
+        return f'{bar} {Fore.RED}{self.get_statistic("health")}{Fore.WHITE} ({Fore.RED}{self.get_statistic("max_health")}{Fore.WHITE})'
+
+    def mana_bar(self) -> str:
+        """"""
+        percentage = round(self.get_statistic('mana') / self.get_statistic('max_mana') * 10)
+        bar = '[' + Fore.GREEN + '=' * percentage + Fore.WHITE + ' ' * (10 - percentage) + ']'
+        return f'{bar} {Fore.GREEN}{self.get_statistic("mana")}{Fore.WHITE} ({Fore.GREEN}{self.get_statistic("max_mana")}{Fore.WHITE})'

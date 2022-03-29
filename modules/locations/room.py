@@ -3,6 +3,8 @@ from textwrap import wrap
 from dataclasses import dataclass, field
 from colorama import Fore
 
+from modules import utils
+
 
 @dataclass(kw_only=True)
 class Room:
@@ -19,11 +21,8 @@ class Room:
 
         if self.items or self.enemies or self.npc:
             word = 'are' if len(self.items) + len(self.enemies) + len(self.npc) else 'is'
-
             print(f'\nAround you {word}:')
-
-        if self.items:
-            self.display_items()
+            self.display_entities()
 
         self.display_actions()
 
@@ -33,9 +32,11 @@ class Room:
         print(f'[{Fore.CYAN}i{Fore.WHITE}] Open the inventory')
         print(f'[{Fore.CYAN}c{Fore.WHITE}] Continue your exploration')
 
-    def display_items(self) -> None:
+    def display_entities(self) -> None:
         """Display the items present in the room"""
-        item_list = [str(item) for item in self.items]
-        item_list[-1] = 'and ' + item_list[-1]
+        item_list = [utils.indefinite_determiner(str(entity)) for entity in self.items + self.enemies + self.npc]
+
+        if len(item_list) > 1:
+            item_list[-1] = 'and ' + item_list[-1]
         item_list[0] = item_list[0].capitalize()
         print(', '.join(item_list))
