@@ -1,7 +1,16 @@
+from enum import Enum
 from typing import Any, List
 from colorama import Fore
 
 from modules import utils
+
+
+class Action(Enum):
+    """Class representing the actions used in input handlers"""
+
+    IDLE = 0
+    QUIT = 1
+    DROP = 2
 
 
 class SelectionView:
@@ -64,3 +73,18 @@ class SelectionView:
 
 # General view for selecting one or many items from a list
 selection_view = SelectionView()
+
+
+def yes_no_menu(text: str) -> bool:
+    while True:
+        utils.clear_screen()
+        print(f'{text}\n')
+
+        print(f'[{Fore.CYAN}y{Fore.WHITE}] Yes')
+        print(f'[{Fore.CYAN}n{Fore.WHITE}] No')
+
+        user_input = input('\n> ').lower()
+        if user_input == 'y':
+            return True
+        if user_input == 'n':
+            return False

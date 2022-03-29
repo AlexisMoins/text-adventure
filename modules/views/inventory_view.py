@@ -20,15 +20,20 @@ class InventoryView:
         if self.inventory.items:
             print('Your inventory contains:')
             print(f'slots: {self.slot_bar()}\n')
+        else:
+            print('Your inventory is empty...')
 
         for item in self.inventory.items:
             indicator = f'{Fore.RED}e{Fore.WHITE}' if item in self.inventory.equipments.values() else ' '
             print(f'[{indicator}] x{item.quantity} {utils.indefinite_determiner(str(item))}')
 
+    def display_commands(self) -> None:
+        """"""
         print(f'\n[{Fore.CYAN}q{Fore.WHITE}] Close the inventory')
 
         if self.inventory.items:
             print(f'[{Fore.CYAN}l{Fore.WHITE}] Look at a particular item')
+            print(f'[{Fore.CYAN}d{Fore.WHITE}] Drop items in the room')
 
             if len(self.inventory.wearable_items()) > 0:
                 print(f'[{Fore.CYAN}w{Fore.WHITE}] Wear a piece of equipment')
