@@ -8,5 +8,5 @@ generation:
 enemy1:
   name: wolf
   statistics: {health: 10, strength: 4, resistance: 2, speed: 5}
-  inventory: [sword]
+  inventory: [armor]
   gold: 20
