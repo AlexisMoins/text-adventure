@@ -21,7 +21,8 @@ class InventoryView:
             print('Your inventory contains:')
             print(f'slots: {self.slot_bar()}\n')
         else:
-            print('Your inventory is empty...')
+            print('Your inventory is empty')
+            print(f'slots: {self.slot_bar()}')
 
         for item in self.inventory.items:
             indicator = f'{Fore.RED}e{Fore.WHITE}' if item in self.inventory.equipments.values() else ' '

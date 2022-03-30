@@ -35,17 +35,20 @@ class InventoryController:
         """Handle the input received by the controller"""
         if user_input == 'q':
             return Action.QUIT
+
         if user_input == 'l':
             selection_view.message = 'Select the item you want to take a look at:'
             selected_item = selection_view.choose_one(self.inventory.items)
             if selected_item:
                 controller = ItemController(selected_item, self.inventory)
-                controller.run()
+                action = controller.run()
+                if action == Action.DROP:
+                    self.room.items.append(controller.dropped_item)
 
         if user_input == 'w':
             selection_view.message = 'Select the equipment(s) you want to wear or handle:'
             selected_items = selection_view.choose_many(self.inventory.wearable_items())
-            self.inventory.equip_many(selected_items)
+            self.inventory.equip_items(selected_items)
 
         if user_input == 't':
             selection_view.message = 'Select the equipment(s) you want to take off:'

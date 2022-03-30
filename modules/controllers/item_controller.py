@@ -1,4 +1,4 @@
-from enum import Enum
+from colorama import Fore
 
 from modules.items.items import Item
 from modules.items.inventory import Inventory
@@ -31,12 +31,12 @@ class ItemController:
         if user_input == 'q':
             return Action.QUIT
         if user_input == 't':
-            self.view.inventory.remove_one(self.view.item)
+            self.view.inventory.take_off_item(self.view.item)
         if user_input == 'w':
-            self.view.inventory.equip_one(self.view.item)
+            self.view.inventory.equip_item(self.view.item)
         if user_input == 'd':
             if self.view.inventory.item_is_equipped(self.view.item):
-                if not yes_no_menu('This item is equipped. Do you want to drop it anyway ?'):
+                if not yes_no_menu(f'{Fore.RED}Warning 1/1{Fore.WHITE}\n\nThis item is equipped: {str(self.view.item)}\nDo you want to drop it anyway ?'):
                     return Action.IDLE
             self.dropped_item = self.view.inventory.drop_item(self.view.item)
             return Action.DROP

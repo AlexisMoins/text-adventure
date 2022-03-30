@@ -5,6 +5,7 @@ from modules import utils
 from modules.items.items import Item
 from modules.items.inventory import Inventory
 
+
 class ItemView:
     """Class representing the view of an item"""
 
@@ -42,7 +43,7 @@ class ItemView:
         print(f'{slot:<30}{equipped}')
 
     def display_commands(self) -> None:
-        print(f'\n[{Fore.CYAN}q{Fore.WHITE}] Return')
+        print(f'\n[{Fore.CYAN}q{Fore.WHITE}] Go back')
 
         if self.inventory.contains(self.item):
             if self.inventory.item_is_equipped(self.item):

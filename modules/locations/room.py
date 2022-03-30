@@ -15,6 +15,10 @@ class Room:
     npc: Any = field(default_factory=list)
     actions: List[str] = field(default_factory=list, init=False)
 
+    def is_empty(self) -> bool:
+        """"""
+        return len(self.items + self.enemies + self.npc) == 0
+
     def display(self) -> None:
         """"""
         print('\n'.join(wrap(self.description)))
@@ -30,8 +34,10 @@ class Room:
         """Display the possible actions available in the current room"""
         print(f'\n[{Fore.CYAN}q{Fore.WHITE}] Leave the dungeon')
         print(f'[{Fore.CYAN}i{Fore.WHITE}] Open your inventory')
+        if not self.is_empty():
+            print(f'[{Fore.CYAN}l{Fore.WHITE}] Look at something')
         if self.items:
-            print(f'[{Fore.CYAN}l{Fore.WHITE}] Look at specific items')
+            print(f'[{Fore.CYAN}p{Fore.WHITE}] Put an item in your inventory')
         print(f'[{Fore.CYAN}c{Fore.WHITE}] Continue your exploration')
 
     def display_entities(self) -> None:

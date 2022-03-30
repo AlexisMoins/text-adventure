@@ -17,18 +17,18 @@ class Inventory:
         """Return a list of items with the given action"""
         return filter(lambda item: action in item.actions, self.items)
 
-    def equip_one(self, item: Equipment) -> None:
+    def equip_item(self, item: Equipment) -> None:
         """Equip the given item into the corresponding equipment slot"""
         if item:
             self.equipments[item.slot] = item
 
-    def equip_many(self, items: List[Item]) -> None:
+    def equip_items(self, items: List[Item]) -> None:
         """Equip the given items into the corresponding equipment slots"""
         if items:
             for item in items:
-                self.equip_one(item)
+                self.equip_item(item)
 
-    def remove_one(self, item: Equipment) -> None:
+    def take_off_item(self, item: Equipment) -> None:
         """Remove the given item from its corresponding equipment slot"""
         if item:
             del self.equipments[item.slot]
@@ -37,12 +37,12 @@ class Inventory:
         """Remove the given items from their corresponding equipment slots"""
         if items:
             for item in items:
-                self.remove_one(item)
+                self.take_off_item(item)
 
     def drop_item(self, item: Item) -> Item | None:
         """"""
         if self.item_is_equipped(item):
-            self.remove_one(item)
+            self.take_off_item(item)
         return self.items.pop(self.items.index(item))
 
     def wearable_items(self) -> List[Item]:
