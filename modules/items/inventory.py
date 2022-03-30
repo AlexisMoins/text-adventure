@@ -51,7 +51,7 @@ class Inventory:
 
     def wearable_items(self) -> List[Item]:
         """Return the list of items that can be wore but are not currenlty"""
-        return [item for item in self.filter('equip') if item not in self.equipments.values()]
+        return [item for item in self.filter('equip') if not self.item_is_equipped(item)]
 
     def contains(self, the_item: Item) -> bool:
         """Return true if the given item is in the inventory"""
