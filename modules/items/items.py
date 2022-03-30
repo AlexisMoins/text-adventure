@@ -1,6 +1,4 @@
-from textwrap import wrap
 from typing import List, Dict
-from colorama import Fore
 from dataclasses import dataclass, field
 
 

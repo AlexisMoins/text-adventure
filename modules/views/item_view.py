@@ -1,3 +1,4 @@
+import statistics
 from textwrap import wrap
 from colorama import Fore
 
@@ -21,9 +22,6 @@ class ItemView:
         print(f'{Fore.MAGENTA}{self.item.name.capitalize()}{Fore.WHITE}\n')
         print('\n'.join(wrap(self.item.description)))
 
-        if hasattr(self.item, 'durability'):
-            print(f'\ndurability: {self.durability_bar()}')
-
         price = f'price: {Fore.MAGENTA}{str(self.item.price)} gold{Fore.WHITE}'
         quantity = f'quantity: {Fore.MAGENTA}x{str(self.item.quantity)}{Fore.WHITE}'
 
@@ -38,6 +36,16 @@ class ItemView:
         else:
             slot += f'none{Fore.WHITE}'
             equipped += f'no{Fore.WHITE}'
+
+        statistics = f'statistics: {Fore.MAGENTA}'
+        if hasattr(self.item, 'statistics'):
+            statistics += ', '.join([f'{stat} +{value}' for stat, value in self.item.statistics.items()]) + Fore.WHITE
+        else:
+            statistics += f'noting{Fore.WHITE}'
+
+        if hasattr(self.item, 'durability'):
+            print(f'\ndurability: {self.durability_bar()}')
+        print(f'{statistics:<30}')
 
         print(f'\n{price:<30}{quantity}')
         print(f'{slot:<30}{equipped}')

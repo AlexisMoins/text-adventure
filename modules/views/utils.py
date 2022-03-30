@@ -11,6 +11,7 @@ class Action(Enum):
     IDLE = 0
     QUIT = 1
     DROP = 2
+    TAKE = 3
 
 
 class SelectionView:
@@ -75,10 +76,10 @@ class SelectionView:
 selection_view = SelectionView()
 
 
-def yes_no_menu(text: str) -> bool:
+def yes_no_menu(message: str) -> bool:
     while True:
         utils.clear_screen()
-        print(f'{text}\n')
+        print(f'{message}\n')
 
         print(f'[{Fore.CYAN}y{Fore.WHITE}] Yes')
         print(f'[{Fore.CYAN}n{Fore.WHITE}] No')
@@ -88,3 +89,10 @@ def yes_no_menu(text: str) -> bool:
             return True
         if user_input == 'n':
             return False
+
+
+def message_without_input(message: str) -> None:
+    """"""
+    utils.clear_screen()
+    print(f'{message}')
+    input(f'Press any key to continue {Fore.CYAN}[.]{Fore.WHITE} ')

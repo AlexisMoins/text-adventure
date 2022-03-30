@@ -11,7 +11,11 @@ class Inventory:
     gold: int = 0
     items: List[Item] = field(default_factory=list)
     equipments: Dict[str, Item] = field(default_factory=dict)
-    capacity: int = 9
+    capacity: int = 6
+
+    def is_full(self) -> bool:
+        """Return true if the inventory is full"""
+        return len(self.items) == self.capacity
 
     def filter(self, action: str) -> List[Item]:
         """Return a list of items with the given action"""
@@ -56,9 +60,11 @@ class Inventory:
                 return True
         return False
 
-    def item_is_equipped(self, the_item: Item) -> bool:
+    def item_is_equipped(self, item: Item) -> bool:
         """"""
-        for item in self.equipments.values():
-            if the_item is item:
-                return True
+        if not isinstance(item, Equipment) or item.slot not in self.equipments.keys():
+            return False
+
+        if self.equipments[item.slot] is item:
+            return True
         return False

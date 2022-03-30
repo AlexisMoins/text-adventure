@@ -25,7 +25,7 @@ class InventoryView:
             print(f'slots: {self.slot_bar()}')
 
         for item in self.inventory.items:
-            indicator = f'{Fore.RED}e{Fore.WHITE}' if item in self.inventory.equipments.values() else ' '
+            indicator = f'{Fore.RED}e{Fore.WHITE}' if self.inventory.item_is_equipped(item) else ' '
             print(f'[{indicator}] x{item.quantity} {utils.indefinite_determiner(str(item))}')
 
     def display_commands(self) -> None:
