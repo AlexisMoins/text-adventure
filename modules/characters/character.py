@@ -28,7 +28,7 @@ class Character:
     def equip_item(self, item: Equipment) -> None:
         """Equips the given item into the corresponding equipment slot"""
         if 'equip' in item.actions:
-            self.inventory.equip_item(item)
+            self.inventory.equip(item)
 
     def is_alive(self) -> bool:
         """Return true if the current character is alive, return false otherwise"""

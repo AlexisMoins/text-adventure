@@ -11,6 +11,13 @@ from modules.controllers.item_controller import ItemController
 from modules.views.utils import Action, yes_no_menu
 
 
+def iterate(function, iterator) -> None:
+    """Iterate over the given iterator, passing each item to the given function"""
+    if iterator:
+        for item in iterator:
+            function(item)
+
+
 class InventoryController:
     """Class controlling the player's inventory"""
 
@@ -37,6 +44,7 @@ class InventoryController:
             return Action.QUIT
 
         if user_input == 'l':
+            # TODO: show which item is currently equipped
             selection_view.message = 'Select the item you want to take a look at:'
             selected_item = selection_view.choose_one(self.inventory.items)
             if selected_item:
@@ -47,20 +55,21 @@ class InventoryController:
 
         if user_input == 'w':
             selection_view.message = 'Select the equipment(s) you want to wear or handle:'
-            selected_items = selection_view.choose_many(self.inventory.wearable_items())
-            self.inventory.equip_items(selected_items)
+            selected_items = selection_view.choose(self.inventory.wearable_items())
+            iterate(self.inventory.equip, selected_items)
 
         if user_input == 't':
             selection_view.message = 'Select the equipment(s) you want to take off:'
-            selected_items = selection_view.choose_many(self.inventory.equipments.values())
-            self.inventory.remove_many(selected_items)
+            selected_items = selection_view.choose(self.inventory.equipments.values())
+            iterate(self.inventory.take_off, selected_items)
 
         if user_input == 'd':
+            # TODO: show which item is currently equipped
             selection_view.message = 'Select the item(s) you want to drop:'
-            selected_items = selection_view.choose_many(self.inventory.items)
+            selected_items = selection_view.choose(self.inventory.items)
             if selected_items:
                 for index, item in enumerate(selected_items):
                     if self.inventory.item_is_equipped(item):
-                        if not yes_no_menu(f'{Fore.RED}Warning {index + 1}/{len(selected_items)}{Fore.WHITE}\n\nThis item is equipped: {str(item)}\nDo you want to drop it anyway ?'):
+                        if not yes_no_menu(f'{Fore.RED}Warning{Fore.WHITE}\n\nThis item is equipped: {str(item)}\nDo you want to drop it anyway ?'):
                             return Action.IDLE
-                    self.room.items.append(self.view.inventory.drop_item(item))
+                    self.room.items.append(self.view.inventory.drop(item))

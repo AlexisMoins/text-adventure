@@ -65,5 +65,5 @@ class ItemView:
     def durability_bar(self) -> str:
         """"""
         percentage = round(self.item.durability / self.item.durability * 10)
-        bar = '[' + Fore.MAGENTA + '#' * percentage + Fore.WHITE + ' ' * (10 - percentage) + ']'
-        return f'{bar} {Fore.MAGENTA}{self.item.durability}{Fore.WHITE} ({Fore.MAGENTA}{self.item.durability}{Fore.WHITE})'
+        bar = '[' + Fore.MAGENTA + '=' * percentage + Fore.WHITE + ' ' * (10 - percentage) + ']'
+        return f'{bar} {Fore.MAGENTA}{self.item.durability}{Fore.WHITE} ({Fore.MAGENTA}{self.item.max_durability}{Fore.WHITE})'

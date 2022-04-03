@@ -59,7 +59,11 @@ class SelectionView:
             if items and 0 <= index < len(items):
                 selection[index] = not selection[index]
 
-    def choose_one(self, items: List) -> Any:
+    def choose(self, items: List) -> List[Any]:
+        """"""
+        return self.choose_many(items) if len(items) > 1 else [self.choose_one(items)]
+
+    def choose_one(self, items: List) -> List[Any]:
         """"""
         while True:
             self._display(items)
