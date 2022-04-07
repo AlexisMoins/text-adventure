@@ -1,0 +1,22 @@
+room:
+  actions:
+    i: Open your inventory
+    l: Look at something
+    p: Put something in your inventory
+    c: Continue your exploration
+    q: Leave the dungeon
+
+inventory:
+  actions:
+    l: Look at a particular item
+    d: Drop items in the room
+    w: Wear a piece of equipment
+    t: Take off a piece of equipment
+    q: Close the inventory
+
+selection:
+  actions:
+    q: Cancel
+    v: Validate selection
+  interface:
+    look: Select what you want to take a look at

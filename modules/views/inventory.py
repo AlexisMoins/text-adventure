@@ -1,7 +1,7 @@
 from colorama import Fore
 
 from modules import utils
-from modules.characters.character import Character
+from modules.models.characters.character import Character
 
 
 class InventoryView:

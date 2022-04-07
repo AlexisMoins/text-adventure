@@ -3,7 +3,7 @@ from colorama import Fore
 from typing import Dict, List
 from dataclasses import dataclass, field
 
-from modules.items.items import Item, Spell
+from modules.models.items.items import Item, Spell
 
 
 @dataclass(kw_only=True)

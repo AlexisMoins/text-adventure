@@ -1,7 +1,7 @@
 from colorama import Fore
 
-from modules.items.items import Item
-from modules.items.inventory import Inventory
+from modules.models.items.items import Item
+from modules.models.items.inventory import Inventory
 
 from modules.views.utils import Action, yes_no_menu
 from modules.views.item_view import ItemView

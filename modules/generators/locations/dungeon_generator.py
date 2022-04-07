@@ -2,14 +2,14 @@ import random
 from typing import Any, Dict, List
 
 from modules import utils
-from modules.locations.dungeon import Dungeon
+from modules.models.locations.dungeon import Dungeon
 
 
 def generate(floor_path: str) -> Dungeon:
     """Returns a new dungeon generated using the data in the given path"""
     data = utils.load_resource(floor_path + '/floors.yaml')
     floors = floor_list(data)
-    return Dungeon(floors, floor_path)
+    return Dungeon(floors)
 
 
 def floor_list(data: Dict[str, Any]) -> List[str]:

@@ -2,11 +2,11 @@ from random import randint
 from typing import Any, Dict, List
 from modules import utils
 
-from modules.characters.npc import Enemy
-from modules.characters.character import Character
+from modules.models.characters.npc import Enemy
+from modules.models.characters.character import Character
 
 import modules.factories.generators as factory
-from modules.items.inventory import Inventory
+from modules.models.items.inventory import Inventory
 from modules.generators.field_generator import generate_field
 
 

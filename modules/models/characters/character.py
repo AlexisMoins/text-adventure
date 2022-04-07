@@ -2,8 +2,8 @@ from typing import Dict
 from dataclasses import dataclass, field
 from colorama import Fore
 
-from modules.items.inventory import Inventory
-from modules.items.equipments import Equipment
+from modules.models.items.inventory import Inventory
+from modules.models.items.equipments import Equipment
 
 
 @dataclass(kw_only=True)

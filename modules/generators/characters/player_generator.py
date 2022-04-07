@@ -1,15 +1,15 @@
 from random import choice
 from yaml import safe_load
 
-from modules.items.inventory import Inventory
-from modules.characters.character import Character
+from modules.models.items.inventory import Inventory
+from modules.models.characters.character import Character
 
 import modules.factories.generators as factory
 from modules.generators.field_generator import generate_field
 
 
 """Dictionnary containing the different classes available"""
-with open('resources/classes.yaml', 'r') as data:
+with open('data/classes.yaml', 'r') as data:
     _classes = safe_load(data)
 
 

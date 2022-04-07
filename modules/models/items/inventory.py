@@ -1,8 +1,8 @@
 from typing import Dict, List
 from dataclasses import dataclass, field
 
-from modules.items.items import Item
-from modules.items.equipments import Equipment
+from modules.models.items.items import Item
+from modules.models.items.equipments import Equipment
 
 
 @dataclass(kw_only=True)

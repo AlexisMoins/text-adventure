@@ -1,7 +1,7 @@
 from typing import Dict
 
-from modules.locations.room import Room
-from modules.locations.coordinates import Coordinates
+from modules.models.locations.room import Room
+from modules.models.locations.coordinates import Coordinates
 
 
 class Floor:

@@ -3,7 +3,7 @@ from typing import Dict, List, Any
 
 from modules import utils
 from modules.generators.field_generator import generate_field
-from modules.locations.room import Room
+from modules.models.locations.room import Room
 import modules.factories.generators as factory
 
 

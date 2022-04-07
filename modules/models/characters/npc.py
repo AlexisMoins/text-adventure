@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from colorama import Fore
 
-from modules.characters.character import Character
+from modules.models.characters.character import Character
 
 
 @dataclass(kw_only=True)

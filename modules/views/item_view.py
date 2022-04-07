@@ -3,8 +3,8 @@ from textwrap import wrap
 from colorama import Fore
 
 from modules import utils
-from modules.items.items import Item
-from modules.items.inventory import Inventory
+from modules.models.items.items import Item
+from modules.models.items.inventory import Inventory
 
 
 class ItemView:

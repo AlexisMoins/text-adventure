@@ -3,9 +3,9 @@ from typing import Dict, List
 from random import randint, choice
 from modules import utils
 
-from modules.locations.room import Room
-from modules.locations.floor import Floor
-from modules.locations.coordinates import Coordinates
+from modules.models.locations.room import Room
+from modules.models.locations.floor import Floor
+from modules.models.locations.coordinates import Coordinates
 
 import modules.factories.generators as factory
 

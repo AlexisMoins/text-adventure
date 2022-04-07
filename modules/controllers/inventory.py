@@ -1,14 +1,12 @@
 from colorama import Fore
 
-from modules.locations.room import Room
-from modules.characters.character import Character
+from modules.models.locations.room import Room
+from modules.models.characters.character import Character
 
-from modules.views.inventory_view import InventoryView
-from modules.views.utils import selection_view
+from modules.views.inventory import InventoryView
+from modules.views.utils import Action, yes_no_menu, selection_view
 
-from modules.controllers.item_controller import ItemController
-
-from modules.views.utils import Action, yes_no_menu
+from modules.controllers.item import ItemController
 
 
 def iterate(function, iterator) -> None:
