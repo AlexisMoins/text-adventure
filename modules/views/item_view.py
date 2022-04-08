@@ -3,17 +3,21 @@ from colorama import Fore
 
 from modules import utils
 
+from modules.models import items
 
-class ItemView:
+from modules.views.view import View
+
+
+class ItemView(View):
     """Class representing the view of an item"""
 
     def __init__(self) -> None:
         """Parameterised constructor creating a new view over an item"""
-        self.item = None
-        self.inventory = None
+        self.item: Item
+        self.inventory: Inventory
 
     def display(self) -> None:
-        """"""
+        """Display the current view"""
         utils.clear_screen()
 
         print(f'{Fore.MAGENTA}{self.item.name.capitalize()}{Fore.WHITE}\n')

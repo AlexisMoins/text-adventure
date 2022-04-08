@@ -1,10 +1,8 @@
 from typing import Any, Dict, List
-from textwrap import wrap
 from dataclasses import dataclass, field
-from colorama import Fore
 
-from modules import utils
-from modules.views.utils import Action
+from modules.models.items.items import Item
+from modules.controllers.actions import Action
 
 
 @dataclass(kw_only=True)
@@ -24,6 +22,10 @@ class Room:
     def entities(self) -> List:
         """Return the list of all entities present in the room"""
         return self.items + self.enemies + self.npc
+
+    def remove(self, item: Item) -> None:
+        """Remove the given item from the current room"""
+        del self.items[self.items.index(item)]
 
     def get_actions(self) -> Dict[str, Action]:
         """Return a map of the keys and their associated actions in the room"""

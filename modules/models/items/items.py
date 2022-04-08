@@ -1,7 +1,7 @@
 from typing import List, Dict
 from dataclasses import dataclass, field
 
-from modules.views.utils import Action
+from modules.controllers.actions import Action
 
 
 @dataclass(kw_only=True)

@@ -1,12 +1,14 @@
 from modules.utils import resources
 
+from modules.models.items.items import Item
 from modules.models.locations.dungeon import Dungeon
 from modules.models.characters.character import Character
 
-from modules.views.utils import Action
+from modules.views.utils import display_message
 
-from modules.controllers.controller import Controller
+from modules.controllers.actions import Action
 from modules.controllers.selection import choose_one
+from modules.controllers.controller import Controller
 
 
 class DungeonController(Controller):
@@ -24,14 +26,14 @@ class DungeonController(Controller):
         """Initialize the current controller"""
         self.is_running = True
         self.view('room').room = self.dungeon.current_room
-        self.controller('inventory').inventory = self.player.inventory
         self.controller('item').inventory = self.player.inventory
+        self.controller('inventory').player = self.player
 
     def run(self) -> None:
         """Run the current controller"""
         self.initialize()
         while self.is_running and self.player.is_alive():
-            # print(self.player.status_bar)
+            print(self.player.status_bar)
             self.view('room').display()
 
             user_input = input('\n> ').lower()
@@ -49,27 +51,25 @@ class DungeonController(Controller):
         if action == Action.INVENTORY:
             self.controller('inventory').run()
 
-        # if action == Action.TRAVEL:
-        #     self.travel()
-
         if action == Action.LOOK:
             self.look()
 
     def look(self) -> None:
         """Look at the given entity"""
-        entity = choose_one(resources['selection']['interface']['look'].format('what'),
-                            self.dungeon.current_room.items)
+        message = resources['selection']['interface']['look'].format('what')
+        entity = choose_one(message, self.dungeon.current_room.items)
+        self.look_at_item(entity) if isinstance(entity, Item) else self.look_at_npc()
 
-        name = type(entity).__name__.lowe()
-        controller = self.controller(name)
-        action = controller.run()
+    def look_at_item(self, item: Item) -> None:
+        """Look at the given item"""
+        self.controller('item').item = item
+        action = self.controller('item').run()
 
-        # if action == Action.TAKE:
-        #     if self.player.inventory.is_full():
-        #         message_without_input(f'{Fore.RED}Warning{Fore.WHITE}\n\nYour inventory is full')
-        #         return Action.IDLE
-        #     self.player.inventory.items.append(self.room.items.pop(self.room.items.index(selected_item)))
+        if action == Action.TAKE:
+            if self.player.inventory.is_full():
+                display_message('Your inventory is full', wait=True, warning=True)
+                return Action.IDLE
 
-    def travel(self) -> None:
-        """"""
-        pass
+            item = self.controller('item')
+            self.dungeon.current_room.remove(item)
+            self.player.take(item)

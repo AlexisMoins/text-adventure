@@ -1,6 +1,10 @@
 from modules.utils import resources
 
-from modules.views.utils import Action, ask
+from modules.models.items.items import Item
+from modules.models.items.inventory import Inventory
+
+from modules.views.utils import ask
+
 from modules.controllers.controller import Controller
 
 
@@ -13,8 +17,8 @@ class ItemController(Controller):
         """Parameterised constructor creating a new item controller"""
         super().__init__(self.views, self.controllers)
         self.dropped_item = None
-        self.inventory = None
-        self.item = None
+        self.inventory: Inventory
+        self.item: Item
 
     def initialize(self) -> None:
         """Initialize the current controller"""
@@ -29,7 +33,7 @@ class ItemController(Controller):
             self.view('item').display()
 
             user_input = input('\n> ').lower()
-            actions = self.item.get_actions()
+            actions = self.item.get_actions(self.inventory)
             if user_input not in actions:
                 continue
 

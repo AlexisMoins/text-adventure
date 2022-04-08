@@ -3,7 +3,8 @@ from dataclasses import dataclass, field
 
 from modules.models.items.items import Item
 from modules.models.items.equipments import Equipment
-from modules.views.utils import Action
+
+from modules.controllers.actions import Action
 
 
 @dataclass(kw_only=True)

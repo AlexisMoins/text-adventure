@@ -1,9 +1,11 @@
+from __future__ import annotations
 from typing import List
 from abc import ABC, abstractmethod
 
-from modules.views.utils import Action
 from modules.factories import view_factory, controller_factory
+
 from modules.views.view import View
+from modules.controllers.actions import Action
 
 
 class Controller(ABC):
@@ -21,7 +23,7 @@ class Controller(ABC):
         """Return the view corresponding to the given name"""
         return self._views[name] if name in self._views.keys() else None
 
-    def controller(self, name: str) -> 'Controller':
+    def controller(self, name: str) -> Controller:
         """Return the controller corresponding to the given name"""
         return self._controllers[name] if name in self._controllers.keys() else None
 

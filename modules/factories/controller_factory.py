@@ -1,6 +1,5 @@
-from typing import Dict, Callable
+from typing import Any, Dict, Callable
 
-import modules.controllers.controller as controller
 from modules.controllers.item_controller import ItemController
 
 
@@ -8,7 +7,7 @@ from modules.controllers.item_controller import ItemController
 controllers: Dict[str, Callable] = dict()
 
 
-def get(controller_type: str) -> controller.Controller | None:
+def get(controller_type: str) -> Any:
     """Return the view corresponding to the given entity"""
     return controllers[controller_type] if controller_type in controllers.keys() else None
 

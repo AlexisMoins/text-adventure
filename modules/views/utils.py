@@ -1,23 +1,8 @@
 import os
-from enum import Enum, auto
 from colorama import Fore
 from typing import Dict, List
 
 from modules.utils import resources
-
-
-class Action(Enum):
-    """Class representing the actions used in input handlers"""
-
-    LOOK = auto()
-    IDLE = auto()
-    QUIT = auto()
-    DROP = auto()
-    WEAR = auto()
-    TAKE = auto()
-    TAKE_OFF = auto()
-    INVENTORY = auto()
-    STATISTICS = auto()
 
 
 def ask(message: str) -> bool:
