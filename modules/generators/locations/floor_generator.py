@@ -7,15 +7,15 @@ from modules.models.locations.room import Room
 from modules.models.locations.floor import Floor
 from modules.models.locations.coordinates import Coordinates
 
-import modules.factories.generators as factory
+import modules.factories.generator_factory as factory
 
 
 class FloorGenerator:
     """Class generating floors based on the provided configuration files"""
 
-    def __init__(self, path: str) -> None:
+    def __init__(self) -> None:
         """Constructor creating a new generator of floors"""
-        self.path = path
+        self.path = None
         self.rules: Dict = None
 
     def load_floor(self, floor: str) -> None:

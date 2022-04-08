@@ -1,21 +1,19 @@
-from modules.factories import generators
-from modules.controllers.engine import Engine
+from modules.factories import generator_factory
 
 from modules.generators.locations import dungeon_generator
 from modules.generators.characters import player_generator
 
+from modules.controllers.dungeon_controller import DungeonController
+
 
 if __name__ == '__main__':
+    # Initialize the generator factory
+    generator_factory.set_dungeon_path('data/dungeon')
 
-    path = 'data/dungeon'
-    generators.initialize(path)
-
-    dungeon = dungeon_generator.generate(path)
-
-    # TODO: resources = ResourcesLoader.load('resources/interfaces/room.yaml')
+    dungeon_generator = generator_factory.get('dungeon')
+    dungeon = dungeon_generator.generate()
 
     player = player_generator.generate_one()
 
-    engine = Engine(dungeon, player)
-
-    engine.run()
+    controller = DungeonController(dungeon, player)
+    controller.run()

@@ -4,15 +4,18 @@ from typing import Dict, List, Any
 from modules import utils
 from modules.generators.field_generator import generate_field
 from modules.models.locations.room import Room
-import modules.factories.generators as factory
+
+from modules.factories import generator_factory as factory
 
 
 class RoomGenerator:
     """Class generating rooms based on the provided configuration files"""
 
-    def __init__(self, path: str) -> None:
+    def __init__(self) -> None:
         """Constructor creating a new generator of rooms"""
-        self.path = path
+        self.path = None
+        self.item_generator = factory.get('item')
+        self.enemy_generator = factory.get('enemy')
 
     def load_floor(self, floor: str) -> None:
         """Loads a floor into the floor generator"""
@@ -47,8 +50,8 @@ class RoomGenerator:
     def _deserialize_room(self, data: Dict[str, Any]) -> Room:
         """Returns the room deserialized from the given data"""
         room = Room(**data)
-        room.items = generate_field(factory.generators['item'], room.items)
-        room.enemies = generate_field(factory.generators['enemy'], room.enemies)
+        room.items = generate_field(self.item_generator, room.items)
+        room.enemies = generate_field(self.enemy_generator, room.enemies)
         return room
 
     def _pop_room(self, room) -> Dict[str, Any]:

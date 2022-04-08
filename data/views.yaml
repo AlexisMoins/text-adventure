@@ -19,4 +19,16 @@ selection:
     q: Cancel
     v: Validate selection
   interface:
-    look: Select what you want to take a look at
+    look: "Select {} you want to take a look at:"
+
+item:
+  interface:
+    warning: "This item is equipped: {}\n\nDo you want to drop it anyway ?"
+  actions:
+    q: Go back
+
+
+yesNo:
+  actions:
+    y: Yes
+    n: No

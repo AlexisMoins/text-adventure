@@ -4,7 +4,7 @@ from yaml import safe_load
 from modules.models.items.inventory import Inventory
 from modules.models.characters.character import Character
 
-import modules.factories.generators as factory
+import modules.factories.generator_factory as factory
 from modules.generators.field_generator import generate_field
 
 

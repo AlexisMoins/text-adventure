@@ -1,19 +1,16 @@
-import statistics
 from textwrap import wrap
 from colorama import Fore
 
 from modules import utils
-from modules.models.items.items import Item
-from modules.models.items.inventory import Inventory
 
 
 class ItemView:
     """Class representing the view of an item"""
 
-    def __init__(self, item: Item, inventory: Inventory) -> None:
+    def __init__(self) -> None:
         """Parameterised constructor creating a new view over an item"""
-        self.item = item
-        self.inventory = inventory
+        self.item = None
+        self.inventory = None
 
     def display(self) -> None:
         """"""
@@ -50,7 +47,9 @@ class ItemView:
         print(f'\n{price:<30}{quantity}')
         print(f'{slot:<30}{equipped}')
 
-    def display_commands(self) -> None:
+        # utils.display_actions()
+
+    def display_actions(self) -> None:
         print(f'\n[{Fore.CYAN}q{Fore.WHITE}] Go back')
 
         if self.inventory.contains(self.item):

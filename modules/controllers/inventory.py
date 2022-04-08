@@ -1,12 +1,12 @@
-from colorama import Fore
-
+from modules.controllers.selection import choose_one
 from modules.models.locations.room import Room
 from modules.models.characters.character import Character
 
-from modules.views.inventory import InventoryView
-from modules.views.utils import Action, yes_no_menu, selection_view
+from modules.views.inventory import display_inventory
+from modules.views.utils import Action, ask, clear_screen
 
-from modules.controllers.item import ItemController
+from modules.controllers.item_controller import ItemController
+from modules.utils import resources
 
 
 def iterate(function, iterator) -> None:
@@ -21,53 +21,72 @@ class InventoryController:
 
     def __init__(self, player: Character, room: Room) -> None:
         """Parameterised constructor creating a new controller over the player's inventory"""
-        self.view = InventoryView(player)
         self.inventory = player.inventory
+        # self.character_controller = CharacterController(player)
+        self.player = player
         self.room = room
 
     def run(self) -> None:
-        """"""
-        while True:
-            self.view.display()
-            self.view.display_commands()
+        """Run the controller"""
+        self.is_running = True
+        while self.is_running and self.player.is_alive():
+            clear_screen()
+            actions = self.inventory.get_actions()
+
+            display_inventory(self.inventory, actions.keys())
+
+            actions['2'] = Action.STATISTICS
 
             user_input = input('\n> ').lower()
-            action = self._handle_input(user_input)
-            if action == Action.QUIT:
-                break
+            if user_input not in actions:
+                continue
 
-    def _handle_input(self, user_input: str) -> None:
-        """Handle the input received by the controller"""
-        if user_input == 'q':
-            return Action.QUIT
+            self.handle_action(actions[user_input])
 
-        if user_input == 'l':
-            # TODO: show which item is currently equipped
-            selection_view.message = 'Select the item you want to take a look at:'
-            selected_item = selection_view.choose_one(self.inventory.items)
-            if selected_item:
-                controller = ItemController(selected_item, self.inventory)
-                action = controller.run()
-                if action == Action.DROP:
-                    self.room.items.append(controller.dropped_item)
+    def handle_action(self, action: Action) -> None:
+        """Handle the action received by the engine"""
+        if action == Action.QUIT:
+            self.is_running = False
 
-        if user_input == 'w':
-            selection_view.message = 'Select the equipment(s) you want to wear or handle:'
-            selected_items = selection_view.choose(self.inventory.wearable_items())
-            iterate(self.inventory.equip, selected_items)
+        if action == Action.LOOK:
+            entity = choose_one(resources['selection']['interface']['look'].format('the item'),
+                                self.inventory.items)
+            # self.look(entity)
 
-        if user_input == 't':
-            selection_view.message = 'Select the equipment(s) you want to take off:'
-            selected_items = selection_view.choose(self.inventory.equipments.values())
-            iterate(self.inventory.take_off, selected_items)
+        if action == Action.STATISTICS:
+            pass
+            # action = self.character_controller.run()
+            # if action == Action.QUIT:
+            #     self.is_running = False
 
-        if user_input == 'd':
-            # TODO: show which item is currently equipped
-            selection_view.message = 'Select the item(s) you want to drop:'
-            selected_items = selection_view.choose(self.inventory.items)
-            if selected_items:
-                for index, item in enumerate(selected_items):
-                    if self.inventory.item_is_equipped(item):
-                        if not yes_no_menu(f'{Fore.RED}Warning{Fore.WHITE}\n\nThis item is equipped: {str(item)}\nDo you want to drop it anyway ?'):
-                            return Action.IDLE
-                    self.room.items.append(self.view.inventory.drop(item))
+        # if action == 'l':
+        #     # TODO: show which item is currently equipped
+        #     selection_view.message = 'Select the item you want to take a look at:'
+        #     selected_item = selection_view.choose_one(self.inventory.items)
+        #     if selected_item:
+        #         controller = ItemController(selected_item, self.inventory)
+        #         action = controller.run()
+        #         if action == Action.DROP:
+        #             self.room.items.append(controller.dropped_item)
+
+        # if user_input == 'w':
+        #     selection_view.message = 'Select the equipment(s) you want to wear or handle:'
+        #     selected_items = selection_view.choose(self.inventory.wearable_items())
+        #     iterate(self.inventory.equip, selected_items)
+
+        # if user_input == 't':
+        #     selection_view.message = 'Select the equipment(s) you want to take off:'
+        #     selected_items = selection_view.choose(self.inventory.equipments.values())
+        #     iterate(self.inventory.take_off, selected_items)
+
+        # if user_input == 'd':
+        #     # TODO: show which item is currently equipped
+        #     selection_view.message = 'Select the item(s) you want to drop:'
+        #     selected_items = selection_view.choose(self.inventory.items)
+        #     if selected_items:
+        #         for index, item in enumerate(selected_items):
+        #             if self.inventory.item_is_equipped(item):
+        #                 if not ask(resources['item']['interface']['warning'].format(item),
+        #                            warning=True):
+        #                     return Action.IDLE
+        #             self.room.items.append(self.view.inventory.drop(item))

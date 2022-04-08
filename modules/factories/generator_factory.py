@@ -10,26 +10,29 @@ from modules.generators.characters.character_generator import EnemyGenerator
 generators: Dict[str, Any] = dict()
 
 
-def get(generator: str):
-    return generators[generator]
+def get(generator: str) -> Any:
+    """"""
+    return generators[generator] if generator in generators else None
 
 
-def initialize(path: str) -> None:
+def set_dungeon_path(path: str) -> None:
     """Initialize the generators with the given dungeon path"""
-    dungeon = path
-
-    register_generator('floor', FloorGenerator(path))
-    register_generator('enemy', EnemyGenerator(path))
-    register_generator('room', RoomGenerator(path))
-    register_generator('item', ItemGenerator(path))
+    for generator in generators.values():
+        generator.path = path
 
 
-def register_generator(generator_type: str, generator) -> None:
+def register(generator_type: str, generator) -> None:
     """Add an generator type and its corresponding class to the items dictionnary"""
-    generators[generator_type] = generator
+    generators[generator_type] = generator()
 
 
 def load_floor(floor: str) -> None:
     """Tell all generators to load a new floor"""
     for generator in generators.values():
         generator.load_floor(floor)
+
+
+register('floor', FloorGenerator)
+register('enemy', EnemyGenerator)
+register('room', RoomGenerator)
+register('item', ItemGenerator)

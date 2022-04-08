@@ -3,15 +3,16 @@ from typing import List
 
 from modules import utils
 from modules.models.items.items import Item
-from modules.factories import items as factory
+
+from modules.factories import item_factory as factory
 
 
 class ItemGenerator:
     """Class generating items based on the provided configuration files"""
 
-    def __init__(self, path: str) -> None:
+    def __init__(self) -> None:
         """Parameterised constructor creating a new generator of items"""
-        self.path = path
+        self.path = None
 
     def load_floor(self, floor: str) -> None:
         """Loads a floor into the item generator"""

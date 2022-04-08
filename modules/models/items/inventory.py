@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 
 from modules.models.items.items import Item
 from modules.models.items.equipments import Equipment
+from modules.views.utils import Action
 
 
 @dataclass(kw_only=True)
@@ -49,10 +50,23 @@ class Inventory:
         return False
 
     def item_is_equipped(self, item: Item) -> bool:
-        """"""
-        if not isinstance(item, Equipment) or item.slot not in self.equipments.keys():
-            return False
+        """Return true if the given item is currently equipped"""
+        return isinstance(item, Equipment) and item.slot in self.equipments.keys() and self.equipments[item.slot] is item
 
-        if self.equipments[item.slot] is item:
-            return True
-        return False
+    def get_actions(self) -> Dict[str, Action]:
+        """Return a map of the keys and their associated actions in the inventory"""
+        actions = dict()
+        actions['i'] = Action.INVENTORY
+
+        if self.items:
+            actions['l'] = Action.LOOK
+            actions['d'] = Action.DROP
+
+        if self.wearable_items():
+            actions['w'] = Action.WEAR
+
+        if self.equipments:
+            actions['t'] = Action.TAKE_OFF
+
+        actions['q'] = Action.QUIT
+        return actions

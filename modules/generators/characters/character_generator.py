@@ -5,7 +5,7 @@ from modules import utils
 from modules.models.characters.npc import Enemy
 from modules.models.characters.character import Character
 
-import modules.factories.generators as factory
+import modules.factories.generator_factory as factory
 from modules.models.items.inventory import Inventory
 from modules.generators.field_generator import generate_field
 
@@ -13,9 +13,9 @@ from modules.generators.field_generator import generate_field
 class CharacterGenerator:
     """Class generating enemies based on the provided configuration files"""
 
-    def __init__(self, path: str) -> None:
+    def __init__(self) -> None:
         """Constructor creating a new generator of enemies"""
-        self.path = path
+        self.path = None
 
     def load_floor(self, file_name: str) -> None:
         """Loads a floor into the enemy generator"""
@@ -52,10 +52,6 @@ class CharacterGenerator:
 
 class EnemyGenerator(CharacterGenerator):
     """"""
-
-    def __init__(self, path: str) -> None:
-        """"""
-        super().__init__(path)
 
     def load_floor(self, floor: str) -> None:
         """Loads a floor into the enemy generator"""
