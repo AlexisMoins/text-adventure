@@ -1,42 +1,35 @@
-from modules.controllers.selection import choose_one
-from modules.models.locations.room import Room
+from modules.controllers.selection import choose_many, choose_one
 from modules.models.characters.character import Character
 
-from modules.views.inventory import display_inventory
-from modules.views.utils import Action, ask, clear_screen
+from modules.views.inventory_view import display_inventory
+from modules.views.utils import clear_screen
+
+from modules.controllers.actions import Action
 
 from modules.controllers.item_controller import ItemController
 from modules.utils import resources
 
 
-def iterate(function, iterator) -> None:
-    """Iterate over the given iterator, passing each item to the given function"""
-    if iterator:
-        for item in iterator:
-            function(item)
-
-
 class InventoryController:
     """Class controlling the player's inventory"""
 
-    def __init__(self, player: Character, room: Room) -> None:
+    def __init__(self, player: Character, item_controller: ItemController) -> None:
         """Parameterised constructor creating a new controller over the player's inventory"""
+        self.item_controller = item_controller
+        self.dungeon = item_controller.dungeon
         self.inventory = player.inventory
-        # self.character_controller = CharacterController(player)
         self.player = player
-        self.room = room
 
     def run(self) -> None:
         """Run the controller"""
         self.is_running = True
-        while self.is_running and self.player.is_alive():
+        while self.is_running:
             clear_screen()
             actions = self.inventory.get_actions()
 
             display_inventory(self.inventory, actions.keys())
 
             actions['2'] = Action.STATISTICS
-
             user_input = input('\n> ').lower()
             if user_input not in actions:
                 continue
@@ -49,44 +42,24 @@ class InventoryController:
             self.is_running = False
 
         if action == Action.LOOK:
-            entity = choose_one(resources['selection']['interface']['look'].format('the item'),
-                                self.inventory.items)
-            # self.look(entity)
+            message = resources['selection']['interface']['look'].format('the item')
+            if item := choose_one(message, self.inventory.items, self.inventory):
+                self.item_controller.run(item)
+
+        if action == Action.DROP:
+            message = resources['selection']['interface']['drop']
+            for item in choose_many(message, self.inventory.items, self.inventory):
+                self.player.drop(item, self.dungeon.current_room)
+
+        if action == Action.TAKE_OFF:
+            message = resources['selection']['interface']['take_off']
+            for item in choose_many(message, self.inventory.equipments.values()):
+                self.inventory.take_off(item)
+
+        if action == Action.WEAR:
+            message = resources['selection']['interface']['wear']
+            for item in choose_many(message, self.inventory.wearable_items):
+                self.inventory.equip(item)
 
         if action == Action.STATISTICS:
             pass
-            # action = self.character_controller.run()
-            # if action == Action.QUIT:
-            #     self.is_running = False
-
-        # if action == 'l':
-        #     # TODO: show which item is currently equipped
-        #     selection_view.message = 'Select the item you want to take a look at:'
-        #     selected_item = selection_view.choose_one(self.inventory.items)
-        #     if selected_item:
-        #         controller = ItemController(selected_item, self.inventory)
-        #         action = controller.run()
-        #         if action == Action.DROP:
-        #             self.room.items.append(controller.dropped_item)
-
-        # if user_input == 'w':
-        #     selection_view.message = 'Select the equipment(s) you want to wear or handle:'
-        #     selected_items = selection_view.choose(self.inventory.wearable_items())
-        #     iterate(self.inventory.equip, selected_items)
-
-        # if user_input == 't':
-        #     selection_view.message = 'Select the equipment(s) you want to take off:'
-        #     selected_items = selection_view.choose(self.inventory.equipments.values())
-        #     iterate(self.inventory.take_off, selected_items)
-
-        # if user_input == 'd':
-        #     # TODO: show which item is currently equipped
-        #     selection_view.message = 'Select the item(s) you want to drop:'
-        #     selected_items = selection_view.choose(self.inventory.items)
-        #     if selected_items:
-        #         for index, item in enumerate(selected_items):
-        #             if self.inventory.item_is_equipped(item):
-        #                 if not ask(resources['item']['interface']['warning'].format(item),
-        #                            warning=True):
-        #                     return Action.IDLE
-        #             self.room.items.append(self.view.inventory.drop(item))

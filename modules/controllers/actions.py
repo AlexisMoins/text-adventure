@@ -10,6 +10,7 @@ class Action(Enum):
     DROP = auto()
     WEAR = auto()
     TAKE = auto()
+    TRAVEL = auto()
     TAKE_OFF = auto()
     INVENTORY = auto()
     STATISTICS = auto()

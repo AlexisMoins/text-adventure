@@ -15,9 +15,19 @@ class Inventory:
     equipments: Dict[str, Item] = field(default_factory=dict)
     capacity: int = 6
 
+    def __post_init__(self) -> None:
+        """"""
+        for item in self.items:
+            item.is_in_inventory = True
+
     def is_full(self) -> bool:
         """Return true if the inventory is full"""
         return len(self.items) == self.capacity
+
+    def add(self, item: Item) -> None:
+        """Add the given item to the inventory"""
+        self.items.append(item)
+        item.is_in_inventory = True
 
     def filter(self, action: str) -> List[Item]:
         """Return a list of items with the given action"""
@@ -25,23 +35,25 @@ class Inventory:
 
     def equip(self, item: Equipment) -> None:
         """Equip the given item into the corresponding equipment slot"""
-        if item:
-            self.equipments[item.slot] = item
+        item.is_equipped = True
+        self.equipments[item.slot] = item
 
     def take_off(self, item: Equipment) -> None:
         """Remove the given item from its corresponding equipment slot"""
-        if item:
-            del self.equipments[item.slot]
+        item.is_equipped = False
+        del self.equipments[item.slot]
 
     def drop(self, item: Item) -> Item | None:
         """"""
-        if self.item_is_equipped(item):
+        if self.is_wore_or_held(item):
             self.take_off(item)
+        item.is_in_inventory = False
         return self.items.pop(self.items.index(item))
 
+    @property
     def wearable_items(self) -> List[Item]:
         """Return the list of items that can be wore but are not currenlty"""
-        return [item for item in self.filter('equip') if not self.item_is_equipped(item)]
+        return [item for item in self.filter('equip') if not self.is_wore_or_held(item)]
 
     def contains(self, the_item: Item) -> bool:
         """Return true if the given item is in the inventory"""
@@ -50,7 +62,7 @@ class Inventory:
                 return True
         return False
 
-    def item_is_equipped(self, item: Item) -> bool:
+    def is_wore_or_held(self, item: Item) -> bool:
         """Return true if the given item is currently equipped"""
         return isinstance(item, Equipment) and item.slot in self.equipments.keys() and self.equipments[item.slot] is item
 
@@ -63,7 +75,7 @@ class Inventory:
             actions['l'] = Action.LOOK
             actions['d'] = Action.DROP
 
-        if self.wearable_items():
+        if self.wearable_items:
             actions['w'] = Action.WEAR
 
         if self.equipments:

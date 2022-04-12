@@ -1,27 +1,41 @@
+from abc import ABC, abstractmethod
 from random import randint
 from typing import Dict, List, Any
 
 from modules import utils
-from modules.generators.field_generator import generate_field
 from modules.models.locations.room import Room
 
-from modules.factories import generator_factory as factory
+from modules.generators.field_generator import FieldGenerator
+from modules.generators.items.item_generator import ItemGenerator
+from modules.generators.characters.character_generator import EnemyGenerator
 
 
-class RoomGenerator:
+class Generator(ABC):
+    """"""
+
+    @abstractmethod
+    def load_floor(self, floor: str) -> None:
+        """"""
+        pass
+
+
+class RoomGenerator(Generator):
     """Class generating rooms based on the provided configuration files"""
 
-    def __init__(self) -> None:
+    def __init__(self, dungeon_path: str) -> None:
         """Constructor creating a new generator of rooms"""
-        self.path = None
-        self.item_generator = factory.get('item')
-        self.enemy_generator = factory.get('enemy')
+        self.dungeon = dungeon_path
+        self.item_generator = ItemGenerator(dungeon_path)
+        self.enemy_generator = EnemyGenerator(dungeon_path)
 
     def load_floor(self, floor: str) -> None:
         """Loads a floor into the floor generator"""
-        data = utils.load_resource('{0}/{1}/rooms.yaml'.format(self.path, floor))
+        data = utils.load_resource(f'{self.dungeon}/{floor}/rooms.yaml')
         self.generation_table = data.pop('generation')
         self.rooms = data
+
+        self.item_generator.load_floor(floor)
+        self.enemy_generator.load_floor(floor)
 
     def total_weight(self) -> int:
         """Returns the total weight of the rooms in the generation table"""
@@ -50,8 +64,8 @@ class RoomGenerator:
     def _deserialize_room(self, data: Dict[str, Any]) -> Room:
         """Returns the room deserialized from the given data"""
         room = Room(**data)
-        room.items = generate_field(self.item_generator, room.items)
-        room.enemies = generate_field(self.enemy_generator, room.enemies)
+        room.items = FieldGenerator.generate(self.item_generator, room.items)
+        room.enemies = FieldGenerator.generate(self.enemy_generator, room.enemies)
         return room
 
     def _pop_room(self, room) -> Dict[str, Any]:

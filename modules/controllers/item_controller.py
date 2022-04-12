@@ -1,43 +1,38 @@
-from modules.utils import resources
-
 from modules.models.items.items import Item
-from modules.models.items.inventory import Inventory
+from modules.models.locations.dungeon import Dungeon
+from modules.models.characters.character import Character
 
-from modules.views.utils import ask
+from modules.views.item_view import ItemView
+from modules.controllers.actions import Action
 
-from modules.controllers.controller import Controller
 
-
-class ItemController(Controller):
+class ItemController:
     """Class controlling the actions performed in an item view"""
-    views = ['item']
-    controllers = []
 
-    def __init__(self) -> None:
+    def __init__(self, player: Character, dungeon: Dungeon) -> None:
         """Parameterised constructor creating a new item controller"""
-        super().__init__(self.views, self.controllers)
-        self.dropped_item = None
-        self.inventory: Inventory
-        self.item: Item
+        self.dungeon = dungeon
+        self.player = player
 
-    def initialize(self) -> None:
-        """Initialize the current controller"""
+        self.item_view: ItemView = None
+        self.item: Item = None
+
+    def run(self, item: Item) -> None:
+        """Run the current controller"""
+        self.item_view = ItemView(item)
         self.is_running = True
-        self.view('item').item = self.item
-        self.view('item').inventory = self.inventory
+        self.item = item
 
-    def run(self) -> None:
-        """Run the controller"""
-        self.initialize()
         while self.is_running:
-            self.view('item').display()
+            self.item_view.display()
 
             user_input = input('\n> ').lower()
-            actions = self.item.get_actions(self.inventory)
+            actions = self.item.get_actions()
             if user_input not in actions:
                 continue
 
-            self.handle_action(actions[user_input])
+            action = actions[user_input]
+            self.handle_action(action)
 
     def handle_action(self, action: Action) -> None:
         """Handle the action received by the controller"""
@@ -45,18 +40,13 @@ class ItemController(Controller):
             self.is_running = False
 
         if action == Action.TAKE_OFF:
-            self.inventory.take_off(self.view.item)
+            self.player.take_off(self.item)
 
         if action == Action.WEAR:
-            self.inventory.equip(self.view.item)
+            self.player.equip(self.item)
 
         if action == Action.DROP:
-            if self.inventory.item_is_equipped(self.view.item):
-                if not ask(resources['item']['interface']['warning'].format(self.view.item),
-                           warning=True):
-                    return Action.IDLE
-            self.dropped_item = self.inventory.drop(self.view.item)
-            return Action.DROP
+            self.player.drop(self.item, self.dungeon.current_room)
 
         if action == Action.TAKE:
-            pass
+            self.player.take(self.item, self.dungeon.current_room)

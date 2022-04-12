@@ -9,12 +9,8 @@ from modules.views.utils import clear_screen, display_actions
 
 def display_inventory(inventory: Inventory, keys: List[str]):
     """Display the player's inventory"""
-    if inventory.items:
-        print('Your inventory contains:')
-        print(f'slots: {slot_bar(inventory)}\n')
-    else:
-        print('Your inventory is empty')
-        print(f'slots: {slot_bar(inventory)}')
+    print(f'Inventory {slot_bar(inventory)}\n')
+    print('Your inventory contains:' if inventory.items else 'Your inventory is empty')
 
     for item in inventory.items:
         display_item(item, inventory)
@@ -27,8 +23,8 @@ def display_inventory(inventory: Inventory, keys: List[str]):
 
 def display_item(item, inventory: Inventory) -> None:
     """Display the given item"""
-    indicator = f'{Fore.RED}e{Fore.WHITE}' if inventory.item_is_equipped(item) else ' '
-    print(f'[{indicator}] x{item.quantity} {indefinite_determiner(str(item))}')
+    indicator = f'{Fore.RED}e{Fore.WHITE}' if inventory.is_wore_or_held(item) else ' '
+    print(f'[{indicator}] x{item.quantity} {item}')
 
 
 def slot_bar(inventory: Inventory) -> str:

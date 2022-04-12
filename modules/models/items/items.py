@@ -1,7 +1,8 @@
-from typing import List, Dict
+from typing import List, Dict, OrderedDict
 from dataclasses import dataclass, field
 
 from modules.controllers.actions import Action
+from modules.utils import indefinite_determiner
 
 
 @dataclass(kw_only=True)
@@ -10,28 +11,25 @@ class Item:
     name: str
     price: int = 0
     description: str
-    actions: List[str] = field(default_factory=list)
     quantity: int = 1
+    actions: List[str] = field(default_factory=list)
+    is_in_inventory: bool = field(init=False, default=False)
 
     def __str__(self) -> str:
         """String representation of the item"""
-        return f'{self.name}'
+        return f'{indefinite_determiner(self.name)}'
 
-    def get_actions(self) -> Dict[str, Action]:
+    def get_actions(self) -> OrderedDict[str, Action]:
         """Return a map of the keys and their associated actions in the room"""
-        actions = dict()
+        actions = OrderedDict()
+
+        if self.is_in_inventory:
+            actions['d'] = Action.DROP
+        else:
+            actions['p'] = Action.TAKE
 
         actions['q'] = Action.QUIT
         return actions
-
-        # if self.inventory.contains(self.item):
-        #     if self.inventory.item_is_equipped(self.item):
-        #         print(f'[{Fore.CYAN}t{Fore.WHITE}] Take off')
-        #     else:
-        #         print(f'[{Fore.CYAN}w{Fore.WHITE}] Wear or hold')
-        #     print(f'[{Fore.CYAN}d{Fore.WHITE}] Drop in the room')
-        # else:
-        #     print(f'[{Fore.CYAN}p{Fore.WHITE}] Put in your inventory')
 
 
 @dataclass(kw_only=True)

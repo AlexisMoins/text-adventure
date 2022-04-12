@@ -1,4 +1,5 @@
 from enum import Enum
+from colorama import Fore
 from typing import Any, List
 
 
@@ -28,10 +29,7 @@ class Coordinates:
 
     def __eq__(self, other: Any) -> bool:
         """Returns true if the current coordinates is equal to the other coordinates"""
-        return (
-            isinstance(
-                other, Coordinates) and other.x == self.x and other.y == self.y
-        )
+        return isinstance(other, Coordinates) and other.x == self.x and other.y == self.y
 
     def __hash__(self) -> int:
         """Returns the hashed value of the current coordinates"""
@@ -41,3 +39,7 @@ class Coordinates:
     def __repr__(self) -> str:
         """Return the representation of the current coordinate"""
         return f'Coordinates(x={self.x}, y={self.y})'
+
+    def __str__(self) -> str:
+        """Return the string representation of the coordinates"""
+        return f'{Fore.YELLOW}[{self.x}, {self.y}]{Fore.WHITE}'

@@ -5,7 +5,7 @@ from modules.models.items.inventory import Inventory
 from modules.models.characters.character import Character
 
 import modules.factories.generator_factory as factory
-from modules.generators.field_generator import generate_field
+from modules.generators.field_generator import FieldGenerator
 
 
 """Dictionnary containing the different classes available"""
@@ -17,6 +17,6 @@ def generate_one() -> Character:
     """Generate a random character to act as the player"""
     key = choice(list(_classes))
     data = _classes[key]
-    items = generate_field(factory.generators['item'], data.pop('inventory'))
+    items = FieldGenerator.generate(factory.generators['item'], data.pop('inventory'))
     inventory = Inventory(items=items, gold=data.pop('gold'))
     return Character(**data, inventory=inventory)

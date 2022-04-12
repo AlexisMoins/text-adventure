@@ -14,21 +14,27 @@ inventory:
     t: Take off a piece of equipment
     q: Close the inventory
 
+item:
+  actions:
+    t: Take off
+    w: Wear or hold
+    d: Drop in the room
+    p: Put in your inventory
+    q: Go back
+
+player:
+  interface:
+    drop warning: "This item is equipped: {}\nDrop it anyway ?"
+
 selection:
   actions:
     q: Cancel
     v: Validate selection
+    y: 'Yes'
+    n: 'No'
   interface:
     look: "Select {} you want to take a look at:"
-
-item:
-  interface:
-    warning: "This item is equipped: {}\n\nDo you want to drop it anyway ?"
-  actions:
-    q: Go back
-
-
-yesNo:
-  actions:
-    y: Yes
-    n: No
+    take_off: "Select the equipment(s) you want to take off:"
+    wear: "Select the equipment(s) you want to wear:"
+    take: "Select the item(s) you want to take:"
+    drop: "Select the item(s) you want to drop"

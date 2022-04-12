@@ -2,8 +2,9 @@
 
 # 1: Rooms generation chances
 generation:
-  room1: 50
-  room2: 50
+  room3: 34
+  room1: 33
+  room2: 33
 
 # 2: Room list
 room1:
@@ -16,3 +17,8 @@ room2:
   description: As you progress through the dungeon, you find a pond of clear water.
     As you get closer, you see something glowing at the very bottom of the pond.
   items: [1, 2]
+
+room3:
+  description: While continuing your exploration of the dungeon, you come across a troup
+    of goblin scouts sitting around a campfire. It seems they have not noticed you yet.
+  enemies: [goblin scout, goblin scout]

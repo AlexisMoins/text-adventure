@@ -1,16 +1,16 @@
-from pickle import FALSE
 from typing import Any, List
+from modules.models.items.inventory import Inventory
 
 from modules.views.utils import display_message
-from modules.views.selection import display_multi_selection, display_selection
+from modules.views.selection import display_multi_selection, display_selection, inventory_single_selection_format
 
 
-def choose_one(message: str, items: List) -> Any:
+def choose_one(message: str, items: List, inventory: Inventory = None) -> Any:
     """"""
     keys = ['q', 'v']
     while True:
         display_message(message)
-        display_selection(items, ['q'])
+        display_selection(items, ['q'], inventory)
 
         user_input = input('\n> ').lower()
         if user_input == keys[0]:
@@ -22,14 +22,14 @@ def choose_one(message: str, items: List) -> Any:
                 return items[index]
 
 
-def choose_many(message: str, items: List) -> List[Any]:
+def choose_many(message: str, items: List, inventory: Inventory = None) -> List[Any]:
     """Return a list of items chosen from the given list"""
     keys = ['q', 'v']
     selection = [False for _ in items]
 
     while True:
         display_message(message)
-        display_multi_selection(items, selection, keys)
+        display_multi_selection(items, selection, keys, inventory)
 
         user_input = input('\n> ').lower()
         if user_input == keys[0]:

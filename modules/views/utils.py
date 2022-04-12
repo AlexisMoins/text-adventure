@@ -5,12 +5,12 @@ from typing import Dict, List
 from modules.utils import resources
 
 
-def ask(message: str) -> bool:
+def yes_no_question(message: str, warning: bool = False) -> bool:
     """Return true if the user chooses yes, return false otherwise"""
     keys = ['y', 'n']
     while True:
-        display_message(message)
-        display_actions(keys, resources['utils']['actions'])
+        display_message(message, warning=warning)
+        display_actions(keys, resources['selection']['actions'])
 
         user_input = input('\n> ').lower()
         if user_input == keys[0]:
@@ -30,10 +30,10 @@ def display_message(message: str, wait: bool = False, warning: bool = False) -> 
     clear_screen()
     if warning:
         print(f'{Fore.RED}Warning{Fore.WHITE}\n')
-    print(f'{message}\n')
+    print(f'{message}')
 
     if wait:
-        input(f'Press any key to continue {Fore.CYAN}[.]{Fore.WHITE} ')
+        input(f'Press any key to continue {Fore.CYAN}[...]{Fore.WHITE} ')
 
 
 def display_actions(keys: List[str], actions: Dict[str, str]) -> None:
