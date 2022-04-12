@@ -1,7 +1,7 @@
 from typing import Dict, Callable, Any
 
-from modules.items.items import Item
-from modules.items.equipments import Weapon, Armor
+from modules.models.items.items import Item
+from modules.models.items.equipments import Equipment
 
 """List of item types and their corresponding class"""
 items: Dict[str, Callable[..., Item]] = dict()
@@ -20,7 +20,4 @@ def create(data: Dict[str, Any]) -> Item:
     return function(**copy)
 
 
-def initialize() -> None:
-    """"""
-    register('weapon', Weapon)
-    register('armor', Armor)
+register('equipment', Equipment)

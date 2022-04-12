@@ -9,28 +9,30 @@ generation:
 # 2: Item list
 armor:
   name: armor
-  description: An equipment that you can equip to protect your body from wounds
-  price: 15
-  type: armor
+  description: An equipment that you can wear to protect your body from wounds
+  price: 20
+  type: equipment
   slot: chest
   actions: [equip]
   durability: 20
-  protection: 5
+  statistics: {'defense': 5}
 
 sword:
   name: sword
   description: A generally single handed weapon that inflicts physical wounds to enemies
-  price: 20
-  type: weapon
+  price: 10
+  type: equipment
+  slot: hand
   actions: [attack, equip]
   durability: 15
-  damage: 7
+  statistics: {'attack': 5}
 
 staff:
   name: staff
   description: A magic catalist that improves significantly its owner's magic power
-  price: 20
-  type: weapon
+  price: 25
+  type: equipment
+  slot: hand
   actions: [attack, cast, equip]
-  durability: 12
-  damage: 7
+  durability: 10
+  statistics: {'attack': 2, 'magic': 5}

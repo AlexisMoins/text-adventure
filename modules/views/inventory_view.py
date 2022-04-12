@@ -1,43 +1,34 @@
+from typing import List
 from colorama import Fore
 
-from modules import utils
-from modules.characters.character import Character
+from modules.utils import resources, indefinite_determiner
+
+from modules.models.items.inventory import Inventory
+from modules.views.utils import clear_screen, display_actions
 
 
-class InventoryView:
-    """Class representing the view of the player's inventory"""
+def display_inventory(inventory: Inventory, keys: List[str]):
+    """Display the player's inventory"""
+    print(f'Inventory {slot_bar(inventory)}\n')
+    print('Your inventory contains:' if inventory.items else 'Your inventory is empty')
 
-    def __init__(self, player: Character) -> None:
-        """Parameterised constructor creating a new view of the player's inventory"""
-        self.player = player
-        self.inventory = player.inventory
+    for item in inventory.items:
+        display_item(item, inventory)
 
-    def display(self):
-        """Display the player's inventory"""
-        utils.clear_screen()
-        print(self.player.status_bar)
+    print(f'\n[{Fore.GREEN}*{Fore.WHITE}] Inventory')
+    print(f'[{Fore.GREEN}2{Fore.WHITE}] Statistics')
 
-        if self.inventory.items:
-            print('Your inventory contains:')
-            print(f'slots: {self.slot_bar()}\n')
+    display_actions(keys, resources['inventory']['actions'])
 
-        for item in self.inventory.items:
-            indicator = f'{Fore.GREEN}*{Fore.WHITE}' if item in self.inventory.equipments.values() else ' '
-            print(f'[{indicator}] x{item.quantity} {utils.indefinite_determiner(str(item))}')
 
-        print(f'\n[{Fore.CYAN}q{Fore.WHITE}] Close the inventory')
+def display_item(item, inventory: Inventory) -> None:
+    """Display the given item"""
+    indicator = f'{Fore.RED}e{Fore.WHITE}' if inventory.is_wore_or_held(item) else ' '
+    print(f'[{indicator}] x{item.quantity} {item}')
 
-        if self.inventory.items:
-            print(f'[{Fore.CYAN}l{Fore.WHITE}] Look at a particular item')
 
-            if len(self.inventory.wearable_items()) > 0:
-                print(f'[{Fore.CYAN}w{Fore.WHITE}] Wear a piece of equipment')
-
-            if self.inventory.equipments:
-                print(f'[{Fore.CYAN}t{Fore.WHITE}] Take off a piece of equipment')
-
-    def slot_bar(self) -> str:
-        """"""
-        percentage = round(len(self.inventory.items) / self.inventory.capacity * 10)
-        bar = '[' + Fore.YELLOW + '#' * percentage + Fore.WHITE + ' ' * (10 - percentage) + ']'
-        return f'{bar} {Fore.YELLOW}{len(self.inventory.items)}{Fore.WHITE} ({Fore.YELLOW}{self.inventory.capacity}{Fore.WHITE})'
+def slot_bar(inventory: Inventory) -> str:
+    """Display the slot bar of the inventory"""
+    percentage = round(len(inventory.items) / inventory.capacity * 10)
+    bar = '[' + Fore.YELLOW + '#' * percentage + Fore.WHITE + ' ' * (10 - percentage) + ']'
+    return f'{bar} {Fore.YELLOW}{len(inventory.items)}{Fore.WHITE} ({Fore.YELLOW}{inventory.capacity}{Fore.WHITE})'

@@ -2,21 +2,21 @@ import random
 from typing import List
 
 from modules import utils
-from modules.items.items import Item
-from modules.factories import items as factory
+from modules.models.items.items import Item
+
+from modules.factories import item_factory as factory
 
 
 class ItemGenerator:
     """Class generating items based on the provided configuration files"""
 
-    def __init__(self, path: str) -> None:
+    def __init__(self, dungeon_path: str) -> None:
         """Parameterised constructor creating a new generator of items"""
-        self.path = path
-        factory.initialize()
+        self.dungeon = dungeon_path
 
     def load_floor(self, floor: str) -> None:
         """Loads a floor into the item generator"""
-        data = utils.load_resource(f'{self.path}/{floor}/items.yaml')
+        data = utils.load_resource(f'{self.dungeon}/{floor}/items.yaml')
         self.generation_table = data.pop('generation')
         self.items = data
 

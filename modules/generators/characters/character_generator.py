@@ -2,20 +2,20 @@ from random import randint
 from typing import Any, Dict, List
 from modules import utils
 
-from modules.characters.npc import Enemy
-from modules.characters.character import Character
+from modules.models.characters.npc import Enemy
+from modules.models.characters.character import Character
 
-import modules.factories.generators as factory
-from modules.items.inventory import Inventory
-from modules.generators.field_generator import generate_field
+import modules.factories.generator_factory as factory
+from modules.models.items.inventory import Inventory
+from modules.generators.field_generator import FieldGenerator
 
 
 class CharacterGenerator:
     """Class generating enemies based on the provided configuration files"""
 
-    def __init__(self, path: str) -> None:
+    def __init__(self, dungeon_path: str) -> None:
         """Constructor creating a new generator of enemies"""
-        self.path = path
+        self.dungeon = dungeon_path
 
     def load_floor(self, file_name: str) -> None:
         """Loads a floor into the enemy generator"""
@@ -46,20 +46,20 @@ class CharacterGenerator:
 
     def generate_inventory(self, data):
         """Generate an inventory with the given data"""
-        items = generate_field(factory.generators['item'], data.pop('inventory'))
+        items = FieldGenerator.generate(factory.generators['item'], data.pop('inventory'))
         return Inventory(items=items, gold=data.pop('gold'))
 
 
 class EnemyGenerator(CharacterGenerator):
     """"""
 
-    def __init__(self, path: str) -> None:
-        """"""
-        super().__init__(path)
+    def __init__(self, dungeon_path: str) -> None:
+        """Parameterised constructor creating a new generator of enemies"""
+        super().__init__(dungeon_path)
 
     def load_floor(self, floor: str) -> None:
         """Loads a floor into the enemy generator"""
-        super().load_floor(f'{self.path}/{floor}/enemies.yaml')
+        super().load_floor(f'{self.dungeon}/{floor}/enemies.yaml')
 
     def _deserialize_character(self, data: Dict[str, Any]) -> Enemy:
         """Returns the enemy deserialized from the given data"""
