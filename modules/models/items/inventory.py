@@ -11,12 +11,12 @@ from modules.controllers.actions import Action
 class Inventory:
     """Class representing an inventory, with gold and items"""
     gold: int = 0
+    capacity: int = 6
     items: List[Item] = field(default_factory=list)
     equipments: Dict[str, Item] = field(default_factory=dict)
-    capacity: int = 6
 
     def __post_init__(self) -> None:
-        """"""
+        """Equip the default items"""
         for item in self.items:
             item.is_in_inventory = True
 
@@ -35,6 +35,9 @@ class Inventory:
 
     def equip(self, item: Equipment) -> None:
         """Equip the given item into the corresponding equipment slot"""
+        if item.slot in self.equipments.keys():
+            self.equipments[item.slot].is_equipped = False
+
         item.is_equipped = True
         self.equipments[item.slot] = item
 

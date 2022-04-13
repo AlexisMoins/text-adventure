@@ -34,7 +34,7 @@ class FloorGenerator:
 
     def create_room_layout(self, rooms: List[Room]) -> Dict[Coordinates, Room]:
         """Return the map of the floor, comprised of coordinates and their associated room"""
-        layout = dict()
+        layout: Dict[Coordinates, Room] = dict()
         coordinates = Coordinates(0, 0)
 
         for room in rooms:
@@ -42,7 +42,13 @@ class FloorGenerator:
             room.coordinates = coordinates
 
             neighbours = coordinates.neighbours()
-            candidates = set(neighbours) - set(layout.keys())
+            candidates = set(neighbours.keys()) - set(layout.keys())
             coordinates = choice(list(candidates))
+
+        for coordinates, room in layout.items():
+            neighbours = coordinates.neighbours()
+            for coord, direction in neighbours.items():
+                if coord in layout.keys():
+                    room.exits[direction] = coord
 
         return layout

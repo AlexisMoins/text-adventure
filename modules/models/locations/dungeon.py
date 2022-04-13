@@ -1,6 +1,7 @@
 from typing import List
 
 from modules.factories import generator_factory
+from modules.models.locations.coordinates import Coordinates
 
 from modules.models.locations.room import Room
 from modules.models.locations.floor import Floor
@@ -19,10 +20,15 @@ class Dungeon:
     @property
     def current_room(self) -> Room:
         """Return the current room"""
-        return self.current_floor.current_room
+        return self.current_floor.current_room()
 
     def next_floor(self) -> None:
         """Ascend to the next floor"""
         new_floor = self.floors.pop(0)
         generator_factory.change_floor(new_floor)
         self.current_floor = self.floor_generator.generate_one()
+
+    def travel(self, coordinates: Coordinates) -> None:
+        """Travel to another room"""
+        if coordinates in self.current_floor.rooms.keys():
+            self.current_floor.player_position = coordinates

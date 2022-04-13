@@ -1,8 +1,9 @@
-from typing import Any, Dict, List, OrderedDict
+from __future__ import annotations
 from dataclasses import dataclass, field
+from typing import Any, Dict, List, OrderedDict
 
 from modules.models.items.items import Item
-from modules.models.locations.coordinates import Coordinates
+from modules.models.locations.coordinates import Coordinates, Direction
 
 from modules.controllers.actions import Action
 
@@ -15,8 +16,10 @@ class Room:
     enemies: Any = field(default_factory=list)
     npc: Any = field(default_factory=list)
     actions: List[str] = field(default_factory=list, init=False)
-    coordinates: Coordinates = field(init=False)
+
     visited: bool = field(init=False, default=False)
+    coordinates: Coordinates = field(init=False, default=None)
+    exits: Dict[Direction, Coordinates] = field(default_factory=dict, init=False)
 
     def is_empty(self) -> bool:
         """Return true if the room is empty, return false otherwise"""
@@ -39,6 +42,7 @@ class Room:
         """Return a map of the keys and their associated actions in the room"""
         actions = OrderedDict()
         actions['i'] = Action.INVENTORY
+        actions['c'] = Action.TRAVEL
 
         if not self.is_empty():
             actions['l'] = Action.LOOK

@@ -12,4 +12,8 @@ class Floor:
         self.name = name
         self.rooms = rooms
         self.is_finished = False
-        self.current_room = self.rooms[Coordinates(0, 0)]
+        self.player_position = Coordinates(0, 0)
+
+    def current_room(self) -> Room:
+        """Return the current room"""
+        return self.rooms[self.player_position]

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from colorama import Fore
 
 from modules.models.characters.character import Character
+from modules.utils import indefinite_determiner
 
 
 @dataclass(kw_only=True)
@@ -16,6 +17,5 @@ class Enemy(NPC):
     friendly: bool = False
 
     def __str__(self) -> str:
-        """"""
-        indicator = '[~]' if self.friendly else '[!]'
-        return f'{self.name} {Fore.RED}{indicator}{Fore.WHITE}'
+        """Return the string representation of the current enemy"""
+        return f'{indefinite_determiner(self.name)} {Fore.RED}[!]{Fore.WHITE}'

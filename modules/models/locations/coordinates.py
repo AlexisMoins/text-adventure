@@ -1,15 +1,19 @@
 from enum import Enum
 from colorama import Fore
-from typing import Any, List
+from typing import Any, Dict, List
 
 
 class Direction(Enum):
     """Class representing the four cardinal directions"""
 
-    NORTH = (0, 1)
-    EAST = (1, 0)
-    SOUTH = (0, -1)
-    WEST = (-1, 0)
+    NORTH = (0, 1, 'north')
+    EAST = (1, 0, 'east')
+    SOUTH = (0, -1, 'south')
+    WEST = (-1, 0, 'west')
+
+    def __str__(self) -> str:
+        """Return the name of the current direction"""
+        return self.value[2].capitalize()
 
 
 class Coordinates:
@@ -23,9 +27,9 @@ class Coordinates:
         """Return the coordinates in the given direction"""
         return Coordinates(self.x + direction.value[0], self.y + direction.value[1])
 
-    def neighbours(self) -> List['Coordinates']:
+    def neighbours(self) -> Dict['Coordinates', Direction]:
         """Returns the list of all neighbouring coordinates"""
-        return [self.next_towards(direction) for direction in list(Direction)]
+        return {self.next_towards(direction): direction for direction in list(Direction)}
 
     def __eq__(self, other: Any) -> bool:
         """Returns true if the current coordinates is equal to the other coordinates"""

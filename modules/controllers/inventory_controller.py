@@ -1,33 +1,30 @@
-from modules.controllers.selection import choose_many, choose_one
-from modules.models.characters.character import Character
-
-from modules.views.inventory_view import display_inventory
+from modules.controllers.controller import Controller
+from modules.utils import resources
 from modules.views.utils import clear_screen
+from modules.views.inventory_view import display_inventory
 
 from modules.controllers.actions import Action
-
 from modules.controllers.item_controller import ItemController
-from modules.utils import resources
+from modules.controllers.selection import choose_many, choose_one
 
 
-class InventoryController:
+class InventoryController(Controller):
     """Class controlling the player's inventory"""
 
-    def __init__(self, player: Character, item_controller: ItemController) -> None:
+    def __init__(self, item_controller: ItemController) -> None:
         """Parameterised constructor creating a new controller over the player's inventory"""
         self.item_controller = item_controller
         self.dungeon = item_controller.dungeon
-        self.inventory = player.inventory
-        self.player = player
+        self.player = item_controller.player
 
     def run(self) -> None:
         """Run the controller"""
         self.is_running = True
         while self.is_running:
             clear_screen()
-            actions = self.inventory.get_actions()
+            actions = self.player.inventory.get_actions()
 
-            display_inventory(self.inventory, actions.keys())
+            display_inventory(self.player.inventory, actions.keys())
 
             actions['2'] = Action.STATISTICS
             user_input = input('\n> ').lower()
@@ -43,23 +40,23 @@ class InventoryController:
 
         if action == Action.LOOK:
             message = resources['selection']['interface']['look'].format('the item')
-            if item := choose_one(message, self.inventory.items, self.inventory):
+            if item := choose_one(message, self.player.inventory.items, inventory=True):
                 self.item_controller.run(item)
 
         if action == Action.DROP:
             message = resources['selection']['interface']['drop']
-            for item in choose_many(message, self.inventory.items, self.inventory):
+            for item in choose_many(message, self.player.inventory.items, inventory=True):
                 self.player.drop(item, self.dungeon.current_room)
 
         if action == Action.TAKE_OFF:
             message = resources['selection']['interface']['take_off']
-            for item in choose_many(message, self.inventory.equipments.values()):
-                self.inventory.take_off(item)
+            for item in choose_many(message, self.player.inventory.equipments.values()):
+                self.player.take_off(item)
 
         if action == Action.WEAR:
             message = resources['selection']['interface']['wear']
-            for item in choose_many(message, self.inventory.wearable_items):
-                self.inventory.equip(item)
+            for item in choose_many(message, self.player.inventory.wearable_items):
+                self.player.equip(item)
 
         if action == Action.STATISTICS:
             pass

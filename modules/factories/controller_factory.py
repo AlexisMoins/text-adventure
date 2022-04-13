@@ -15,6 +15,3 @@ def get(controller_type: str) -> Any:
 def register(controller_type: str, controller: Callable) -> None:
     """Add a controller type and its corresponding class to the dictionary of controllers"""
     controllers[controller_type] = controller()
-
-
-register('item', ItemController)

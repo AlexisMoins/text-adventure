@@ -25,6 +25,3 @@ def get(entity: Any) -> View | None:
 def register(view_type: str, view: Callable) -> None:
     """Add a view type and its corresponding class to the dictionary of views"""
     views[view_type] = view()
-
-
-register('Item', ItemView)
