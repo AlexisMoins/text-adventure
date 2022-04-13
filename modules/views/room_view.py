@@ -22,7 +22,7 @@ class RoomView(View):
     def display(self) -> None:
         """Display the given room"""
         clear_screen()
-        print(f'{self.player_view.status_bar}    room: {self.dungeon.current_room}\n')
+        print(f'{self.player_view.status_bar}    Room: {self.dungeon.current_room}\n')
 
         print('\n'.join(wrap(self.dungeon.current_room.description)))
 
@@ -30,6 +30,11 @@ class RoomView(View):
             word = 'are' if len(self.dungeon.current_room.entities) > 1 else 'is'
             print(f'\nAround you {word}:')
             self.display_entities()
+
+        # indicator = 's' if len(self.dungeon.current_room.exits) > 1 else ''
+        # print(f'\nAvailable exit{indicator}:')
+        # exits = [f'{direction} {coordinates}' for direction, coordinates in self.dungeon.current_room.exits.items()]
+        # print(','.join(exits))
 
         actions = self.dungeon.current_room.get_actions()
         self.display_actions(actions.keys(), resources['room']['actions'])
