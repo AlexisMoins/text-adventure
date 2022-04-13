@@ -32,3 +32,4 @@ class Dungeon:
         """Travel to another room"""
         if coordinates in self.current_floor.rooms.keys():
             self.current_floor.player_position = coordinates
+            self.current_room.visited = True

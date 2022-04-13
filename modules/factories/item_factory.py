@@ -7,17 +7,16 @@ from modules.models.items.equipments import Equipment
 items: Dict[str, Callable[..., Item]] = dict()
 
 
-def register(item_type: str, function: Callable[..., Item]) -> None:
+def register(item_type: str, item: Callable[..., Item]) -> None:
     """Add an item type and its corresponding class to the items dictionnary"""
-    items[item_type] = function
+    items[item_type] = item
 
 
 def create(data: Dict[str, Any]) -> Item:
     """Create a new item based on the item type retreived from the given data"""
-    copy = data.copy()
-    item_type = copy.pop('type')
-    function: Callable[..., Item] = items[item_type]
-    return function(**copy)
+    item_type = data.pop('type')
+    item: Callable[..., Item] = items[item_type]
+    return item(**data)
 
 
 register('equipment', Equipment)

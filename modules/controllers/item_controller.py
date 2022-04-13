@@ -47,6 +47,8 @@ class ItemController:
 
         if action == Action.DROP:
             self.player.drop(self.item, self.dungeon.current_room)
+            self.is_running = False
 
         if action == Action.TAKE:
             self.player.take(self.item, self.dungeon.current_room)
+            self.is_running = False

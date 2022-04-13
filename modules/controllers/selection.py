@@ -24,26 +24,6 @@ def choose_one(message: str, items: List, inventory: bool = False) -> Any:
                 return items[index]
 
 
-def choose_one_destination(room: Room) -> Coordinates | None:
-    """Choose a destination from the given list"""
-    keys = ['q']
-    destinations = [f'{direction} {coordinates}' for direction, coordinates in room.exits.items()]
-
-    while True:
-        display_message(f'Where do you want to go ?\nCurrent position: {room}')
-        display_selection(destinations, keys, inventory=False)
-
-        user_input = input('\n> ').lower()
-        if user_input == keys[0]:
-            return None
-
-        if (is_integer(user_input)):
-            index = int(user_input)
-            if room.exits and 0 <= index < len(room.exits):
-                keys = list(room.exits.keys())
-                return room.exits[keys[index]]
-
-
 def choose_many(message: str, items: List, inventory: bool = False) -> List[Any]:
     """Return a list of items chosen from the given list"""
     keys = ['q', 'v']

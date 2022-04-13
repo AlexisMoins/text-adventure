@@ -8,7 +8,7 @@ from modules.views.room_view import RoomView
 
 from modules.controllers.actions import Action
 from modules.controllers.controller import Controller
-from modules.controllers.selection import choose_many, choose_one, choose_one_destination
+from modules.controllers.selection import choose_many, choose_one
 from modules.controllers.item_controller import ItemController
 from modules.controllers.inventory_controller import InventoryController
 
@@ -48,7 +48,7 @@ class DungeonController(Controller):
             self.inventory_controller.run()
 
         if action == Action.TRAVEL:
-            if coordinates := choose_one_destination(self.dungeon.current_room):
+            if coordinates := self.dungeon.current_floor.choose_destination():
                 self.dungeon.travel(coordinates)
 
         if action == Action.LOOK:
