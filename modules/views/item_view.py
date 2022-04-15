@@ -3,9 +3,9 @@ import resource
 from textwrap import wrap
 from colorama import Fore
 
-from modules.views.utils import clear_screen
-
 from modules.models.items.items import Item
+from modules.utils import indefinite_determiner
+from modules.views.utils import clear_screen
 
 from modules.views.view import View
 
@@ -19,9 +19,6 @@ class ItemView(View):
 
     def display(self) -> None:
         """Display the current view"""
-        clear_screen()
-
-        print(f'{Fore.MAGENTA}{self.item.name.capitalize()}{Fore.WHITE}\n')
         print('\n'.join(wrap(self.item.description)))
 
         price = f'price: {Fore.MAGENTA}{str(self.item.price)} gold{Fore.WHITE}'
@@ -31,8 +28,8 @@ class ItemView(View):
         if 'equip' in self.item.actions:
             self.display_equipment()
 
-        actions = self.item.get_actions()
-        self.display_actions(actions.keys(), self.resources['item']['actions'])
+        # actions = self.item.get_actions()
+        # self.display_actions(actions.keys(), self.resources['item']['actions'])
 
     def display_equipment(self) -> None:
         """Display the equipment's information"""

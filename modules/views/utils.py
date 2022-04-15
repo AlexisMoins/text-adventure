@@ -27,7 +27,6 @@ def clear_screen():
 
 def display_message(message: str, wait: bool = False, warning: bool = False) -> None:
     """Display the given message on screen, optionaly waiting for an input"""
-    clear_screen()
     if warning:
         print(f'{Fore.RED}Warning{Fore.WHITE}\n')
     print(f'{message}')

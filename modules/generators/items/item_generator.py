@@ -38,7 +38,7 @@ class ItemGenerator:
         statistics = dict()
         for name, value in item['statistics'].items():
             percentage = value * 0.20
-            statistics[name] = random.randint(math.ceil(value-percentage), math.floor(value+percentage))
+            statistics[name] = random.randint(math.floor(value-percentage), math.ceil(value+percentage))
 
         item['statistics'] = statistics
 

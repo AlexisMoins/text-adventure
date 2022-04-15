@@ -1,34 +1,31 @@
-from typing import List
 from colorama import Fore
 
-from modules.utils import resources, indefinite_determiner
-
 from modules.models.items.inventory import Inventory
-from modules.views.utils import clear_screen, display_actions
+from modules.models.items.items import Item
 
 
-def display_inventory(inventory: Inventory, keys: List[str]):
-    """Display the player's inventory"""
-    print(f'Inventory {slot_bar(inventory)}\n')
-    print('Your inventory contains:' if inventory.items else 'Your inventory is empty')
+class InventoryView:
+    """"""
 
-    for item in inventory.items:
-        display_item(item, inventory)
+    def __init__(self, inventory: Inventory) -> None:
+        self.inventory = inventory
 
-    print(f'\n[{Fore.GREEN}*{Fore.WHITE}] Inventory')
-    print(f'[{Fore.GREEN}2{Fore.WHITE}] Statistics')
+    def display(self):
+        """Display the player's inventory"""
+        print('Your inventory contains:' if self.inventory.items else 'Your inventory is empty')
+        print(f'{self.slot_bar}\n')
 
-    display_actions(keys, resources['inventory']['actions'])
+        for item in self.inventory.items:
+            self.display_item(item)
 
+    def display_item(self, item: Item) -> None:
+        """Display the given item"""
+        indicator = f'{Fore.RED}e{Fore.WHITE}' if self.inventory.is_wore_or_held(item) else ' '
+        print(f'[{indicator}] x{item.quantity} {item}')
 
-def display_item(item, inventory: Inventory) -> None:
-    """Display the given item"""
-    indicator = f'{Fore.RED}e{Fore.WHITE}' if inventory.is_wore_or_held(item) else ' '
-    print(f'[{indicator}] x{item.quantity} {item}')
-
-
-def slot_bar(inventory: Inventory) -> str:
-    """Display the slot bar of the inventory"""
-    percentage = round(len(inventory.items) / inventory.capacity * 10)
-    bar = '[' + Fore.YELLOW + '#' * percentage + Fore.WHITE + ' ' * (10 - percentage) + ']'
-    return f'{bar} {Fore.YELLOW}{len(inventory.items)}{Fore.WHITE} ({Fore.YELLOW}{inventory.capacity}{Fore.WHITE})'
+    @property
+    def slot_bar(self) -> str:
+        """Display the slot bar of the inventory"""
+        percentage = round(len(self.inventory.items) / self.inventory.capacity * 10)
+        bar = '[' + Fore.YELLOW + '#' * percentage + Fore.WHITE + ' ' * (10 - percentage) + ']'
+        return f'{bar} {Fore.YELLOW}{len(self.inventory.items)}{Fore.WHITE} ({Fore.YELLOW}{self.inventory.capacity}{Fore.WHITE})'

@@ -2,9 +2,11 @@
 
 # 1: Items loot chances
 generation:
-  sword: 60
-  staff: 30
-  armor: 10
+  tunic: 35
+  hat: 30
+  sword: 15
+  staff: 15
+  armor: 5
 
 # 2: Item list
 armor:
@@ -16,6 +18,27 @@ armor:
   actions: [equip]
   durability: 20
   statistics: {'defense': 5}
+
+tunic:
+  name: tunic
+  description: A light cloth made of soft fabric
+  price: 10
+  type: equipment
+  slot: chest
+  actions: [equip]
+  durability: 10
+  statistics: {'defense': 2}
+
+hat:
+  name: hat
+  description: Does it really protect you from wounds ?
+  price: 10
+  type: equipment
+  slot: head
+  actions: [equip]
+  durability: 5
+  statistics: {'defense': 2}
+
 
 sword:
   name: sword

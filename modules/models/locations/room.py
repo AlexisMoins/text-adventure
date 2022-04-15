@@ -38,20 +38,15 @@ class Room:
         """Add the given item to the current room"""
         self.items.append(item)
 
-    def get_actions(self) -> Dict[str, Action]:
-        """Return a map of the keys and their associated actions in the room"""
-        actions = OrderedDict()
-        actions['i'] = Action.INVENTORY
-        actions['c'] = Action.TRAVEL
+    def find_item(self, pattern: str) -> List[Item]:
+        """Return the list of items corresponding to the given pattern"""
+        iterator = filter(lambda item: pattern in item.name, self.items)
+        return list(iterator)
 
-        if not self.is_empty():
-            actions['l'] = Action.LOOK
-
-        if self.items:
-            actions['p'] = Action.TAKE
-
-        actions['q'] = Action.QUIT
-        return actions
+    def find_entities(self, pattern: str) -> List[Any]:
+        """Return the list of items whose name matches the given pattern"""
+        iterator = filter(lambda entity: pattern in entity.name, self.entities)
+        return list(iterator)
 
     def __str__(self) -> str:
         """Return the string representation of the room"""

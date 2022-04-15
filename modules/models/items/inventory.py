@@ -69,20 +69,7 @@ class Inventory:
         """Return true if the given item is currently equipped"""
         return isinstance(item, Equipment) and item.slot in self.equipments.keys() and self.equipments[item.slot] is item
 
-    def get_actions(self) -> Dict[str, Action]:
-        """Return a map of the keys and their associated actions in the inventory"""
-        actions = dict()
-        actions['i'] = Action.INVENTORY
-
-        if self.items:
-            actions['l'] = Action.LOOK
-            actions['d'] = Action.DROP
-
-        if self.wearable_items:
-            actions['w'] = Action.WEAR
-
-        if self.equipments:
-            actions['t'] = Action.TAKE_OFF
-
-        actions['q'] = Action.QUIT
-        return actions
+    def find_items(self, pattern: str) -> List[Item]:
+        """Return the list of items whose name matches the given pattern"""
+        iterator = filter(lambda item: pattern in item.name, self.items)
+        return list(iterator)

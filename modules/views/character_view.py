@@ -18,7 +18,7 @@ class CharacterView(View):
     @property
     def status_bar(self) -> str:
         """Return the status bars of the current character"""
-        return f'Health {self.health_bar}    Energy: {self.mana_bar}'
+        return f'Health {self.health_bar}    mana: {self.mana_bar}'
 
     @property
     def health_bar(self) -> str:

@@ -1,16 +1,20 @@
-from modules.utils import resources
+from typing import Any, List, Tuple
+from modules.controllers.selection import choose_one
+
+from modules.models.locations.coordinates import Direction
 
 from modules.models.items.items import Item
 from modules.models.locations.dungeon import Dungeon
 from modules.models.characters.character import Character
+from modules.views.inventory_view import InventoryView
+from modules.views.item_view import ItemView
 
 from modules.views.room_view import RoomView
 
 from modules.controllers.actions import Action
 from modules.controllers.controller import Controller
-from modules.controllers.selection import choose_many, choose_one
 from modules.controllers.item_controller import ItemController
-from modules.controllers.inventory_controller import InventoryController
+from modules.views.utils import clear_screen
 
 
 class DungeonController(Controller):
@@ -19,9 +23,9 @@ class DungeonController(Controller):
     def __init__(self, dungeon: Dungeon, player: Character) -> None:
         """Parameterised constructor creating a new dungeon engine"""
         self.item_controller = ItemController(player, dungeon)
-        self.inventory_controller = InventoryController(self.item_controller)
-        # self.npc_controller = NpcController()
 
+        self.inventory_view = InventoryView(player.inventory)
+        # self.npc_controller = NpcController()
         self.room_view = RoomView(player, dungeon)
         self.dungeon = dungeon
         self.player = player
@@ -29,34 +33,83 @@ class DungeonController(Controller):
     def run(self) -> None:
         """Run the current controller"""
         self.is_running = True
+        self.room_view.display()
+
         while self.is_running and self.player.is_alive():
-            self.room_view.display()
-
             user_input = input('\n> ').lower()
-            actions = self.dungeon.current_room.get_actions()
-            if user_input not in actions:
-                continue
+            action = self.parse_input(user_input)
 
-            self.handle_action(actions[user_input])
+            self.handle_action(action)
 
-    def handle_action(self, action: Action) -> None:
+    def parse_input(self, user_input: str) -> Tuple:
+        """Handle the given user input"""
+        words = user_input.split(' ')
+
+        match words:
+            case ['look', 'at', *something] | ['look', *something]:
+                return Action.LOOK, ' '.join(something)
+
+            case ['take' | 'get', *something]:
+                return Action.TAKE, ' '.join(something)
+
+        if words[0] in ['q', 'quit']:
+            return Action.QUIT,
+
+        if words[0] in ['i', 'inv', 'inventory']:
+            return Action.INVENTORY,
+
+        directions = {'north': Direction.NORTH, 'east': Direction.EAST,
+                      'south': Direction.SOUTH, 'west': Direction.WEST}
+        if words[0] in directions.keys():
+            return Action.TRAVEL, directions[words[0]]
+
+        return Action.IDLE,
+
+    def handle_action(self, command: Tuple[Action, Any]) -> None:
         """Handle the action received by the controller"""
-        if action == Action.QUIT:
+        if command[0] == Action.IDLE:
+            print('Huh ?')
+
+        if command[0] == Action.QUIT:
             self.is_running = False
 
-        if action == Action.INVENTORY:
-            self.inventory_controller.run()
+        if command[0] == Action.INVENTORY:
+            self.inventory_view.display()
 
-        if action == Action.TRAVEL:
-            if coordinates := self.dungeon.current_floor.choose_destination():
-                self.dungeon.travel(coordinates)
+        if command[0] == Action.TAKE:
+            if items := self.dungeon.current_room.find_item(command[1]):
+                if len(items) > 1:
+                    if item := choose_one('Which item do you want to take ?', items):
+                        self.player.take(item, self.dungeon.current_room)
+                else:
+                    if self.player.take(items[0], self.dungeon.current_room):
+                        print('Done!')
 
-        if action == Action.LOOK:
-            message = resources['selection']['interface']['look'].format('what')
-            if entity := choose_one(message, self.dungeon.current_room.entities):
-                self.item_controller.run(entity) if isinstance(entity, Item) else self.npc_controller.run(entity)
+        if command[0] == Action.LOOK:
+            self.look(command[1])
 
-        if action == Action.TAKE:
-            message = resources['selection']['interface']['take']
-            for item in choose_many(message, self.dungeon.current_room.items):
-                self.player.take(item, self.dungeon.current_room)
+        if command[0] == Action.TRAVEL:
+            if self.dungeon.travel(command[1]):
+                self.room_view.display()
+            else:
+                print('There is nothing in that direction')
+
+    def look(self, pattern: str) -> None:
+        """Look at the entity corresponding to the given pattern"""
+        if not pattern or pattern == 'around':
+            self.room_view.display()
+        elif entities := self.find_entities(pattern):
+            if len(entities) > 1:
+                if entity := choose_one('Which one do you want to take a look at ?', entities):
+                    ItemView(entity).display() if isinstance(entity, Item) else self.npc_controller.run(entity)
+                else:
+                    print('Ok')
+            else:
+                entity = entities[0]
+                ItemView(entity).display() if isinstance(entity, Item) else self.npc_controller.run(entity)
+        else:
+            print('There is nothing like that here')
+
+    def find_entities(self, pattern: str) -> List:
+        """Return the list of entities matching the given pattern"""
+        return self.dungeon.current_room.find_entities(pattern) + self.player.inventory.find_items(pattern)

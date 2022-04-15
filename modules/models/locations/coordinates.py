@@ -13,7 +13,7 @@ class Direction(Enum):
 
     def __str__(self) -> str:
         """Return the name of the current direction"""
-        return self.value[2].capitalize()
+        return self.value[2]
 
 
 class Coordinates:

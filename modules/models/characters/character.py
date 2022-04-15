@@ -44,10 +44,13 @@ class Character:
         """Return true if the current character is alive, return false otherwise"""
         return self.get_statistic('health') > 0
 
-    def take(self, item: Item, room: Room) -> None:
+    def take(self, item: Item, room: Room) -> bool:
         """Take the given item and add it to the current player's inventory"""
-        display_message('Your inventory is full', warning=True,
-                        wait=True) if self.inventory.is_full() else self.inventory.add(room.remove(item))
+        if self.inventory.is_full():
+            print('Your inventory is full')
+            return False
+        self.inventory.add(room.remove(item))
+        return True
 
     def drop(self, item: Item, room: Room) -> None:
         """Drop the given item in the given room"""
