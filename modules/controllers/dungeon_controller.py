@@ -30,12 +30,18 @@ class DungeonController(Controller):
         self.dungeon = dungeon
         self.player = player
 
+        self.messages = []
+
     def run(self) -> None:
         """Run the current controller"""
         self.is_running = True
-        self.room_view.display()
 
         while self.is_running and self.player.is_alive():
+            self.room_view.display()
+
+            if self.messages:
+                print('\n' + "\n".join(self.messages))
+
             user_input = input('\n> ').lower()
             action = self.parse_input(user_input)
 
@@ -83,7 +89,8 @@ class DungeonController(Controller):
                         self.player.take(item, self.dungeon.current_room)
                 else:
                     if self.player.take(items[0], self.dungeon.current_room):
-                        print('Done!')
+                        self.messages.clear()
+                        self.messages.append('Done!')
 
         if command[0] == Action.LOOK:
             self.look(command[1])
