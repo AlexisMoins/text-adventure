@@ -6,7 +6,7 @@ from modules.models.items.inventory import Inventory
 from modules.models.items.equipments import Equipment
 from modules.models.items.items import Item
 from modules.models.locations.room import Room
-from modules.views.utils import display_message, yes_no_question
+from modules.views.utils import yes_no_question
 
 from modules.utils import resources
 

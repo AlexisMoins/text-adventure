@@ -4,8 +4,6 @@ from textwrap import wrap
 from colorama import Fore
 
 from modules.models.items.items import Item
-from modules.utils import indefinite_determiner
-from modules.views.utils import clear_screen
 
 from modules.views.view import View
 

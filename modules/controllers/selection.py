@@ -20,7 +20,7 @@ def choose_one(message: str, items: List) -> Any:
             print(f'[{Fore.CYAN}{index}{Fore.WHITE}] {entity}{indicator}')
         print(f'\n[{Fore.CYAN}q{Fore.WHITE}] None')
 
-        user_input = input('\n> ').lower()
+        user_input = input('\n? ').lower()
 
         if user_input == 'q':
             return None

@@ -1,0 +1,31 @@
+# List of the verbs used in the game. Each item of the list represents a verb.
+# If the item itself is a list [A], [A] is understood as a list of synonyms of
+# [A]'s first element.
+#
+# For exemple, 'get' is a synonym of 'take', 'l' is a synonym of 'look'
+verbs: [ [look, l], [take, get], [quit, q], [go, move] ]
+
+# List of the pre-defined nouns in the game. Just like the verb list, it can
+# contain synonyms.
+nouns: [ [inventory, inv, i], [statistics, stats, s] ]
+
+# List of the comprehensible prepositions
+prepositions: [in, at]
+
+# List of the comprehensible articles
+articles: [the, a, an]
+
+# List the different patterns the game understands. Each pattern is centered
+# around either a verb or a noun. If an item of the list is itself a list, it
+# is comprehended as an optional word in the pattern.
+patterns:
+  # For instance, the pattern for the 'look' command is :
+  # look at [the | a | an (optional)] noun
+
+  # Verb based patterns
+  look: [look, at, [articles], noun]
+  take: [take, [articles], noun]
+  quit: [quit]
+
+  # Noun based patterns
+  inventory: [inventory]
