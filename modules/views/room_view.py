@@ -23,7 +23,7 @@ class RoomView(View):
     def display(self) -> None:
         """Display the given room"""
         clear_screen()
-        print(f'{self.player_view.status_bar}    room: {self.dungeon.current_room}\n')
+        print(f'{self.player_view.status_bar}    {self.dungeon.current_room}\n')
 
         print('\n'.join(wrap(self.dungeon.current_room.description)))
 

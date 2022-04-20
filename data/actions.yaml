@@ -1,0 +1,23 @@
+# Leave the dungeon
+quit: ^(quit|q)$
+
+# Open the player's inventory
+inventory: ^(inventory|inv|i)$
+
+# Display the description of the room
+description: ^(description|desc)$
+
+# Drop an item from the inventory in the current room
+drop: ^drop (the |a |an )?(?P<item>.+)
+
+# Look at something, either in the room or in the player's inventory
+look: ^look at (the |a |an )?(?P<entity>.+)
+
+# Take an item from the current room
+take: ^(take|get) (the |a |an )?(?P<item>.+)
+
+# Wear or hold a piece of equipment
+wear: ^(?P<verb>wear|equip|hold) (the |a |an )?(?P<equipment>.*)
+
+# Move to another room
+move: ^(move |go )?(?P<direction>north|n|east|e|south|s|west|w)$

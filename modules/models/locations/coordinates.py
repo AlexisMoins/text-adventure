@@ -1,3 +1,4 @@
+from __future__ import annotations
 from enum import Enum
 from colorama import Fore
 from typing import Any, Dict, List
@@ -10,6 +11,13 @@ class Direction(Enum):
     EAST = (1, 0, 'east')
     SOUTH = (0, -1, 'south')
     WEST = (-1, 0, 'west')
+
+    @staticmethod
+    def parse(direction: str) -> Direction:
+        directions = {'n': Direction.NORTH, 'e': Direction.EAST,
+                      's': Direction.SOUTH, 'w': Direction.WEST}
+
+        return directions[direction[0]]
 
     def __str__(self) -> str:
         """Return the name of the current direction"""

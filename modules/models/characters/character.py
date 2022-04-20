@@ -32,8 +32,9 @@ class Character:
 
     def equip(self, item: Equipment) -> None:
         """Equips the given item into the corresponding equipment slot"""
-        if item and 'equip' in item.actions and self.inventory.contains(item):
+        if 'equip' in item.actions:
             self.inventory.equip(item)
+            print('Done!')
 
     def take_off(self, item: Equipment) -> None:
         """Take off the given equipment"""
@@ -44,16 +45,17 @@ class Character:
         """Return true if the current character is alive, return false otherwise"""
         return self.get_statistic('health') > 0
 
-    def take(self, item: Item, room: Room) -> bool:
+    def take(self, item: Item, room: Room) -> None:
         """Take the given item and add it to the current player's inventory"""
         if self.inventory.is_full():
             print('Your inventory is full')
-            return False
-        self.inventory.add(room.remove(item))
-        return True
+        else:
+            self.inventory.add(room.remove(item))
+            print('Done!')
 
     def drop(self, item: Item, room: Room) -> None:
         """Drop the given item in the given room"""
-        message = resources['player']['interface']['drop warning']
-        if not self.inventory.is_wore_or_held(item) or yes_no_question(message.format(item), warning=True):
-            room.add(self.inventory.drop(item))
+        if self.inventory.is_wore_or_held(item):
+            self.take_off(item)
+        room.add(self.inventory.drop(item))
+        print('Done!')

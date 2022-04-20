@@ -1,17 +1,17 @@
-from typing import List
-from modules.lexer import Lexer, Token
+import re
+from typing import List, Tuple
+from modules.controllers.selection import choose_one
 
 from modules.models.items.items import Item
+from modules.models.locations.coordinates import Direction
 from modules.models.locations.dungeon import Dungeon
 from modules.models.characters.character import Character
+from modules.utils import load_resource, split_items
 
 from modules.views.room_view import RoomView
 from modules.views.item_view import ItemView
-from modules.views.inventory_view import InventoryView
 
-from modules.controllers.actions import Action
-from modules.controllers.selection import choose_one
-from modules.controllers.item_controller import ItemController
+from modules.views.inventory_view import display_inventory
 
 
 class DungeonController:
@@ -19,14 +19,13 @@ class DungeonController:
 
     def __init__(self, dungeon: Dungeon, player: Character) -> None:
         """Parameterised constructor creating a new dungeon engine"""
-        self.item_controller = ItemController(player, dungeon)
-
-        self.inventory_view = InventoryView(player.inventory)
-        # self.npc_controller = NpcController()
         self.room_view = RoomView(player, dungeon)
         self.dungeon = dungeon
         self.player = player
-        self.lexer = Lexer()
+
+    def find_entities(self, pattern: str) -> List:
+        """Return the list of entities matching the given pattern"""
+        return self.dungeon.current_room.find_entities(pattern) + self.player.inventory.find_items(pattern)
 
     def run(self) -> None:
         """Run the current controller"""
@@ -34,57 +33,95 @@ class DungeonController:
         self.room_view.display()
 
         while self.is_running and self.player.is_alive():
-            user_input = input('\n> ').lower()
-            sentence = self.lexer.parse(user_input)
-            input(sentence)
+            user_input = input('\n> ').lower().strip()
 
-            self.handle_sentence(sentence)
+            action, expression = self.parse_input(user_input)
+            self.handle_action(action, expression) if action and expression else print('Huh ?')
 
-    def handle_sentence(self, sentence: List[Token]) -> None:
+    def parse_input(self, user_input: str) -> Tuple[str | None]:
+        """Return a tuple of the the action corresponding to the given input and the matched expression"""
+        resources = load_resource('data/actions.yaml')
+
+        for action, pattern in resources.items():
+            if expression := re.match(pattern, user_input):
+                return action, expression
+        return None, None
+
+    def handle_action(self, action: str, expression: re.Match) -> None:
         """Handle the action received by the controller"""
-        input(f'valid: {self.lexer.sentence_is_valid(sentence)}')
-
-        if sentence[0] == Action.QUIT:
+        if action == 'quit':
             self.is_running = False
 
-        if sentence[0] == Action.INVENTORY:
-            self.inventory_view.display()
-
-        if sentence[0] == Action.TAKE:
-            if items := self.dungeon.current_room.find_item(sentence[1]):
-                if len(items) > 1:
-                    if item := choose_one('Which item do you want to take ?', items):
-                        if self.player.take(item, self.dungeon.current_room):
-                            print('Done!')
-                else:
-                    if self.player.take(items[0], self.dungeon.current_room):
-                        print('Done!')
-
-        if sentence[0] == Action.LOOK:
-            self.look(sentence[1])
-
-        if sentence[0] == Action.TRAVEL:
-            if self.dungeon.travel(sentence[1]):
-                self.room_view.display()
-            else:
-                print('There is nothing in that direction')
-
-    def look(self, pattern: str) -> None:
-        """Look at the entity corresponding to the given pattern"""
-        if not pattern or pattern == 'around':
+        if action == 'description':
             self.room_view.display()
-        elif entities := self.find_entities(pattern):
-            if len(entities) > 1:
-                if entity := choose_one('Which one do you want to take a look at ?', entities):
-                    ItemView(entity).display() if isinstance(entity, Item) else self.npc_controller.run(entity)
-                else:
-                    print('Ok')
-            else:
-                entity = entities[0]
-                ItemView(entity).display() if isinstance(entity, Item) else self.npc_controller.run(entity)
-        else:
-            print('There is nothing like that here')
 
-    def find_entities(self, pattern: str) -> List:
-        """Return the list of entities matching the given pattern"""
-        return self.dungeon.current_room.find_entities(pattern) + self.player.inventory.find_items(pattern)
+        if action == 'look':
+            entity = expression.group('entity')
+            self.look_at(entity)
+
+        if action == 'take':
+            item = expression.group('item')
+            for i in split_items(item):
+                self.take(i)
+
+        if action == 'drop':
+            item = expression.group('item')
+            for i in split_items(item):
+                self.drop(item)
+
+        if action == 'inventory':
+            display_inventory(self.player.inventory)
+
+        if action == 'wear':
+            # Split the item by ',' and 'and
+            verb = expression.group('verb')
+            equipment = expression.group('equipment')
+            self.wear(verb, equipment)
+
+        if action == 'move':
+            direction = expression.group('direction')
+            self.move(direction)
+
+    def look_at(self, noun: str) -> None:
+        """"""
+        message = 'Which one do you want to take a look at ?'
+        if entity := find_one(message, self.find_entities(noun)):
+            ItemView(entity).display() if isinstance(entity, Item) else self.npc_controller.run(entity)
+
+    def wear(self, verb: str, equipment: str) -> None:
+        """"""
+        message = f'Which equipment do you want to {verb} ?'
+        if item := find_one(message, self.player.inventory.find_wearables(equipment)):
+            self.player.equip(item)
+
+    def take(self, noun: str) -> None:
+        """"""
+        message = 'Which item do you want to take ?'
+        if item := find_one(message, self.dungeon.current_room.find_items(noun)):
+            self.player.take(item, self.dungeon.current_room)
+
+    def drop(self, noun: str) -> None:
+        """"""
+        message = 'Which item do you want to drop ?'
+        if item := find_one(message, self.player.inventory.find_items(noun)):
+            self.player.drop(item, self.dungeon.current_room)
+
+    def move(self, noun: str):
+        """Move to another room"""
+        direction = Direction.parse(noun)
+        self.room_view.display() if self.dungeon.travel(
+            direction) else print('There is nothing in that direction!')
+
+
+def find_one(message: str, items: List):
+    """"""
+    if items:
+        if len(items) > 1:
+            if item := choose_one(message, items):
+                return item
+            else:
+                print('Ok')
+        else:
+            return items[0]
+    else:
+        print('There is nothing like that here...')

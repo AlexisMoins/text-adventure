@@ -11,6 +11,7 @@ from modules.controllers.actions import Action
 @dataclass(kw_only=True)
 class Room:
     """Class representing a generic room"""
+    name: str
     description: str
     items: Any = field(default_factory=list)
     enemies: Any = field(default_factory=list)
@@ -38,10 +39,10 @@ class Room:
         """Add the given item to the current room"""
         self.items.append(item)
 
-    def find_item(self, pattern: str) -> List[Item]:
+    def find_items(self, pattern: str) -> List[Item]:
         """Return the list of items corresponding to the given pattern"""
-        iterator = filter(lambda item: pattern in item.name, self.items)
-        return list(iterator)
+        items = filter(lambda item: pattern in item.name, self.items)
+        return list(items)
 
     def find_entities(self, pattern: str) -> List[Any]:
         """Return the list of items whose name matches the given pattern"""
@@ -50,4 +51,4 @@ class Room:
 
     def __str__(self) -> str:
         """Return the string representation of the room"""
-        return f'{self.coordinates}'
+        return f'{self.name.capitalize()} {self.coordinates}'

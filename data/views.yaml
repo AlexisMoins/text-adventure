@@ -1,40 +1,7 @@
-room:
-  actions:
-    i: Open your inventory
-    c: Continue your exploration
-    l: Look at something
-    p: Put something in your inventory
-    q: Leave the dungeon
+take:
+  success: Done!
+  question: Which item do you want to take ?
+  not found: I don't see that here
 
-inventory:
-  actions:
-    l: Look at a particular item
-    d: Drop items in the room
-    w: Wear a piece of equipment
-    t: Take off a piece of equipment
-    q: Close the inventory
-
-item:
-  actions:
-    t: Take off
-    w: Wear or hold
-    d: Drop in the room
-    p: Put in your inventory
-    q: Go back
-
-player:
-  interface:
-    drop warning: "This item is equipped: {}\nDrop it anyway ?"
-
-selection:
-  actions:
-    q: Cancel
-    v: Validate selection
-    y: 'Yes'
-    n: 'No'
-  interface:
-    look: "Select {} you want to take a look at:"
-    take_off: "Select the equipment(s) you want to take off:"
-    wear: "Select the equipment(s) you want to wear:"
-    take: "Select the item(s) you want to take:"
-    drop: "Select the item(s) you want to drop"
+wear:
+  success: Done!

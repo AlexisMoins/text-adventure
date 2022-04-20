@@ -1,4 +1,5 @@
-from typing import Any
+import re
+from typing import Any, List
 from yaml import safe_load
 
 
@@ -24,3 +25,9 @@ def indefinite_determiner(item_name: str) -> str:
     vowels = 'aeiouy'
     determiner = 'an ' if item_name[0] in vowels else 'a '
     return determiner + item_name
+
+
+def split_items(items: str) -> List[str]:
+    splits = re.split(',|and', items)
+    splits = [re.sub('a |an |the ', '', split) for split in splits]
+    return [split.strip() for split in splits]

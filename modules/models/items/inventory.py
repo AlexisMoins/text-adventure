@@ -24,6 +24,10 @@ class Inventory:
         """Return true if the inventory is full"""
         return len(self.items) == self.capacity
 
+    def is_empty(self) -> bool:
+        """Return true if the inventory is empty"""
+        return len(self.items) == 0
+
     def add(self, item: Item) -> None:
         """Add the given item to the inventory"""
         self.items.append(item)
@@ -73,3 +77,8 @@ class Inventory:
         """Return the list of items whose name matches the given pattern"""
         iterator = filter(lambda item: pattern in item.name, self.items)
         return list(iterator)
+
+    def find_wearables(self, pattern: str) -> List[Item]:
+        """Return the list of wearable items whose name matches the given pattern"""
+        wearable_items = filter(lambda item: pattern in item.name, self.wearable_items)
+        return list(wearable_items)

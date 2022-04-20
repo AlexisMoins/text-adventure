@@ -1,6 +1,7 @@
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from posixpath import split
+from typing import Any, Dict, List, OrderedDict, Tuple
 
 from modules.utils import load_resource
 
@@ -10,6 +11,20 @@ class Token:
     """"""
     group: str
     body: str
+
+
+class PatternParser:
+    """"""
+
+    @staticmethod
+    def parse(sentence: str) -> Tuple:
+        """"""
+        pattern = list()
+        for word in sentence.split():
+            if word.startswith('!'):
+                pass
+
+        return tuple(pattern)
 
 
 class Lexer:
@@ -57,8 +72,8 @@ class Lexer:
             word = sentence[i]
             structure = pattern[j]
 
-            print(f'\nword: {word} (i: {i})')
-            print(f'structure: {structure} (j: {j})')
+            # print(f'\nword: {word} (i: {i})')
+            # print(f'structure: {structure} (j: {j})')
 
             if word.body == structure or word.group[:-1] == structure:
                 i += 1
@@ -77,3 +92,10 @@ class Lexer:
             return False
 
         return i == len(sentence) and j == len(pattern)
+
+    @staticmethod
+    def get_noun(sentence: List[Token]) -> str:
+        """Return the noun of the sentence"""
+        tokens = filter(lambda word: word.group == 'nouns', sentence)
+        nouns = [token.body for token in tokens]
+        return ' '.join(nouns)
