@@ -17,7 +17,7 @@ class ItemView(View):
 
     def display(self) -> None:
         """Display the current view"""
-        print('\n'.join(wrap(self.item.description)))
+        print(f'{Fore.MAGENTA}({self.item.name}){Fore.WHITE}\n' + '\n'.join(wrap(self.item.description)))
 
         price = f'price: {Fore.MAGENTA}{str(self.item.price)} gold{Fore.WHITE}'
         quantity = f'quantity: {Fore.MAGENTA}x{str(self.item.quantity)}{Fore.WHITE}'

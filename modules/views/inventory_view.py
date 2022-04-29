@@ -6,7 +6,7 @@ from modules.models.items.items import Item
 
 def display_inventory(inventory: Inventory):
     """Display the player's inventory"""
-    print('Your inventory contains:' if inventory.is_empty() else 'Your inventory is empty')
+    print('Your inventory is empty' if inventory.is_empty() else 'Your inventory contains:')
     dislpay_slot_bar(inventory)
 
     if not inventory.is_empty():
@@ -27,3 +27,9 @@ def dislpay_slot_bar(inventory: Inventory) -> str:
     percentage = round(len(inventory.items) / inventory.capacity * 10)
     bar = '[' + Fore.YELLOW + '#' * percentage + Fore.WHITE + ' ' * (10 - percentage) + ']'
     print(f'{bar} {Fore.YELLOW}{len(inventory.items)}{Fore.WHITE} ({Fore.YELLOW}{inventory.capacity}{Fore.WHITE})')
+
+
+def display_slots(inventory: Inventory) -> None:
+    """"""
+    for slot, item in inventory.equipments.items():
+        print(f'{item} on slot {Fore.YELLOW}({slot}){Fore.WHITE}')

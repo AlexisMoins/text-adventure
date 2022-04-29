@@ -1,23 +1,63 @@
 # Leave the dungeon
-quit: ^(quit|q)$
+quit:
+  patterns:
+    - ^(quit|q)$
+
+help:
+  patterns:
+    - ^(help|h)( )?(?P<command>.+)?
 
 # Open the player's inventory
-inventory: ^(inventory|inv|i)$
+inventory:
+  patterns:
+    - ^(inventory|inv)$
 
 # Display the description of the room
-description: ^(description|desc)$
+description:
+  patterns:
+    - ^(description|desc)$
 
-# Drop an item from the inventory in the current room
-drop: ^drop (the |a |an )?(?P<item>.+)
+# Show the player's statistics
+statistics:
+  patterns:
+    - ^(statistics|stats)$
 
-# Look at something, either in the room or in the player's inventory
-look: ^look at (the |a |an )?(?P<entity>.+)
+# Show the wore/held items
+slots:
+  patterns:
+    - ^slots$
 
-# Take an item from the current room
-take: ^(take|get) (the |a |an )?(?P<item>.+)
+# Drop an item from the inventory directly into a container in the room
+drop:
+  patterns:
+    - ^drop (the |a |an )?(?P<item>.+) in (the |a |an )?(?P<container>.+)
+    - ^drop (the |a |an )?(?P<item>.+)
+
+look:
+  patterns:
+      - ^look at (the |a |an )?(?P<entity>.+) (from|in) (the |a |an )?(?P<container>.+)
+      - ^look at (the |a |an )?(?P<entity>.+)
+  description: Look at something, either in a container (inventory, chest...) or in the room around you
+  help:
+    - look at <something>
+    - look at <somehting> from / in <container>
+
+# Take an item from a container in the room
+take:
+  patterns:
+    - ^(take|get) (the |a |an )?(?P<item>.+) from (the |a |an )?(?P<container>.+)
+    - ^(take|get) (the |a |an )?(?P<item>.+)
+  description: take an item, either from a container (chest, barrel...) or in the room around you
+  help:
+    - take / get <item>
+    - take / get <item> from / in <container>
 
 # Wear or hold a piece of equipment
-wear: ^(?P<verb>wear|equip|hold) (the |a |an )?(?P<equipment>.*)
+wear:
+  patterns:
+    - ^(?P<verb>wear|equip|hold) (the |a |an )?(?P<equipment>.*)
 
 # Move to another room
-move: ^(move |go )?(?P<direction>north|n|east|e|south|s|west|w)$
+move:
+  patterns:
+    - ^(move |go )?(?P<direction>north|n|east|e|south|s|west|w)$

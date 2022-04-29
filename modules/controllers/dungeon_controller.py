@@ -1,6 +1,7 @@
 import re
-from typing import List, Tuple
+from textwrap import wrap
 from modules.controllers.selection import choose_one
+from colorama import Fore
 
 from modules.models.items.items import Item
 from modules.models.locations.coordinates import Direction
@@ -11,7 +12,9 @@ from modules.utils import load_resource, split_items
 from modules.views.room_view import RoomView
 from modules.views.item_view import ItemView
 
-from modules.views.inventory_view import display_inventory
+from modules.views.inventory_view import display_inventory, display_slots
+
+Entity = Character | Item
 
 
 class DungeonController:
@@ -23,7 +26,7 @@ class DungeonController:
         self.dungeon = dungeon
         self.player = player
 
-    def find_entities(self, pattern: str) -> List:
+    def find_entities(self, pattern: str) -> list:
         """Return the list of entities matching the given pattern"""
         return self.dungeon.current_room.find_entities(pattern) + self.player.inventory.find_items(pattern)
 
@@ -38,13 +41,14 @@ class DungeonController:
             action, expression = self.parse_input(user_input)
             self.handle_action(action, expression) if action and expression else print('Huh ?')
 
-    def parse_input(self, user_input: str) -> Tuple[str | None]:
+    def parse_input(self, user_input: str) -> tuple[str | None, str | None]:
         """Return a tuple of the the action corresponding to the given input and the matched expression"""
         resources = load_resource('data/actions.yaml')
 
-        for action, pattern in resources.items():
-            if expression := re.match(pattern, user_input):
-                return action, expression
+        for action, data in resources.items():
+            for pattern in data['patterns']:
+                if expression := re.match(pattern, user_input):
+                    return action, expression
         return None, None
 
     def handle_action(self, action: str, expression: re.Match) -> None:
@@ -52,12 +56,16 @@ class DungeonController:
         if action == 'quit':
             self.is_running = False
 
+        if action == 'help':
+            arguments = expression.groupdict()
+            self.get_help(**arguments)
+
         if action == 'description':
             self.room_view.display()
 
         if action == 'look':
-            entity = expression.group('entity')
-            self.look_at(entity)
+            arguments = expression.groupdict()
+            self.look_at(**arguments)
 
         if action == 'take':
             item = expression.group('item')
@@ -68,6 +76,9 @@ class DungeonController:
             item = expression.group('item')
             for i in split_items(item):
                 self.drop(item)
+
+        if action == 'slots':
+            display_slots(self.player.inventory)
 
         if action == 'inventory':
             display_inventory(self.player.inventory)
@@ -82,11 +93,49 @@ class DungeonController:
             direction = expression.group('direction')
             self.move(direction)
 
-    def look_at(self, noun: str) -> None:
+    def get_help(self, command: str = None) -> None:
         """"""
-        message = 'Which one do you want to take a look at ?'
-        if entity := find_one(message, self.find_entities(noun)):
-            ItemView(entity).display() if isinstance(entity, Item) else self.npc_controller.run(entity)
+        resources = load_resource('data/actions.yaml')
+        if command:
+            if command in resources.keys():
+                print()
+                for c in resources[command]["help"]:
+                    print(f'  {Fore.GREEN}{c}{Fore.WHITE}')
+                print('\n' + '\n'.join(wrap(resources[command]['description'])))
+            else:
+                print(f'There is no entry for \'{command}\' in the help manual')
+        else:
+            print('Here is what you can do in the dungeon:')
+            commands = [f'{Fore.GREEN}{key}{Fore.WHITE}' for key in resources.keys()]
+            print('\n  ' + '\n  '.join(wrap(', '.join(commands), width=120)))
+        # TODO join keys in actions.yaml in a wrapped list with colors
+
+    def look_at(self, entity: str, container: str = None) -> None:
+        """Look at something, in a container or in the current room (default)"""
+        collection = self.get_container(container)
+        if collection is None:
+            return None
+
+        found_entity = find(entity, collection)
+        if found_entity is None:
+            return None
+
+        ItemView(found_entity).display() if isinstance(found_entity, Item) else self.npc_controller.run(found_entity)
+
+    def get_container(self, container: str) -> list[Entity] | None:
+        """"""
+        if not container:
+            return self.dungeon.current_room.entities + self.player.inventory.items
+
+        if container in ['inventory', 'inv']:
+            return self.player.inventory.items
+
+        if container in ['here', 'room']:
+            return self.dungeon.current_room.entities
+
+        # TODO look for containers in the current room
+        print(f'There is no {container} here')
+        return None
 
     def wear(self, verb: str, equipment: str) -> None:
         """"""
@@ -113,15 +162,31 @@ class DungeonController:
             direction) else print('There is nothing in that direction!')
 
 
-def find_one(message: str, items: List):
+def find_one(message: str, collection: list[Entity]) -> Entity:
     """"""
-    if items:
-        if len(items) > 1:
-            if item := choose_one(message, items):
+    if collection:
+        if len(collection) > 1:
+            if item := choose_one(message, collection):
                 return item
             else:
                 print('Ok')
         else:
-            return items[0]
+            return collection[0]
     else:
         print('There is nothing like that here...')
+
+
+def find(name: str, collection: list[Entity]) -> Entity | None:
+    """"""
+    iterable = [entity for entity in collection if name in entity.name]
+    if not iterable:
+        print(f'There is no {name} here')
+        return None
+
+    if len(iterable) > 1:
+        if item := choose_one('Which one of the following ?', iterable):
+            return item
+        else:
+            print('Ok!')
+    else:
+        return iterable[0]

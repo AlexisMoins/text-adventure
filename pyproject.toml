@@ -2,7 +2,7 @@
 name = "text-adventure"
 version = "0.1.0"
 description = "A text-based roguelike including dungeons, monsters and magic 🎉"
-authors = ["AlexisMoins <moinsalexis@gmail.com>"]
+authors = ["Alexis Moins <moinsalexis@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -12,6 +12,7 @@ colorama = "^0.4.4"
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.1"
 autopep8 = "^1.6.0"
+pre-commit = "^2.18.1"
 
 [tool.autopep8]
 max_line_length = 120

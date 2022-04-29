@@ -11,7 +11,6 @@ from modules.controllers.actions import Action
 @dataclass(kw_only=True)
 class Room:
     """Class representing a generic room"""
-    name: str
     description: str
     items: Any = field(default_factory=list)
     enemies: Any = field(default_factory=list)
@@ -51,4 +50,4 @@ class Room:
 
     def __str__(self) -> str:
         """Return the string representation of the room"""
-        return f'{self.name.capitalize()} {self.coordinates}'
+        return f'{self.coordinates}'
