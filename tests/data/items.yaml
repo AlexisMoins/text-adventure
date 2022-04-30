@@ -4,19 +4,22 @@ mock_item:
   name: my item
   description: a basic item
   price: 10
+  quantity: 1
   actions: [buy]
 
 mock_consumable:
   name: my consumable
   description: a basic consumable
   price: 20
-  actions: [drink, thow]
+  quantity: 1
+  actions: [drink, throw]
   statistics: {health: 15}
 
 mock_spell:
   name: my spell
   description: a basic equipment
   damage: 10
+  quantity: 1
   spell_type: offensive
   spell_range: ennemies
 
@@ -24,19 +27,7 @@ mock_equipment:
   name: my equipment
   description: a basic equipment
   price: 30
+  quantity: 1
   durability: 12
-
-mock_armor:
-  name: my armor
-  description: a basic armor
-  price: 70
-  durability: 24
-  protection: 12
-  slot: torso
-
-mock_weapon:
-  name: my weapon
-  description: a basic weapon
-  price: 50
-  durability: 56
-  damage: 12
+  statistics: {attack: 15, magic: 8}
+  slot: chest
