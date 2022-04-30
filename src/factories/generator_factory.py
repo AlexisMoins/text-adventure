@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Callable
 
 from src.generators.items.item_generator import ItemGenerator
 from src.generators.locations.room_generator import RoomGenerator
@@ -7,7 +7,7 @@ from src.generators.characters.character_generator import EnemyGenerator
 
 
 # List of generators
-generators: Dict[str, Any] = dict()
+generators: dict[str, Callable] = {}
 
 
 # Default generators
@@ -17,11 +17,6 @@ default_generators = {
     'room': RoomGenerator,
     'item': ItemGenerator,
 }
-
-
-def get(key: str) -> Any:
-    """Return the generator corresponding to the given key"""
-    return generators[key] if key in generators.keys() else None
 
 
 def set_dungeon_path(path: str) -> None:

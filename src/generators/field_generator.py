@@ -1,5 +1,5 @@
 import random
-from typing import List, Any, Protocol
+from typing import Any, Protocol
 
 
 class Generator(Protocol):
@@ -13,7 +13,7 @@ class Generator(Protocol):
         """"""
         pass
 
-    def generate_many(self, n: int) -> List[Any]:
+    def generate_many(self, n: int) -> list[Any]:
         """"""
         pass
 
@@ -22,7 +22,7 @@ class FieldGenerator:
     """"""
 
     @staticmethod
-    def generate(generator: Generator, data: List[str | int] | int) -> List[Any]:
+    def generate(generator: Generator, data: list[str | int] | int) -> list[Any]:
         """Returns a list of the data deserialized using the given generator"""
         if not data:
             return []

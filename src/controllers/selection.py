@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any
 from colorama import Fore
 from src.models.items.inventory import Inventory
 from src.models.items.items import Item
@@ -9,7 +9,7 @@ from src.views.utils import display_message
 from src.views.selection import display_multi_selection, display_selection, inventory_single_selection_format
 
 
-def choose_one(message: str, items: List) -> Any:
+def choose_one(message: str, items: list) -> Any:
     """"""
     while True:
         display_message(message)
@@ -31,7 +31,7 @@ def choose_one(message: str, items: List) -> Any:
                 return items[index]
 
 
-def choose_many(message: str, items: List, inventory: bool = False) -> List[Any]:
+def choose_many(message: str, items: list, inventory: bool = False) -> list[Any]:
     """Return a list of items chosen from the given list"""
     keys = ['q', 'v']
     selection = [False for _ in items]

@@ -1,7 +1,6 @@
 import math
 import random
-import statistics
-from typing import Any, Dict, List
+from typing import Any
 
 from src import utils
 from src.models.items.items import Item
@@ -20,7 +19,7 @@ class ItemGenerator:
         """Loads a floor into the item generator"""
         data = utils.load_resource(f'{self.dungeon}/{floor}/items.yaml')
         self.generation_table = data.pop('generation')
-        self.items: Dict[str, Dict] = data
+        self.items: dict[str, dict] = data
 
     def generate(self, item_name: str) -> Item | None:
         """Return the given item after it has been generated"""
@@ -33,7 +32,7 @@ class ItemGenerator:
 
         return factory.create(item)
 
-    def random_statistics(self, item: Dict[str, Any]) -> None:
+    def random_statistics(self, item: dict[str, Any]) -> None:
         """Randomize the statistics of the item"""
         statistics = dict()
         for name, value in item['statistics'].items():
@@ -51,6 +50,6 @@ class ItemGenerator:
             number -= weight
         return None
 
-    def generate_many(self, n: int) -> List[Item]:
+    def generate_many(self, n: int) -> list[Item]:
         """Generates n random items"""
         return [self.generate_one() for _ in range(n)]

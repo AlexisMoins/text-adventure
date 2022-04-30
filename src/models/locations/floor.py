@@ -1,17 +1,16 @@
-from typing import Dict
-
 from colorama import Fore
-from modules.controllers.selection import is_integer
-from modules.models.locations.room import Room
-from modules.models.locations.coordinates import Coordinates
-from modules.views.selection import display_selection
-from modules.views.utils import display_message
+
+from src.controllers.selection import is_integer
+from src.models.locations.room import Room
+from src.models.locations.coordinates import Coordinates
+from src.views.selection import display_selection
+from src.views.utils import display_message
 
 
 class Floor:
     """Class representing a collection of rooms"""
 
-    def __init__(self, name: str, rooms: Dict[Coordinates, Room]) -> None:
+    def __init__(self, name: str, rooms: dict[Coordinates, Room]) -> None:
         """Parameterised constructor creating a new floor"""
         self.name = name
         self.rooms = rooms

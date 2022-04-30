@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from random import randint
-from typing import Dict, List, Any
+from typing import Any
 
 from src import utils
 from src.models.locations.room import Room
@@ -56,19 +56,19 @@ class RoomGenerator(Generator):
             number -= weight
         return None
 
-    def generate_many(self, n: int) -> List[Room]:
+    def generate_many(self, n: int) -> list[Room]:
         """Generates n random rooms"""
         number = min(len(self.generation_table), n)
         return [self.generate_one() for _ in range(number)]
 
-    def _deserialize_room(self, data: Dict[str, Any]) -> Room:
+    def _deserialize_room(self, data: dict[str, Any]) -> Room:
         """Returns the room deserialized from the given data"""
         room = Room(**data)
         room.items = FieldGenerator.generate(self.item_generator, room.items)
         room.enemies = FieldGenerator.generate(self.enemy_generator, room.enemies)
         return room
 
-    def _pop_room(self, room) -> Dict[str, Any]:
+    def _pop_room(self, room) -> dict[str, Any]:
         """Returns the given room's data and remove it from the generator"""
         if room in self.generation_table:
             del self.generation_table[room]

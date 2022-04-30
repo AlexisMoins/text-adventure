@@ -1,7 +1,0 @@
-take:
-  success: Done!
-  question: Which item do you want to take ?
-  not found: I don't see that here
-
-wear:
-  success: Done!

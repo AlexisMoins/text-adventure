@@ -1,11 +1,11 @@
 from random import randint
-from typing import Any, Dict, List
+from typing import Any
 from src import utils
 
 from src.models.characters.npc import Enemy
 from src.models.characters.character import Character
 
-import src.factories.generator_factory as factory
+import src.factories.generator_factory as generator_factory
 from src.models.items.inventory import Inventory
 from src.generators.field_generator import FieldGenerator
 
@@ -39,14 +39,14 @@ class CharacterGenerator:
             number -= weight
         return None
 
-    def generate_many(self, n: int) -> List[Character]:
+    def generate_many(self, n: int) -> list[Character]:
         """Generates n random items"""
         number = min(len(self.generation_table), n)
         return [self.generate_one() for _ in range(number)]
 
     def generate_inventory(self, data):
         """Generate an inventory with the given data"""
-        items = FieldGenerator.generate(factory.generators['item'], data.pop('inventory'))
+        items = FieldGenerator.generate(generator_factory.generators['item'], data.pop('inventory'))
         return Inventory(items=items, gold=data.pop('gold'))
 
 
@@ -61,7 +61,7 @@ class EnemyGenerator(CharacterGenerator):
         """Loads a floor into the enemy generator"""
         super().load_floor(f'{self.dungeon}/{floor}/enemies.yaml')
 
-    def _deserialize_character(self, data: Dict[str, Any]) -> Enemy:
+    def _deserialize_character(self, data: dict[str, Any]) -> Enemy:
         """Returns the enemy deserialized from the given data"""
         inventory = super().generate_inventory(data)
         return Enemy(**data, inventory=inventory)

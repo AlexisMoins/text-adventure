@@ -1,19 +1,17 @@
-from typing import List
+from src.factories import generator_factory as factory
 
-from modules.factories import generator_factory
-from modules.models.locations.coordinates import Coordinates, Direction
-
-from modules.models.locations.room import Room
-from modules.models.locations.floor import Floor
+from src.models.locations.room import Room
+from src.models.locations.floor import Floor
+from src.models.locations.coordinates import Direction
 
 
 class Dungeon:
     """Model representing a dungeon with its list of floors"""
 
-    def __init__(self, floors: List[str]) -> None:
+    def __init__(self, floors: list[str]) -> None:
         """Parameterised constructor creating a new dungeon"""
-        self.floors: List[str] = floors
-        self.floor_generator = generator_factory.get('floor')
+        self.floors: list[str] = floors
+        self.floor_generator = factory.generators['floor']
         self.current_floor: Floor
         self.next_floor()
 
@@ -25,7 +23,7 @@ class Dungeon:
     def next_floor(self) -> None:
         """Ascend to the next floor"""
         new_floor = self.floors.pop(0)
-        generator_factory.change_floor(new_floor)
+        factory.change_floor(new_floor)
         self.current_floor = self.floor_generator.generate_one()
 
     def travel(self, direction: Direction) -> bool:

@@ -1,5 +1,5 @@
 import re
-from typing import Any, List
+from typing import Any
 from yaml import safe_load
 
 
@@ -7,10 +7,6 @@ def load_resource(resource: str) -> Any:
     """Return the given resources once loaded and converted"""
     with open(resource, 'r') as data:
         return safe_load(data)
-
-
-# All the resources used in the different views
-resources = load_resource('data/views.yaml')
 
 
 def definite_determiner(item_name: str) -> str:
@@ -27,7 +23,7 @@ def indefinite_determiner(item_name: str) -> str:
     return determiner + item_name
 
 
-def split_items(items: str) -> List[str]:
+def split_items(items: str) -> list[str]:
     splits = re.split(',|and', items)
     splits = [re.sub('a |an |the ', '', split) for split in splits]
     return [split.strip() for split in splits]
