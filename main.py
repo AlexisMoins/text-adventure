@@ -1,14 +1,14 @@
-from modules.factories import generator_factory
+from src.factories import generator_factory
 
-from modules.generators.characters import player_generator
-from modules.generators.locations.dungeon_generator import DungeonGenerator
+from src.generators.characters import player_generator
+from src.generators.locations.dungeon_generator import DungeonGenerator
 
-from modules.controllers.dungeon_controller import DungeonController
-
+from src.controllers.dungeon_controller import DungeonController
 
 if __name__ == '__main__':
 
     path = 'data/dungeon'
+
     # Initialize the generator factory
     generator_factory.set_dungeon_path(path)
 

@@ -1,4 +1,3 @@
-from typing import Dict, List
 from random import randint, choice
 
 from src import utils
@@ -16,7 +15,7 @@ class FloorGenerator:
         """Constructor creating a new generator of floors"""
         self.room_generator = RoomGenerator(dungeon_path)
         self.dungeon = dungeon_path
-        self.rules: Dict = None
+        self.rules: dict = None
 
     def load_floor(self, floor: str) -> None:
         """Loads a floor into the floor generator"""
@@ -32,9 +31,9 @@ class FloorGenerator:
         rooms = self.room_generator.generate_many(max(number, 1))
         return Floor(self.dungeon, self.create_room_layout(rooms))
 
-    def create_room_layout(self, rooms: List[Room]) -> Dict[Coordinates, Room]:
+    def create_room_layout(self, rooms: list[Room]) -> dict[Coordinates, Room]:
         """Return the map of the floor, comprised of coordinates and their associated room"""
-        layout: Dict[Coordinates, Room] = dict()
+        layout: dict[Coordinates, Room] = dict()
         coordinates = Coordinates(0, 0)
 
         for room in rooms:

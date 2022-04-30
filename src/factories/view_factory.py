@@ -1,4 +1,4 @@
-from typing import Dict, Callable, Any, Protocol
+from typing import Callable, Any, Protocol
 
 from src.views.item_view import ItemView
 
@@ -13,7 +13,7 @@ class View(Protocol):
 
 
 """List of views types and their corresponding class"""
-views: Dict[str, Callable] = dict()
+views: dict[str, Callable] = dict()
 
 
 def get(entity: Any) -> View | None:

@@ -1,21 +1,16 @@
 import resource
-from typing import Dict
 from dataclasses import dataclass, field
 
 from src.models.items.inventory import Inventory
-from src.models.items.equipments import Equipment
-from src.models.items.items import Item
+from src.models.items.items import Item, Equipment
 from src.models.locations.room import Room
-from src.views.utils import yes_no_question
-
-from src.utils import resources
 
 
 @dataclass(kw_only=True)
 class Character:
     """Class representing a generic character"""
     name: str
-    statistics: Dict[str, int] = field(default=dict)
+    statistics: dict[str, int] = field(default=dict)
     inventory: Inventory = field(default_factory=list)
 
     def __post_init__(self) -> None:

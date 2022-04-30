@@ -1,5 +1,5 @@
 import random
-from typing import Any, Dict, List
+from typing import Any
 
 from src import utils
 from src.models.locations.dungeon import Dungeon
@@ -16,13 +16,13 @@ class DungeonGenerator:
         return Dungeon(floors)
 
     @staticmethod
-    def floor_list(data: Dict[str, Any]) -> List[str]:
+    def floor_list(data: dict[str, Any]) -> list[str]:
         """Returns a list of (almost) randomly generated floor name"""
         return [DungeonGenerator.choose_one(floor) if type(floor) == dict
                 else floor for floor in data]
 
     @staticmethod
-    def choose_one(selection: Dict[str, int]) -> str | None:
+    def choose_one(selection: dict[str, int]) -> str | None:
         """Returns a floor name after it has been randomly choosen from the items in the given selection"""
         total_weight = sum(selection.values())
         number = random.randint(1, total_weight)

@@ -2,8 +2,6 @@ from colorama import Fore
 from typing import Any
 
 from src.models.items.items import Equipment
-
-from src.utils import resources
 from src.views.utils import display_actions
 
 
@@ -15,8 +13,6 @@ def display_selection(items: list, keys: list[str], inventory: bool) -> None:
             item, Equipment) and item.is_equipped) if inventory else single_selection_format(index, item)
         print(line)
 
-    display_actions(keys, resources['selection']['actions'])
-
 
 def display_multi_selection(items: list, selection: list, keys: list[str], inventory: bool) -> None:
     """Display a selection menu"""
@@ -25,8 +21,6 @@ def display_multi_selection(items: list, selection: list, keys: list[str], inven
         line = inventory_multi_selection_format(index, item, selection, isinstance(
             item, Equipment) and item.is_equipped) if inventory else multi_selection_format(index, item, selection)
         print(line)
-
-    display_actions(keys, resources['selection']['actions'])
 
 
 def inventory_single_selection_format(index: int, item: Any, is_equipped: bool) -> str:

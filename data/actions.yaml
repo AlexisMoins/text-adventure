@@ -1,37 +1,61 @@
 # Leave the dungeon
 quit:
   patterns:
-    - ^(quit|q)$
+    - ^(quit|leave)$
+  description: Leave the dungeon and go back to the main menu
+  help:
+    - quit / leave
 
 help:
   patterns:
-    - ^(help|h)( )?(?P<command>.+)?
+    - ^(help)( )?(?P<command>.+)?
+  description: Display the entries in the help manual or display the manual page for a specific action if one is given
+  help:
+    - help
+    - help <action>
 
 # Open the player's inventory
 inventory:
   patterns:
     - ^(inventory|inv)$
+  description: Display your inventory. Currently wore or held equipments are marked by a red 'e'
+  help:
+    - inventory / inv
 
 # Display the description of the room
 description:
   patterns:
     - ^(description|desc)$
+  description: Display the current room. Also clears the screen. Usefull to declutter your action history.
+  help:
+    - description / desc
 
 # Show the player's statistics
 statistics:
   patterns:
     - ^(statistics|stats)$
+  description: Display your statistics
+  help:
+    - statistics / stats
+
 
 # Show the wore/held items
 slots:
   patterns:
     - ^slots$
+  description: Display the equipments you are currenlty wearing or holding. Also display to which part of the body they are attached
+  help:
+    - slots
 
 # Drop an item from the inventory directly into a container in the room
 drop:
   patterns:
     - ^drop (the |a |an )?(?P<item>.+) in (the |a |an )?(?P<container>.+)
     - ^drop (the |a |an )?(?P<item>.+)
+  description: Drop the given item in the current room or in the given container if one is specified
+  help:
+    - drop <item>
+    - drop <item> in <container>
 
 look:
   patterns:
@@ -47,7 +71,7 @@ take:
   patterns:
     - ^(take|get) (the |a |an )?(?P<item>.+) from (the |a |an )?(?P<container>.+)
     - ^(take|get) (the |a |an )?(?P<item>.+)
-  description: take an item, either from a container (chest, barrel...) or in the room around you
+  description: Take an item, either from a container (chest, barrel...) or in the room around you and put it in your inventory
   help:
     - take / get <item>
     - take / get <item> from / in <container>
@@ -56,8 +80,15 @@ take:
 wear:
   patterns:
     - ^(?P<verb>wear|equip|hold) (the |a |an )?(?P<equipment>.*)
+  description: Wear or hold the given item. The item must be in your inventory
+  help:
+    - wear / equip / hold <item>
 
 # Move to another room
 move:
   patterns:
     - ^(move |go )?(?P<direction>north|n|east|e|south|s|west|w)$
+  description: Travel around the dungeon using cardinal directions
+  help:
+    - move / go <direction>
+    - <direction>

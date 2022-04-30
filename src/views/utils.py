@@ -1,8 +1,5 @@
 import os
 from colorama import Fore
-from typing import Dict, List
-
-from src.utils import resources
 
 
 def yes_no_question(message: str, warning: bool = False) -> bool:
@@ -10,7 +7,6 @@ def yes_no_question(message: str, warning: bool = False) -> bool:
     keys = ['y', 'n']
     while True:
         display_message(message, warning=warning)
-        display_actions(keys, resources['selection']['actions'])
 
         user_input = input('\n> ').lower()
         if user_input == keys[0]:
@@ -35,7 +31,7 @@ def display_message(message: str, wait: bool = False, warning: bool = False) -> 
         input(f'Press any key to continue {Fore.CYAN}[...]{Fore.WHITE} ')
 
 
-def display_actions(keys: List[str], actions: Dict[str, str]) -> None:
+def display_actions(keys: list[str], actions: dict[str, str]) -> None:
     """Display the possible actions available in the current context"""
     print('')
     for key in keys:
