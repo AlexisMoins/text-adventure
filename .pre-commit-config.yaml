@@ -22,11 +22,3 @@ repos:
       - id: poetry-lock
       - id: poetry-export
         args: ["--dev", "-f", "requirements.txt", "-o", "requirements.txt"]
-  - repo: local
-    hooks:
-      - id: pytest-check
-        name: pytest-check
-        entry: pytest
-        language: system
-        pass_filenames: false
-        always_run: true

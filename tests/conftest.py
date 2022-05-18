@@ -1,7 +1,7 @@
+from typing import Any
+
 from pytest import fixture
 from yaml import safe_load
-
-from typing import Any
 
 
 @fixture()

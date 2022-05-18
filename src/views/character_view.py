@@ -1,7 +1,7 @@
 from colorama import Fore
 
-from src.views.view import View
 from src.models.characters.character import Character
+from src.views.view import View
 
 
 class CharacterView(View):

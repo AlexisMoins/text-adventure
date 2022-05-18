@@ -1,62 +1,53 @@
 from colorama import Fore
+from typing import DefaultDict
+from collections import defaultdict
 from dataclasses import dataclass, field
 
-from src.utils import indefinite_determiner
+from src.factory import add
+from src.models.entity import Entity
+from src.models.collections import SizedContainer
 
 
+@add('item')
 @dataclass(kw_only=True)
-class Item:
-    """Class representing a generic item"""
-    name: str
+class Item(Entity):
+    """Represents a generic item"""
+    durability: list[int]
     price: int = 0
-    description: str
-    quantity: int = 1
-    actions: list[str] = field(default_factory=list)
-    is_in_inventory: bool = field(init=False, default=False)
 
     def __str__(self) -> str:
-        """String representation of the item"""
-        return f'{indefinite_determiner(self.name)}'
+        """Return the string representation of this item"""
+        return self.name
 
 
+@add('chest')
 @dataclass(kw_only=True)
+class Chest(Item):
+    """Represents any container item with a size"""
+    items: SizedContainer
+    is_locked: bool = False
+
+    def __str__(self) -> str:
+        """Return the string representation of the chest"""
+        return f'{self.name} {Fore.MAGENTA}[{self.items.indicator}]{Fore.WHITE}'
+
+
+@add('consumable')
+@dataclass(slots=True)
 class Consumable(Item):
-    """Class representing a general"""
-    statistics: dict[str, int] = field(default_factory=dict)
+    """Represents a general comsumable item such as a potion"""
+    statistics: DefaultDict[str, int] = field(default_factory=lambda: defaultdict(int))
 
 
-@dataclass(kw_only=True)
-class Spell(Consumable):
-    """Class representing spells"""
-    damage: int
-    spell_type: str
-    spell_range: str
-
-
+@add('equipment')
 @dataclass(kw_only=True)
 class Equipment(Item):
     """Class representing a generic equipment"""
-    slot: str = None
-    durability: int
+    slot: str
     statistics: dict[str, int] = field(default_factory=dict)
-    is_equipped: bool = field(default=False, init=False)
-
-    def __post_init__(self) -> None:
-        """Additional steps to initialize the instance"""
-        self.max_durability = self.durability
+    equipped: bool = field(default=False, init=False)
 
     def __str__(self) -> str:
         """Return the string representation of the armor"""
         statistics = ', '.join([f'{stat} +{value}' for stat, value in self.statistics.items()])
-        return f'{super().__str__()} {Fore.MAGENTA}[{statistics}]{Fore.WHITE}'
-
-
-@dataclass(kw_only=True)
-class SpellBook(Equipment):
-    """Class representing any spellbook"""
-    capacity: int
-    spells: list[Spell] = field(default_factory=list)
-
-    def __post_init__(self) -> None:
-        """Additional steps to initialize the instance"""
-        super().slot = 'spellbook'
+        return f'{self.name} {Fore.MAGENTA}[{statistics}]{Fore.WHITE}'

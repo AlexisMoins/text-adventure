@@ -6,12 +6,18 @@ generation:
   room1: 33
   room2: 33
 
+start:
+  description: You slowly open your eyes to discover that you have fallen asleep
+    at the bottom of an old oak tree. A tall carved white stone is standing just
+    a few meters from you.
+  items: [oak tree]
+
 # 2: Room list
 room1:
   description: You enter in a long corridor. The floor seems to be covered with
     crushed bones and you smell a terrible sent of rotten flesh.
   items: [0, 1]
-  enemies: [enemy1]
+  enemies: [wolf]
 
 room2:
   description: As you progress through the dungeon, you find a pond of clear water.

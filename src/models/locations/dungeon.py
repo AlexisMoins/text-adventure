@@ -1,8 +1,7 @@
 from src.factories import generator_factory as factory
-
-from src.models.locations.room import Room
-from src.models.locations.floor import Floor
 from src.models.locations.coordinates import Direction
+from src.models.locations.floor import Floor
+from src.models.locations.room import Room
 
 
 class Dungeon:
@@ -28,7 +27,7 @@ class Dungeon:
 
     def travel(self, direction: Direction) -> bool:
         """Travel to another room"""
-        coordinates = self.current_room.coordinates.next_towards(direction)
+        coordinates = self.current_room.coordinates.in_direction(direction)
         if coordinates in self.current_floor.rooms.keys():
             self.current_floor.player_position = coordinates
             self.current_room.visited = True

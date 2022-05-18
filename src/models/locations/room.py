@@ -1,51 +1,38 @@
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Any
 
-from src.models.items.items import Item
+import textwrap
+from dataclasses import dataclass, field
+
+from src.models.collections import Container
 from src.models.locations.coordinates import Coordinates, Direction
 
 
 @dataclass(kw_only=True)
 class Room:
-    """Class representing a generic room"""
+    """Represents a room, a space containing entities (characters and/or items)"""
     description: str
-    items: Any = field(default_factory=list)
-    enemies: Any = field(default_factory=list)
-    npc: Any = field(default_factory=list)
-    actions: list[str] = field(default_factory=list, init=False)
+    entities: Container = field(default_factory=Container)
 
-    visited: bool = field(init=False, default=False)
     coordinates: Coordinates = field(init=False, default=None)
-    exits: dict[Direction, Coordinates] = field(default_factory=dict, init=False)
+    exits: dict[Direction, Room] = field(default_factory=dict, init=False)
 
-    def is_empty(self) -> bool:
-        """Return true if the room is empty, return false otherwise"""
-        return len(self.entities) == 0
+    def add_exit(self, direction: Direction, room: Room) -> None:
+        """Add a new exit to the curren room"""
+        self.exits[direction] = room
+        room.exits[direction.opposite] = self
 
-    @property
-    def entities(self) -> list:
-        """Return the list of all entities present in the room"""
-        return self.items + self.enemies + self.npc
+        if room.coordinates is None:
+            room.coordinates = self.coordinates.in_direction(direction)
 
-    def remove(self, item: Item) -> Item:
-        """Remove the given item from the current room"""
-        return self.items.pop(self.items.index(item))
+    def display(self) -> None:
+        """Display the given room"""
+        clear_screen()
+        print(f'{get_character_status(dungeon.PLAYER)}    position: {dungeon.current_room.coordinates}\n')
 
-    def add(self, item: Item) -> None:
-        """Add the given item to the current room"""
-        self.items.append(item)
+        print(textwrap.fill(dungeon.current_room.description))
 
-    def find_items(self, pattern: str) -> list[Item]:
-        """Return the list of items corresponding to the given pattern"""
-        items = filter(lambda item: pattern in item.name, self.items)
-        return list(items)
-
-    def find_entities(self, pattern: str) -> list[Any]:
-        """Return the list of items whose name matches the given pattern"""
-        iterator = filter(lambda entity: pattern in entity.name, self.entities)
-        return list(iterator)
-
-    def __str__(self) -> str:
-        """Return the string representation of the room"""
-        return f'{self.coordinates}'
+        entities_and_exits = list(dungeon.current_room.entities) + list(dungeon.current_room.exits.keys())
+        if entities_and_exits:
+            word = 'are' if len(entities_and_exits) > 1 else 'is'
+            print(f'\nAround you {word}:')
+            display_entities()

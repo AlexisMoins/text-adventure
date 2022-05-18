@@ -1,47 +1,41 @@
-from textwrap import wrap
+import textwrap
 from colorama import Fore
 
-from src.models.items.items import Item
+from view import view
+from src.models.items.items import Item, Equipment
 
-from src.views.view import View
+
+def display(item: Item) -> None:
+    """Display the current view"""
+    print(f'{Fore.MAGENTA}({item.name}){Fore.WHITE}')
+    print(textwrap.fill(item.description))
+
+    price = f'price: {Fore.MAGENTA}{str(item.price)} gold{Fore.WHITE}'
+    quantity = f'quantity: {Fore.MAGENTA}x{str(item.quantity)}{Fore.WHITE}'
+    print(f'\n{price:<30}{quantity}')
+
+    if 'equip' in item.actions:
+        display_equipment(item)
+
+    # actions = self.item.get_actions()
+    # self.display_actions(actions.keys(), self.resources['item']['actions'])
 
 
-class ItemView(View):
-    """Class representing the view of an item"""
+def display_equipment(item: Equipment) -> None:
+    """Display the equipment's information"""
+    slot = f'slot: {Fore.MAGENTA}{item.slot}{Fore.WHITE}'
+    equipped = f'equipped: {Fore.MAGENTA}{"yes" if item.equipped else "no"}{Fore.WHITE}'
+    print(f'{slot:<30}{equipped}')
 
-    def __init__(self, item: Item) -> None:
-        """Parameterised constructor creating a new view over an item"""
-        self.item = item
+    statistics = f'statistics: {Fore.MAGENTA}'
+    statistics += ', '.join([f'{stat} +{value}' for stat, value in item.statistics.items()]) + Fore.WHITE
 
-    def display(self) -> None:
-        """Display the current view"""
-        print(f'{Fore.MAGENTA}({self.item.name}){Fore.WHITE}\n' + '\n'.join(wrap(self.item.description)))
+    print(f'\ndurability: {disply_durability(item)}')
+    print(f'{statistics:<30}')
 
-        price = f'price: {Fore.MAGENTA}{str(self.item.price)} gold{Fore.WHITE}'
-        quantity = f'quantity: {Fore.MAGENTA}x{str(self.item.quantity)}{Fore.WHITE}'
-        print(f'\n{price:<30}{quantity}')
 
-        if 'equip' in self.item.actions:
-            self.display_equipment()
-
-        # actions = self.item.get_actions()
-        # self.display_actions(actions.keys(), self.resources['item']['actions'])
-
-    def display_equipment(self) -> None:
-        """Display the equipment's information"""
-        slot = f'slot: {Fore.MAGENTA}{self.item.slot}{Fore.WHITE}'
-        equipped = f'equipped: {Fore.MAGENTA}{"yes" if self.item.is_equipped else "no"}{Fore.WHITE}'
-        print(f'{slot:<30}{equipped}')
-
-        statistics = f'statistics: {Fore.MAGENTA}'
-        statistics += ', '.join([f'{stat} +{value}' for stat, value in self.item.statistics.items()]) + Fore.WHITE
-
-        print(f'\ndurability: {self.durability_bar}')
-        print(f'{statistics:<30}')
-
-    @property
-    def durability_bar(self) -> str:
-        """Return the durability bar"""
-        value = self.item.durability
-        maximum = self.item.max_durability
-        return self.get_bar(value, maximum, Fore.MAGENTA, '>')
+def disply_durability(item: Equipment) -> str:
+    """Return the durability bar"""
+    value = item.durability
+    maximum = item.max_durability
+    return view.get_bar(value, maximum, Fore.MAGENTA, '>')

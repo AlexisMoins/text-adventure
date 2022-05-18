@@ -1,8 +1,8 @@
 from colorama import Fore
 
 from src.controllers.selection import is_integer
-from src.models.locations.room import Room
 from src.models.locations.coordinates import Coordinates
+from src.models.locations.room import Room
 from src.views.selection import display_selection
 from src.views.utils import display_message
 

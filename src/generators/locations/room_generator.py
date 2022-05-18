@@ -1,75 +1,76 @@
-from abc import ABC, abstractmethod
-from random import randint
 from typing import Any
 
-from src import utils
+from src.models.collections import Container
+
+from src import utils, dungeon
 from src.models.locations.room import Room
 
-from src.generators.field_generator import FieldGenerator
-from src.generators.items.item_generator import ItemGenerator
-from src.generators.characters.character_generator import EnemyGenerator
+from src.generators import item_generator
+from src.generators.characters import npc_generator
+from src.generators.characters import enemy_generator
 
 
-class Generator(ABC):
-    """"""
+# Mapping room name -> properties
+rooms: dict[str, Any] = {}
 
-    @abstractmethod
-    def load_floor(self, floor: str) -> None:
-        """"""
-        pass
+# List of the possible room names
+population: list[str] = []
+
+# List of the chances of generating corresponding room in the population
+weights: list[int] = []
 
 
-class RoomGenerator(Generator):
-    """Class generating rooms based on the provided configuration files"""
+def parse_floor(floor: str) -> None:
+    """Load the given floor's room generation file"""
+    global rooms
 
-    def __init__(self, dungeon_path: str) -> None:
-        """Constructor creating a new generator of rooms"""
-        self.dungeon = dungeon_path
-        self.item_generator = ItemGenerator(dungeon_path)
-        self.enemy_generator = EnemyGenerator(dungeon_path)
+    rooms = utils.get_content(dungeon.PATH, floor, 'rooms.yaml')
+    generation = rooms.pop('generation')
 
-    def load_floor(self, floor: str) -> None:
-        """Loads a floor into the floor generator"""
-        data = utils.load_resource(f'{self.dungeon}/{floor}/rooms.yaml')
-        self.generation_table = data.pop('generation')
-        self.rooms = data
+    global weights
+    global population
 
-        self.item_generator.load_floor(floor)
-        self.enemy_generator.load_floor(floor)
+    weights = list(generation.values())
+    population = list(generation.keys())
 
-    def total_weight(self) -> int:
-        """Returns the total weight of the rooms in the generation table"""
-        return sum(self.generation_table.values())
 
-    def generate(self, room: str) -> Room | None:
-        """Returns the given room after it has been generated"""
-        if room not in self.rooms.keys():
-            return None
-        return self._deserialize_room(self._pop_room(room))
+def generate(room_id: str) -> Room:
+    """Returns the given room after it has been generated"""
+    data = pop_room(room_id)
+    return deserialize_room(data)
 
-    def generate_one(self) -> Room | None:
-        """Generates a random room"""
-        number = randint(1, self.total_weight())
-        for room, weight in self.generation_table.items():
-            if number <= weight:
-                return self.generate(room)
-            number -= weight
-        return None
 
-    def generate_many(self, n: int) -> list[Room]:
-        """Generates n random rooms"""
-        number = min(len(self.generation_table), n)
-        return [self.generate_one() for _ in range(number)]
+def generate_one() -> Room | None:
+    """Generates a random room"""
+    number = dungeon.RANDOM.randint(1, sum(weights))
+    for room, weight in zip(population, weights):
+        if number <= weight:
+            return generate(room)
+        number -= weight
 
-    def _deserialize_room(self, data: dict[str, Any]) -> Room:
-        """Returns the room deserialized from the given data"""
-        room = Room(**data)
-        room.items = FieldGenerator.generate(self.item_generator, room.items)
-        room.enemies = FieldGenerator.generate(self.enemy_generator, room.enemies)
-        return room
 
-    def _pop_room(self, room) -> dict[str, Any]:
-        """Returns the given room's data and remove it from the generator"""
-        if room in self.generation_table:
-            del self.generation_table[room]
-        return self.rooms.pop(room)
+def generate_many(k: int) -> list[Room]:
+    """Generates k randomly generated rooms"""
+    number = min(len(population), k)
+    return [generate_one() for _ in range(number)]
+
+
+def deserialize_room(data: dict[str, Any]) -> Room:
+    """Returns the room deserialized from the given data"""
+    items = utils.parse_field(data.pop('items', []), item_generator)
+    enemies = utils.parse_field(data.pop('enemies', []), enemy_generator)
+    npc = utils.parse_field(data.pop('npc', []), npc_generator)
+
+    entities = items + enemies + npc
+    return Room(**data, entities=Container(entities))
+
+
+def pop_room(room_id) -> dict[str, Any]:
+    """Returns the given room's data and remove it from the generator"""
+    if room_id in population:
+        index = population.index(room_id)
+
+        del weights[index]
+        population.remove(room_id)
+
+    return rooms.pop(room_id)

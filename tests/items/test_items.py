@@ -68,4 +68,4 @@ def new_equipment_test(item: Equipment, data: dict[str, Any]) -> None:
     assert item.durability == data['durability']
     assert item.max_durability == data['durability']
     assert item.statistics == data['statistics']
-    assert item.is_equipped == False
+    assert item.equipped == False

@@ -1,19 +1,46 @@
-from src.factories import generator_factory
+import sys
+import random
+from colorama import Fore
 
+from src import dungeon, handler, view
+from src.generators.locations import dungeon_generator
 from src.generators.characters import player_generator
-from src.generators.locations.dungeon_generator import DungeonGenerator
 
-from src.controllers.dungeon_controller import DungeonController
+
+def main_menu() -> None:
+    """"""
+    print(f'{Fore.CYAN}DUNGEONS OF TEXT{Fore.WHITE}, version alpha\n')
+
+    instruction = input(f'Would you like to read instructions ? ')
+    if instruction.lower() in ['y', 'yes']:
+        input('INSTRUCTIONS\n')
+
+    seed = input(f'Custom seed: ')
+    if not seed.isdigit():
+        seed = random.randrange(sys.maxsize)
+
+    dungeon.SEED = seed
+    dungeon.RANDOM = random.Random(seed)
+
+
+def open_dungeon() -> None:
+    """Open the doors of the dungeon and start the game!"""
+    view.display_room()
+
+    while dungeon.is_running:
+        user_input = handler.get_input()
+        handler.handle_input(user_input)
+
+        if not dungeon.PLAYER.is_alive():
+            print('*** You died ***')
+            break
+
 
 if __name__ == '__main__':
 
-    path = 'data/dungeon'
+    main_menu()
 
-    # Initialize the generator factory
-    generator_factory.set_dungeon_path(path)
+    dungeon_generator.generate()
 
-    dungeon = DungeonGenerator.generate(path)
-    player = player_generator.generate_one()
-
-    controller = DungeonController(dungeon, player)
-    controller.run()
+    dungeon.PLAYER = player_generator.generate_player()
+    open_dungeon()
