@@ -1,0 +1,11 @@
+# Table used to generate NPCs
+generation:
+  merchant: 100
+
+
+# List of the NPCs
+merchant:
+  type: enemy
+  name: wandering trader
+  statistics: { health: 20, strength: 10, resistance: 8, speed: 7 }
+  inventory: [2, 5]

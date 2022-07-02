@@ -1,56 +1,52 @@
-import resource
+from typing import DefaultDict
+from collections import defaultdict
 from dataclasses import dataclass, field
 
-from src.models.items.inventory import Inventory
+from src.factory import register
+from src.models.entity import Entity
 from src.models.items.items import Item, Equipment
-from src.models.locations.room import Room
+
+from src.models.collections import Container, SizedContainer
 
 
-@dataclass(kw_only=True)
-class Character:
+@register('character')
+@dataclass(slots=True)
+class Character(Entity):
     """Class representing a generic character"""
-    name: str
-    statistics: dict[str, int] = field(default=dict)
-    inventory: Inventory = field(default_factory=list)
+    inventory: SizedContainer
+    spells: Container = field(default_factory=Container)
+    equipments: dict[str, Equipment] = field(default_factory=dict)
+    statistics: DefaultDict[str, int] = field(default_factory=lambda: defaultdict(int))
 
     def __post_init__(self) -> None:
         """Additional steps to initialize the instance"""
-        self.statistics['max_health'] = self.get_statistic('health')
-        self.statistics['max_mana'] = self.get_statistic('mana')
-
         for item in self.inventory.filter('equip'):
             self.equip(item)
 
-    def get_statistic(self, statistic: str) -> int:
-        """Returns the value of the given statistic for the current character"""
-        return self.statistics[statistic] if statistic in self.statistics else 0
+    def is_alive(self) -> bool:
+        """Return true if this character is alive"""
+        return self.statistics['health'] > 0
+
+    def add_to_inventory(self, entity: Entity):
+        """Attempt to put the given entity in this character's inventory"""
+        if not isinstance(entity, Item):
+            print(f'You want to put THAT in your inventory ? Don\'t be silly...')
+
+        elif not 'take' in entity.actions:
+            print('There is no way you could put that in your inventory')
+
+        elif self.inventory.is_full():
+            print('You\'re carrying too many things right now!')
+
+        else:
+            self.inventory.append(entity)
+            print('Done!')
 
     def equip(self, item: Equipment) -> None:
-        """Equips the given item into the corresponding equipment slot"""
-        if 'equip' in item.actions:
-            self.inventory.equip(item)
-            print('Done!')
+        """"""
+        self.equipments[item.slot] = item
 
-    def take_off(self, item: Equipment) -> None:
-        """Take off the given equipment"""
-        if item and self.inventory.is_wore_or_held(item):
-            self.inventory.take_off(item)
-
-    def is_alive(self) -> bool:
-        """Return true if the current character is alive, return false otherwise"""
-        return self.get_statistic('health') > 0
-
-    def take(self, item: Item, room: Room) -> None:
-        """Take the given item and add it to the current player's inventory"""
-        if self.inventory.is_full():
-            print('Your inventory is full')
-        else:
-            self.inventory.add(room.remove(item))
-            print('Done!')
-
-    def drop(self, item: Item, room: Room) -> None:
-        """Drop the given item in the given room"""
-        if self.inventory.is_wore_or_held(item):
-            self.take_off(item)
-        room.add(self.inventory.drop(item))
-        print('Done!')
+    def take_off(self, equipment: Equipment) -> None:
+        """"""
+        if equipment.slot in self.equipments:
+            del self.equipments[equipment.slot]

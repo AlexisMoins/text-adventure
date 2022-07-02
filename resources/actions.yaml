@@ -1,7 +1,7 @@
 # Leave the dungeon
 quit:
   patterns:
-    - ^(quit|leave)$
+    - ^(quit|q|leave)$
   description: Leave the dungeon and go back to the main menu
   help:
     - quit / leave

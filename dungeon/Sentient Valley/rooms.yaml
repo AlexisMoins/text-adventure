@@ -1,0 +1,37 @@
+# Table used to generate rooms
+generation:
+  room3: 34
+  room1: 33
+  room2: 33
+
+
+# Room in which the player spawns at the beginning of the floor
+start:
+  description: You slowly open your eyes to discover that you have fallen asleep
+    at the bottom of an old oak tree. A tall carved white stone is standing just
+    a few meters from you.
+  items:
+    oak tree: 1
+
+
+# List of the remaining rooms
+room1:
+  description: You enter a long corridor. The floor seems to be covered with
+    crushed bones and you smell a terrible sent of rotten flesh.
+  items: [1, 2]
+  enemies: 
+    wolf: 1
+
+room2:
+  description: As you progress through the dungeon, you find a pond of clear water.
+    As you get closer, you see something glowing at the very bottom of the pond.
+  items:
+    generate: 2
+    hat:    { quantity: 1, chances: 50 }
+    tunic:  { quantity: 1, chances: 50 }
+
+room3:
+  description: While continuing your exploration of the dungeon, you come across a troup
+    of goblin scouts sitting around a campfire. It seems they have not noticed you yet.
+  enemies:
+    goblin scout: 2

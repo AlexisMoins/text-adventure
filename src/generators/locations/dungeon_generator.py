@@ -1,33 +1,30 @@
 import random
 from typing import Any
+from collections import deque
 
-from src import utils
-from src.models.locations.dungeon import Dungeon
+from src import dungeon, utils
+from src.generators.locations import floor_generator
 
 
-class DungeonGenerator:
-    """Class representing a generator of dungeons"""
+def generate(path: str = 'dungeon') -> None:
+    """Create a new dungeon using the generation files found in the given path"""
+    dungeon.PATH = path
+    data = utils.get_content(path, 'floors.yaml')
 
-    @staticmethod
-    def generate(dungeon_path: str) -> Dungeon:
-        """Returns a new dungeon generated using the data in the given path"""
-        data = utils.load_resource(f'{dungeon_path}/floors.yaml')
-        floors = DungeonGenerator.floor_list(data)
-        return Dungeon(floors)
+    dungeon.FLOORS = floor_list(data)
 
-    @staticmethod
-    def floor_list(data: dict[str, Any]) -> list[str]:
-        """Returns a list of (almost) randomly generated floor name"""
-        return [DungeonGenerator.choose_one(floor) if type(floor) == dict
-                else floor for floor in data]
+    first_floor = dungeon.FLOORS.popleft()
+    floor_generator.generate(first_floor)
 
-    @staticmethod
-    def choose_one(selection: dict[str, int]) -> str | None:
-        """Returns a floor name after it has been randomly choosen from the items in the given selection"""
-        total_weight = sum(selection.values())
-        number = random.randint(1, total_weight)
-        for floor, weight in selection.items():
-            if number <= weight:
-                return floor
-            number -= weight
-        return None
+
+def floor_list(data: dict[str, Any]) -> deque[str]:
+    """Returns a queue of almost randomly generated floor name"""
+    iterable = [choose_one(floor) if type(floor) is dict else floor for floor in data]
+    return deque(iterable)
+
+
+def choose_one(selection: dict[str, int]) -> str | None:
+    """Returns a floor name after it has been randomly choosen from the items in the given selection"""
+    population, weights = selection.keys(), selection.values()
+    choice = random.choices(tuple(population), tuple(weights))
+    return choice[0]

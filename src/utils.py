@@ -1,29 +1,47 @@
-import re
+import os
+import yaml
+
 from typing import Any
-from yaml import safe_load
+
+from src.models.characters.character import Character
+from src.field import parse_inventory, parse_statistics
 
 
-def load_resource(resource: str) -> Any:
-    """Return the given resources once loaded and converted"""
-    with open(resource, 'r') as data:
-        return safe_load(data)
+def get_content(*path: str) -> Any:
+    """
+    Return the content of the file at the given path.
+
+    Argument:
+    path -- a tuple of path components without separators
+
+    Return value:
+    A yaml object representing the content of the file
+    """
+    _path = os.path.join(*path)
+    with open(_path, 'r') as data:
+        return yaml.safe_load(data)
 
 
-def definite_determiner(item_name: str) -> str:
-    """"""
-    vowels = 'aeiouy'
-    determiner = 'the ' if item_name[0] in vowels else 'the '
-    return determiner + item_name
+def get_player() -> Character:
+    """
+    Create and return the Character representing the player.
 
+    Return value:
+    A character object
+    """
+    inventory = parse_inventory({'armor': 1, 'sword': 1})
 
-def indefinite_determiner(item_name: str) -> str:
-    """"""
-    vowels = 'aeiouy'
-    determiner = 'an ' if item_name[0] in vowels else 'a '
-    return determiner + item_name
+    statistics = parse_statistics({
+        'health': 10, 
+        'max-health': 10,
 
+        'mana': 5, 
+        'max-mana': 5,
+        
+        'strength': 5, 
+        'resistance': 2,
+        'intelligence': 3
+    })
 
-def split_items(items: str) -> list[str]:
-    splits = re.split(',|and', items)
-    splits = [re.sub('a |an |the ', '', split) for split in splits]
-    return [split.strip() for split in splits]
+    return Character(inventory=inventory, statistics=statistics,
+            name='player', description='')

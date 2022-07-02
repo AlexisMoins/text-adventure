@@ -1,53 +1,64 @@
-from random import randint, choice
+import importlib
+import random
+from typing import Any
 
-from src import utils
-from src.generators.locations.room_generator import RoomGenerator
+from src import dungeon, utils
+from src.generators.locations import room_generator
 
 from src.models.locations.room import Room
-from src.models.locations.floor import Floor
-from src.models.locations.coordinates import Coordinates
+from src.models.locations.coordinates import Coordinates, Direction
 
 
-class FloorGenerator:
-    """Class generating floors based on the provided configuration files"""
+# Mapping of the rules of the floor
+rules: dict[str, Any] = dict()
 
-    def __init__(self, dungeon_path: str) -> None:
-        """Constructor creating a new generator of floors"""
-        self.room_generator = RoomGenerator(dungeon_path)
-        self.dungeon = dungeon_path
-        self.rules: dict = None
 
-    def load_floor(self, floor: str) -> None:
-        """Loads a floor into the floor generator"""
-        self.rules = utils.load_resource(f'{self.dungeon}/{floor}/rules.yaml')
-        self.room_generator.load_floor(floor)
+def parse_floor(floor: str):
+    """Load the given floor's rules and """
+    global rules
+    rules = utils.get_content(dungeon.PATH, floor, 'rules.yaml')
 
-    def generate_one(self) -> Floor:
-        """Generates a new floor"""
-        number = self.rules['room_number']
-        if type(number) == list:
-            number = randint(number[0], number[1])
+    generators = ('item_generator', 'characters.npc_generator',
+                  'characters.enemy_generator', 'locations.room_generator')
 
-        rooms = self.room_generator.generate_many(max(number, 1))
-        return Floor(self.dungeon, self.create_room_layout(rooms))
+    for generator in generators:
+        module = importlib.import_module(f'src.generators.{generator}')
+        module.parse_floor(floor)
 
-    def create_room_layout(self, rooms: list[Room]) -> dict[Coordinates, Room]:
-        """Return the map of the floor, comprised of coordinates and their associated room"""
-        layout: dict[Coordinates, Room] = dict()
-        coordinates = Coordinates(0, 0)
 
-        for room in rooms:
-            layout[coordinates] = room
-            room.coordinates = coordinates
+def generate(floor: str) -> None:
+    """Generate the given floor in the dungeon list of floors"""
+    parse_floor(floor)
+    number = rules['number-of-rooms']
 
-            neighbours = coordinates.neighbours()
-            candidates = set(neighbours.keys()) - set(layout.keys())
-            coordinates = choice(list(candidates))
+    if type(number) == list:
+        number = random.randint(number[0], number[1])
 
-        for coordinates, room in layout.items():
-            neighbours = coordinates.neighbours()
-            for coord, direction in neighbours.items():
-                if coord in layout.keys():
-                    room.exits[direction] = coord
+    number = max(number, 1)
+    dungeon.current_room = room_generator.generate(rules['first-room'])
 
-        return layout
+    create_layout(dungeon.current_room, number - 1)
+
+
+def create_layout(first_room: Room, number: int) -> None:
+    """Return the map of the floor, comprised of coordinates and their associated room"""
+    first_room.coordinates = Coordinates(0, 0)
+
+    rooms: list[Room] = [first_room]
+    occupied_coordinates = {first_room.coordinates}
+
+    for i in range(number):
+        room = room_generator.generate_one()
+        previous_room = rooms[i]
+
+        if room is None:
+            break
+
+        neighbours = previous_room.coordinates.neighbours()
+        direction = random.choice([direction for direction, coordinates in neighbours.items()
+            if coordinates not in occupied_coordinates])
+
+        previous_room.add_exit(direction, room)
+
+        rooms.append(room)
+        occupied_coordinates.add(room.coordinates)

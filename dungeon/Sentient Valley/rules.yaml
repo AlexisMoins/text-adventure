@@ -1,10 +1,10 @@
 # General rules of the floor
 
 # Maximum number of rooms generated at this floor
-room_number: 3
+number-of-rooms: 4
 
 # The room from which the floor starts
-# first_room: room1
+first-room: start
 
 # Maximum number of enemies spawning at this floor
-# enemy_number: 2
+# enemy-number: 2

@@ -1,5 +1,6 @@
-from colorama import Fore
 from typing import Any
+
+from colorama import Fore
 
 from src.models.items.items import Equipment
 from src.views.utils import display_actions
@@ -10,7 +11,7 @@ def display_selection(items: list, keys: list[str], inventory: bool) -> None:
     print('')
     for index, item in enumerate(items):
         line = inventory_single_selection_format(index, item, isinstance(
-            item, Equipment) and item.is_equipped) if inventory else single_selection_format(index, item)
+            item, Equipment) and item.equipped) if inventory else single_selection_format(index, item)
         print(line)
 
 
@@ -19,7 +20,7 @@ def display_multi_selection(items: list, selection: list, keys: list[str], inven
     print('')
     for index, item in enumerate(items):
         line = inventory_multi_selection_format(index, item, selection, isinstance(
-            item, Equipment) and item.is_equipped) if inventory else multi_selection_format(index, item, selection)
+            item, Equipment) and item.equipped) if inventory else multi_selection_format(index, item, selection)
         print(line)
 
 

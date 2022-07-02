@@ -1,19 +1,26 @@
-from src.factories import generator_factory
+from src import dungeon, handler, view, utils
+from src.generators.locations import dungeon_generator
 
-from src.generators.characters import player_generator
-from src.generators.locations.dungeon_generator import DungeonGenerator
 
-from src.controllers.dungeon_controller import DungeonController
+def open_dungeon() -> None:
+    """
+    Open the doors of the dungeon and start the game!
+    """
+    dungeon.current_room.explored = True
+    view.display_room(dungeon.current_room)
+
+    while dungeon.is_running:
+        user_input = handler.get_input()
+        handler.handle_input(user_input)
+
+        if not dungeon.PLAYER.is_alive():
+            print('*** You died ***')
+            break
+
 
 if __name__ == '__main__':
 
-    path = 'data/dungeon'
+    dungeon_generator.generate()
+    dungeon.PLAYER = utils.get_player()
 
-    # Initialize the generator factory
-    generator_factory.set_dungeon_path(path)
-
-    dungeon = DungeonGenerator.generate(path)
-    player = player_generator.generate_one()
-
-    controller = DungeonController(dungeon, player)
-    controller.run()
+    open_dungeon()

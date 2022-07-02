@@ -15,7 +15,7 @@ armor:
   price: 20
   type: equipment
   slot: chest
-  actions: [equip]
+  actions: [take, equip]
   durability: 20
   statistics: {'defense': 5}
 
@@ -25,7 +25,7 @@ tunic:
   price: 10
   type: equipment
   slot: chest
-  actions: [equip]
+  actions: [take, equip]
   durability: 10
   statistics: {'defense': 2}
 
@@ -35,7 +35,7 @@ hat:
   price: 10
   type: equipment
   slot: head
-  actions: [equip]
+  actions: [take, equip]
   durability: 5
   statistics: {'defense': 2}
 
@@ -46,7 +46,7 @@ sword:
   price: 10
   type: equipment
   slot: hand
-  actions: [attack, equip]
+  actions: [take, attack, equip]
   durability: 15
   statistics: {'attack': 5}
 
@@ -56,6 +56,14 @@ staff:
   price: 25
   type: equipment
   slot: hand
-  actions: [attack, cast, equip]
-  durability: 10
+  actions: [take, attack, cast, equip]
+  durability: [10, 10]
   statistics: {'attack': 2, 'magic': 5}
+
+oak tree:
+  name: oak tree
+  description: This old oak tree is the only visible vegetation in the meadon around you
+    (except for grass, of course). The wind crosses its branches and leaves producing a
+    calm whistle
+  type: item
+  durability: [100, 100]
