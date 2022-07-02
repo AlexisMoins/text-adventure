@@ -3,7 +3,9 @@ import textwrap
 from colorama import Fore
 
 from src import dungeon
+from src.models.locations.room import Room
 from src.models.items.items import Equipment, Item
+
 from src.models.characters.character import Character
 from src.models.locations.coordinates import Direction
 
@@ -28,45 +30,55 @@ def get_character_status(character: Character) -> str:
     )
 
 
-def display_room(previous_direction: Direction = None) -> None:
+def display_room(room: Room, previous_direction: Direction | None = None) -> None:
     """Display the given room"""
-    clear_screen()
-    print(f'{get_character_status(dungeon.PLAYER)}    position: {dungeon.current_room.coordinates}\n')
+    # print(f'{get_character_status(dungeon.PLAYER)}    position: {dungeon.current_room.coordinates}\n')
 
-    print(textwrap.fill(dungeon.current_room.description, width=75))
+    print(textwrap.fill(room.description, width=75))
 
-    entities_and_exits = list(dungeon.current_room.entities) + list(dungeon.current_room.exits.keys())
-    if entities_and_exits:
-        word = 'are' if len(entities_and_exits) > 1 else 'is'
-        print(f'\nAround you {word}:')
-        display_entities(previous_direction)
+    if room.entities:
+        display_room_entities(room)
+
+    if room.exits:
+        display_room_exits(room, previous_direction)
 
 
-def display_entities(previous_direction: Direction | None) -> None:
+def display_room_exits(room: Room, previous_direction: Direction | None) -> None:
+    """
+    Display the visible exits of the current room.
+
+    Argument:
+    previous_direction -- the direction the player entered the room from
+    """
+    print('\nVisible exits:' if len(dungeon.current_room.exits) > 1 else '\nVisible exit:')
+
+    for direction, room in dungeon.current_room.exits.items():
+        sign = f'{Fore.YELLOW}*{Fore.WHITE}' if direction is previous_direction else ' '
+        explored = f' {Fore.YELLOW}(explored){Fore.WHITE}' if room.explored else ''
+        print(f'{sign} {direction}{explored}')
+
+
+def display_room_entities(room: Room) -> None:
     """Display the items present in the room"""
-    indicator = f'{Fore.YELLOW}*{Fore.WHITE}'
-    item_list = [entity.indefinite for entity in dungeon.current_room.entities]
-    item_list += [f'an exit{indicator if direction is previous_direction else ""} {Fore.YELLOW}({direction}){Fore.WHITE}'
-                  for direction in dungeon.current_room.exits.keys()]
+    word = 'are' if len(room.entities) > 1 else 'is'
+    print(f'\nAround you {word}:')
 
-    if len(item_list) > 1:
-        item_list[-1] = 'and ' + item_list[-1]
-    item_list[0] = item_list[0].capitalize()
-    print(', '.join(item_list))
+    for item in dungeon.current_room.entities:
+        print(f'{Fore.CYAN}x{item.quantity}{Fore.WHITE} {item}')
 
 
 def display_item(item: Item) -> None:
     """
-    Display the given |item|.
+    Display the given |item| on screen.
 
     Argument:
-    item -- an item
+    iten -- the item to display
     """
-    print(f'{Fore.MAGENTA}({item.name}){Fore.WHITE}')
+    print(f'{Fore.RED}({item.name}){Fore.WHITE}')
     print(textwrap.fill(item.description))
 
-    price = f'price: {Fore.MAGENTA}{str(item.price)} gold{Fore.WHITE}'
-    quantity = f'quantity: {Fore.MAGENTA}x{str(item.quantity)}{Fore.WHITE}'
+    price = f'price: {Fore.RED}{str(item.price)} gold{Fore.WHITE}'
+    quantity = f'quantity: {Fore.RED}x{str(item.quantity)}{Fore.WHITE}'
     print(f'\n{price:<30}{quantity}')
 
     if 'equip' in item.actions:
@@ -75,11 +87,11 @@ def display_item(item: Item) -> None:
 
 def display_equipment(item: Equipment) -> None:
     """Display the equipment's information"""
-    slot = f'slot: {Fore.MAGENTA}{item.slot}{Fore.WHITE}'
-    equipped = f'equipped: {Fore.MAGENTA}{"yes" if item.equipped else "no"}{Fore.WHITE}'
+    slot = f'slot: {Fore.RED}{item.slot}{Fore.WHITE}'
+    equipped = f'equipped: {Fore.RED}{"yes" if item.equipped else "no"}{Fore.WHITE}'
     print(f'{slot:<30}{equipped}')
 
-    statistics = f'statistics: {Fore.MAGENTA}'
+    statistics = f'statistics: {Fore.RED}'
     statistics += ', '.join([f'{stat} +{value}' for stat, value in item.statistics.items()]) + Fore.WHITE
 
     print(f'\ndurability: {disply_durability(item)}')
@@ -87,16 +99,19 @@ def display_equipment(item: Equipment) -> None:
 
 
 def disply_durability(item: Equipment) -> str:
-    """Return the durability bar"""
-    value = item.durability
-    maximum = item.max_durability
-    return get_bar(value, maximum, Fore.MAGENTA, '>')
+    """
+    Return the durability bar
+    """
+    value = item.durability[0]
+    maximum = item.durability[1]
+    return get_bar(value, maximum, Fore.RED, '>')
 
 
 def display_slots(character: Character) -> None:
     """"""
+    print('Your current equipment:')
     for slot, item in character.equipments.items():
-        print(f'{item} on slot {Fore.YELLOW}({slot}){Fore.WHITE}')
+        print(f'{item} on slot {Fore.YELLOW}{slot.upper()}{Fore.WHITE}')
 
 
 def display_inventory(character: Character):

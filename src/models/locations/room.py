@@ -13,8 +13,9 @@ class Room:
     description: str
     entities: Container = field(default_factory=Container)
 
-    coordinates: Coordinates = field(init=False, default=None)
-    exits: dict[Direction, Room] = field(default_factory=dict, init=False)
+    explored: bool = field(init=False, default=False)
+    coordinates: Coordinates | None = field(init=False, default=None)
+    exits: dict[Direction, Room] = field(init=False, default_factory=dict)
 
     def add_exit(self, direction: Direction, room: Room) -> None:
         """Add a new exit to the curren room"""

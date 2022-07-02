@@ -42,7 +42,7 @@ def when(expression: str, context: str | None = None, **parameters: dict[str, An
     and uppercase ones will match the remaining words then be passed to the decorated
     function as argument. Notice that articles are removed from the typed command.
 
-    For instance, 'examine the sharp knife' will match the pattern 'examine ENTITY' 
+    For instance, 'examine the sharp knife' will match the pattern 'examine ENTITY'
     and 'sharp knife' will be passed to the function in the 'entity' argument. Thus
     the function should take a paramater 'entity' of type 'str' (See below).
 
@@ -222,7 +222,10 @@ def move(direction: str) -> None:
     """"""
     the_direction = Direction[direction.upper()]
     if the_direction in dungeon.current_room.exits:
-        dungeon.current_room = dungeon.current_room.exits[the_direction]
-        view.display_room(the_direction.opposite)
+        new_room = dungeon.current_room.exits[the_direction]
+        new_room.explored = True
+
+        dungeon.current_room = new_room
+        view.display_room(new_room, the_direction.opposite)
     else:
         print('There is nothing in this direction')
