@@ -24,7 +24,7 @@ weights: list[int] = []
 
 #
 FIELDS: dict[str, ModuleType] = {
-        'items': item_generator, 'enemies': enemy_generator, 'npc': npc_generator }
+    'items': item_generator, 'enemies': enemy_generator, 'npc': npc_generator}
 
 
 def parse_floor(floor: str) -> None:
@@ -68,9 +68,7 @@ def deserialize_room(field: dict[str, Any]) -> Room:
     for name, generator in FIELDS.items():
         if name in field:
             data = field.pop(name)
-            print(f'\n{name}: {data}')
             entities.extend(parse_field(data, generator))  # type: ignore
-            print(entities)
 
     return Room(**field, entities=Container(entities))
 

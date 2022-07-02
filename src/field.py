@@ -11,7 +11,7 @@ from src.models.collections import SizedContainer
 
 class Generator(Protocol):
     """"""
-    
+
     def generate_many(self, quantity: int) -> list[Entity]:  # type: ignore
         """"""
         pass
@@ -55,8 +55,6 @@ def parse_field(field: Any, generator: Generator) -> list[Entity]:
     if not field:
         return []
 
-    print(type(field))
-
     if type(field) is int:
         return generator.generate_many(field)
 
@@ -81,13 +79,11 @@ def _parse_dict_field(field: dict[str, Any], generator: Generator) -> list[Entit
         population = list(field.keys())
         weights = [field[item]['chances'] for item in population]
 
-        print(population, weights)
-
         field = {item: field[item]['quantity']
-                for item in random.choices(population, weights, k=generate_number)}
+                 for item in random.choices(population, weights, k=generate_number)}
 
     field = {key: value if type(value) is int else random.randint(*value)
-            for key, value in field.items()}
+             for key, value in field.items()}
 
     return generator.generate_all(field)
 
