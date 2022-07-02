@@ -1,6 +1,6 @@
 from colorama import Fore
 
-from src import dungeon, handler, view
+from src import dungeon, handler, view, utils
 from src.generators.locations import dungeon_generator
 
 
@@ -31,5 +31,5 @@ def open_dungeon() -> None:
 if __name__ == '__main__':
     dungeon_generator.generate()
 
-    dungeon.PLAYER = character_generator.get_player()
+    dungeon.PLAYER = utils.get_player()
     open_dungeon()

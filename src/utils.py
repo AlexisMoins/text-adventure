@@ -1,31 +1,47 @@
 import os
 import yaml
-import random
 
-from types import ModuleType
-from collections import defaultdict
-from dataclasses import dataclass, field
-from typing import Any, DefaultDict, Literal, Protocol
+from typing import Any
 
-from src.models.entity import Entity
-from src.generators import item_generator
-from src.models.collections import SizedContainer
-
-
-class Generator(Protocol):
-    """Represents a generator (used for prototyping modules)"""
-
-    def generate(self, entity_id: str) -> Entity:
-        """"""
-        pass
-
-    def generate_many(self, k: int) -> list[Entity]:
-        """"""
-        pass
+from src.models.characters.character import Character
+from src.field import parse_inventory, parse_statistics
 
 
 def get_content(*path: str) -> Any:
-    """Return the content of the file at the given path"""
-    path = os.path.join(*path)
-    with open(path, 'r') as data:
+    """
+    Return the content of the file at the given path.
+
+    Argument:
+    path -- a tuple of path components without separators
+
+    Return value:
+    A yaml object representing the content of the file
+    """
+    _path = os.path.join(*path)
+    with open(_path, 'r') as data:
         return yaml.safe_load(data)
+
+
+def get_player() -> Character:
+    """
+    Create and return the Character representing the player.
+
+    Return value:
+    A character object
+    """
+    inventory = parse_inventory({'armor': 1, 'sword': 1})
+
+    statistics = parse_statistics({
+        'health': 10, 
+        'max-health': 10,
+
+        'mana': 5, 
+        'max-mana': 5,
+        
+        'strength': 5, 
+        'resistance': 2,
+        'intelligence': 3
+    })
+
+    return Character(inventory=inventory, statistics=statistics,
+            name='player', description='')
