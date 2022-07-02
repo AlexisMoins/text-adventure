@@ -1,11 +1,15 @@
 import os
 import yaml
+import random
 
+from types import ModuleType
 from collections import defaultdict
-from typing import Any, DefaultDict, Protocol
+from dataclasses import dataclass, field
+from typing import Any, DefaultDict, Literal, Protocol
 
-from src import dungeon
 from src.models.entity import Entity
+from src.generators import item_generator
+from src.models.collections import SizedContainer
 
 
 class Generator(Protocol):
@@ -25,28 +29,3 @@ def get_content(*path: str) -> Any:
     path = os.path.join(*path)
     with open(path, 'r') as data:
         return yaml.safe_load(data)
-
-
-def parse_statistics(statistics: dict[str, int]) -> DefaultDict:
-    """Return a DefaultDict of the given statistics"""
-    dictionary = defaultdict(int)
-    for stat, value in statistics.items():
-        dictionary[stat] = value
-    return dictionary
-
-
-def parse_field(field: Any, generator: Generator) -> list[Any]:
-    """Returns a list of the data deserialized using the given generator"""
-    if not field:
-        return []
-
-    if type(field) == int:
-        return generator.generate_many(field)
-
-    if type(field) == list:
-        if type(field[0]) == int and len(field) > 1:
-            n = dungeon.RANDOM.randint(field[0], field[1])
-            return generator.generate_many(n)
-
-        if type(field[0]) == str:
-            return [generator.generate(item) for item in field]

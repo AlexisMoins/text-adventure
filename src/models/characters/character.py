@@ -2,14 +2,14 @@ from typing import DefaultDict
 from collections import defaultdict
 from dataclasses import dataclass, field
 
-from src.factory import add
+from src.factory import register
 from src.models.entity import Entity
 from src.models.items.items import Item, Equipment
 
 from src.models.collections import Container, SizedContainer
 
 
-@add('character')
+@register('character')
 @dataclass(slots=True)
 class Character(Entity):
     """Class representing a generic character"""
@@ -42,7 +42,7 @@ class Character(Entity):
             self.inventory.append(entity)
             print('Done!')
 
-    def equip(self, item: Item) -> None:
+    def equip(self, item: Equipment) -> None:
         """"""
         self.equipments[item.slot] = item
 

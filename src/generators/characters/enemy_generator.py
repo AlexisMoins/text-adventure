@@ -1,7 +1,7 @@
+import random
 from src import utils, factory
 
-from src import dungeon, utils, factory
-from src.generators import item_generator
+from src import dungeon, utils, factory, field
 from src.models.characters.npc import Enemy
 
 
@@ -29,15 +29,33 @@ def parse_floor(floor: str) -> None:
     population = list(generation.keys())
 
 
-def generate(character_name: str) -> Enemy:
+def generate(character_name: str, quantity: int = 1) -> Enemy:
     """Return the given character after it has been generated"""
     character = enemies[character_name].copy()
-    character['statistics'] = utils.parse_statistics(character['statistics'])
-    character['inventory'] = item_generator.parse_inventory(character['inventory'])
-    return factory.create(character)
+
+    character['quantity'] = quantity
+
+    character['statistics'] = field.parse_statistics(character['statistics'])
+    character['inventory'] = field.parse_inventory(character['inventory'])
+
+    return factory.create_entity(character)
 
 
 def generate_many(k: int) -> list[Enemy]:
     """Generates k randomly generated items"""
     number = min(len(population), k)
-    return [generate(item_id) for item_id in dungeon.RANDOM.choices(population, weights, number)]
+    return [generate(item_id) for item_id in random.choices(population, weights, number)]
+
+
+def generate_all(enemies: dict[str, int]) -> list[Enemy]:
+    """
+    Generate all the enemies in a dictionary.
+
+    Argument:
+    enemies -- a dictionary of enemy IDs and their corresponding quantity
+
+    Return value:
+    A list of enemies
+    """
+    return [generate(item_id, quantity)
+            for item_id, quantity in enemies.items()]

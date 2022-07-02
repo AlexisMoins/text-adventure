@@ -1,9 +1,7 @@
-import importlib
-from typing import Any
+import random
 
 from src import dungeon, utils, factory
 from src.models.items.items import Item
-from src.models.collections import SizedContainer
 
 
 # Mapping item name and its properties
@@ -30,20 +28,41 @@ def parse_floor(floor: str) -> None:
     population = list(generation.keys())
 
 
-def generate(item_id: str) -> Item:
-    """Return the given item after it has been generated"""
+def generate(item_id: str, quantity: int = 1) -> Item:
+    """
+    Generate the item corresponding to an item ID.
+
+    Argument:
+    item_id -- the identifier
+
+    Keyword argument:
+    quantity -- the quantity of the item
+
+    Return value:
+    An item
+    """
     item = items[item_id].copy()
-    return factory.create(item)
+    item['quantity'] = quantity
+
+    return factory.create_entity(item)
 
 
 def generate_many(k: int) -> list[Item]:
     """Generates k randomly generated items"""
     number = min(len(population), k)
     return [generate(item_id) for item_id
-            in dungeon.RANDOM.choices(population, weights=weights, k=number)]
+            in random.choices(population, weights=weights, k=number)]
 
 
-def parse_inventory(field: Any, size: int = 8) -> SizedContainer:
-    """Return a Container of the given size (default 8) and the given field"""
-    items = utils.parse_field(field, importlib.import_module('src.generators.item_generator'))
-    return SizedContainer(size, iterable=items)
+def generate_all(items: dict[str, int]) -> list[Item]:
+    """
+    Generate all the elements in a dictionary.
+
+    Argument:
+    entities -- a dictionary of item IDs and their corresponding quantity
+
+    Return value:
+    A list of items
+    """
+    return [generate(item_id, quantity)
+            for item_id, quantity in items.items()]

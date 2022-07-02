@@ -1,18 +1,12 @@
 from typing import Deque
-from random import Random
 from collections import deque
 
 from src.models.locations.room import Room
 from src.models.characters.character import Character
 
 
-# Path to the dungeon directory (default is ./dungeon)
-PATH = ''
-
-# Random generator in use
-RANDOM: Random = None
-
-SEED: int = None
+# Path to the dungeon directory
+PATH: str = 'dungeon'
 
 # Score of the player
 score = 0
@@ -21,10 +15,10 @@ score = 0
 moves = 0
 
 # The current room
-current_room: Room = None
+current_room: Room | None = None
 
-# The player traveling through the dungeon
-PLAYER: Character = None
+PLAYER: Character | None = None
+"""The playable character wandering through the dungeon"""
 
 # Double linked-list of floor names
 FLOORS: Deque[str] = deque()
@@ -33,4 +27,4 @@ FLOORS: Deque[str] = deque()
 CONTEXT: set[str] = set()
 
 # Wether the dungeon is running or not
-is_running = True
+is_running: bool = True

@@ -1,3 +1,4 @@
+import random
 from typing import Any
 from collections import deque
 
@@ -25,4 +26,5 @@ def floor_list(data: dict[str, Any]) -> deque[str]:
 def choose_one(selection: dict[str, int]) -> str | None:
     """Returns a floor name after it has been randomly choosen from the items in the given selection"""
     population, weights = selection.keys(), selection.values()
-    return dungeon.RANDOM.choices(tuple(population), tuple(weights))
+    choice = random.choices(tuple(population), tuple(weights))
+    return choice[0]

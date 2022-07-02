@@ -1,12 +1,11 @@
-# List the enemies that can spawn at the current floor (2) and their chances of spawning (1)
-
-# 1: Rooms generation chances
+# Table used to generate NPCs
 generation:
   merchant: 100
 
-# 2: Enemy list
+
+# List of the NPCs
 merchant:
   type: enemy
   name: wandering trader
-  statistics: {health: 20, strength: 10, resistance: 8, speed: 7}
+  statistics: { health: 20, strength: 10, resistance: 8, speed: 7 }
   inventory: [2, 5]

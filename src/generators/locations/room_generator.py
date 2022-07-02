@@ -1,9 +1,12 @@
+import random
 from typing import Any
-
-from src.models.collections import Container
+from types import ModuleType
 
 from src import utils, dungeon
+from src.field import parse_field
+
 from src.models.locations.room import Room
+from src.models.collections import Container
 
 from src.generators import item_generator
 from src.generators.characters import npc_generator
@@ -18,6 +21,10 @@ population: list[str] = []
 
 # List of the chances of generating corresponding room in the population
 weights: list[int] = []
+
+#
+FIELDS: dict[str, ModuleType] = {
+        'items': item_generator, 'enemies': enemy_generator, 'npc': npc_generator }
 
 
 def parse_floor(floor: str) -> None:
@@ -42,7 +49,7 @@ def generate(room_id: str) -> Room:
 
 def generate_one() -> Room | None:
     """Generates a random room"""
-    number = dungeon.RANDOM.randint(1, sum(weights))
+    number = random.randint(1, sum(weights))
     for room, weight in zip(population, weights):
         if number <= weight:
             return generate(room)
@@ -55,14 +62,17 @@ def generate_many(k: int) -> list[Room]:
     return [generate_one() for _ in range(number)]
 
 
-def deserialize_room(data: dict[str, Any]) -> Room:
+def deserialize_room(field: dict[str, Any]) -> Room:
     """Returns the room deserialized from the given data"""
-    items = utils.parse_field(data.pop('items', []), item_generator)
-    enemies = utils.parse_field(data.pop('enemies', []), enemy_generator)
-    npc = utils.parse_field(data.pop('npc', []), npc_generator)
+    entities = []
+    for name, generator in FIELDS.items():
+        if name in field:
+            data = field.pop(name)
+            print(f'\n{name}: {data}')
+            entities.extend(parse_field(data, generator))  # type: ignore
+            print(entities)
 
-    entities = items + enemies + npc
-    return Room(**data, entities=Container(entities))
+    return Room(**field, entities=Container(entities))
 
 
 def pop_room(room_id) -> dict[str, Any]:

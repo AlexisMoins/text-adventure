@@ -3,12 +3,12 @@ from typing import DefaultDict
 from collections import defaultdict
 from dataclasses import dataclass, field
 
-from src.factory import add
+from src.factory import register
 from src.models.entity import Entity
 from src.models.collections import SizedContainer
 
 
-@add('item')
+@register('item')
 @dataclass(kw_only=True)
 class Item(Entity):
     """Represents a generic item"""
@@ -20,7 +20,7 @@ class Item(Entity):
         return self.name
 
 
-@add('chest')
+@register('chest')
 @dataclass(kw_only=True)
 class Chest(Item):
     """Represents any container item with a size"""
@@ -32,14 +32,14 @@ class Chest(Item):
         return f'{self.name} {Fore.MAGENTA}[{self.items.indicator}]{Fore.WHITE}'
 
 
-@add('consumable')
+@register('consumable')
 @dataclass(slots=True)
 class Consumable(Item):
     """Represents a general comsumable item such as a potion"""
     statistics: DefaultDict[str, int] = field(default_factory=lambda: defaultdict(int))
 
 
-@add('equipment')
+@register('equipment')
 @dataclass(kw_only=True)
 class Equipment(Item):
     """Class representing a generic equipment"""

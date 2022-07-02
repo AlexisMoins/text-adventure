@@ -55,8 +55,13 @@ def display_entities(previous_direction: Direction | None) -> None:
     print(', '.join(item_list))
 
 
-def display(item: Item) -> None:
-    """Display the current view"""
+def display_item(item: Item) -> None:
+    """
+    Display the given |item|.
+
+    Argument:
+    item -- an item
+    """
     print(f'{Fore.MAGENTA}({item.name}){Fore.WHITE}')
     print(textwrap.fill(item.description))
 

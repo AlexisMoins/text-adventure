@@ -1,21 +1,27 @@
-from typing import Any
-
-from src import dungeon, factory, utils
-from src.generators import item_generator
+from src.field import parse_inventory, parse_statistics
 from src.models.characters.character import Character
 
 
-# Dictionnary containing the different classes available
-classes: dict[str, Any] = utils.get_content('resources', 'classes.yaml')
+def get_player() -> Character:
+    """
+    Create and return the Character representing the player.
 
+    Return value:
+    A character object
+    """
+    inventory = parse_inventory({'armor': 1, 'sword': 1})
 
-def generate_player() -> Character:
-    """Generate a random character to act as the player"""
-    key = dungeon.RANDOM.choice(list(classes.keys()))
-    character = classes[key]
+    statistics = parse_statistics({
+        'health': 10, 
+        'max-health': 10,
 
-    character['statistics'] = utils.parse_statistics(character['statistics'])
-    character['inventory'] = item_generator.parse_inventory(character['inventory'])
-    character['type'] = 'character'
+        'magic': 5, 
+        'max-magic': 5,
+        
+        'strength': 5, 
+        'resistance': 2,
+        'intelligence': 3
+    })
 
-    return factory.create(character)
+    return Character(inventory=inventory, statistics=statistics,
+            name='Player', description='')

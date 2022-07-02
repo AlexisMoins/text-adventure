@@ -1,8 +1,6 @@
 from collections import deque
 from dataclasses import dataclass
-from typing import Callable, Deque, Match, Pattern
-
-from colorama import Fore
+from typing import Any, Callable, Deque, Match, Pattern
 
 from src import dungeon, parser, view
 
@@ -11,44 +9,82 @@ from src.models.locations.coordinates import Direction
 
 
 @dataclass(frozen=True)
-class Command:
-    """Class representing a command"""
+class _Command:
+    """
+    Class representing a command
+    """
     pattern: Pattern
     function: Callable
-    context: str
-    parameters: dict[str, str]
+    context: str | None
+    parameters: dict[str, Any]
 
     def apply(self, match: Match) -> None:
-        """Apply the command to the given match"""
+        """
+        Apply the command to the given match.
+
+        Argument:
+        match -- the match
+        """
         groups = match.groupdict()
         self.function(**groups, **self.parameters)
 
 
 # Double linked-list of commands
-commands: Deque[Command] = deque()
+_commands: Deque[_Command] = deque()
 
 
-def when(expression: str, context: str = None, **parameters) -> None:
-    """Decorator adding the decorated function to the list of available commands
-    once it was parsed"""
-    def decorator(function: Callable) -> None:
+def when(expression: str, context: str | None = None, **parameters: dict[str, Any]) -> Callable:
+    """
+    Registers the decorated function as a valid command the player can use.
+
+    Arguments:
+    expression -- the pattern typed by the player where lowercase letters are required
+    and uppercase ones will match the remaining words then be passed to the decorated
+    function as argument. Notice that articles are removed from the typed command.
+
+    For instance, 'examine the sharp knife' will match the pattern 'examine ENTITY' 
+    and 'sharp knife' will be passed to the function in the 'entity' argument. Thus
+    the function should take a paramater 'entity' of type 'str' (See below).
+
+    @when('examine ENTITY')
+    def examine(entity: str) -> None:
+        pass
+
+    Keyword arguments:
+    context -- the context required to validate the use of the command
+    parameters -- the rest of the parameters grouped together in a dictionary
+
+    Return value:
+    ?
+    """
+    def decorator(function: Callable) -> Callable[..., None]:
         pattern = parser.parse_expression(expression)
-        commands.appendleft(
-            Command(pattern, function, context, parameters))
+        _commands.appendleft(
+            _Command(pattern, function, context, parameters))
 
         return function
     return decorator
 
 
 def get_input() -> str:
-    """Return the input typed by the player"""
+    """
+    Return the raw command typed by the player.
+
+    Return value:
+    A string
+    """
     user_input = input('\n> ')
     return user_input.lower().strip()
 
 
 def handle_input(user_input: str) -> None:
-    """Handle the given user input"""
-    for command in commands:
+    """
+    Handle the given user input.
+
+    Argument:
+    user_input -- the raw command typed by the player
+    """
+    for command in _commands:
         # Skip the command if not in the right context
         if command.context is not None and command.context not in dungeon.CONTEXT:
             continue
@@ -59,12 +95,6 @@ def handle_input(user_input: str) -> None:
             break
     else:
         print('I don\'t understand that')
-
-
-@when('seed')
-def seed() -> None:
-    """Return the seed used to generate the dungeon"""
-    print(f'Current seed is {Fore.GREEN}{dungeon.SEED}{Fore.WHITE}')
 
 
 @when('q')
@@ -85,7 +115,12 @@ def inventory() -> None:
 @when('look at ENTITY')
 @when('examine ENTITY')
 def look_at(entity: str) -> None:
-    """Look at something in the current room"""
+    """
+    Look at something in the current room.
+
+    Argument:
+    entity -- the name of the considered entity
+    """
     the_entity = dungeon.current_room.entities.find(entity)
     if the_entity is None:
         print(f'There is no {entity} here')
@@ -107,7 +142,7 @@ def look_at_from(entity: str, container: str) -> None:
         if the_item is None:
             print(f'There is no {entity} inside the {the_container}')
         else:
-            dungeon.PLAYER.inventory.append(the_item)
+            dungeon.PLAYER.add_to_inventory(the_item)
 
 
 @when('get ITEM')
@@ -131,7 +166,7 @@ def take_from(item: str, container: str) -> None:
     elif not isinstance(the_container, Chest):
         print(f'Taking something from {the_container.indefinite} ? What\'s wrong with you ?')
     else:
-        the_item = the_container.take(item)
+        the_item = the_container.items.take(item)
         if the_item is None:
             print(f'There is no {item} inside the {the_container}')
         else:

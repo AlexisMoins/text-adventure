@@ -1,4 +1,5 @@
 import importlib
+import random
 from typing import Any
 
 from src import dungeon, utils
@@ -31,7 +32,7 @@ def generate(floor: str) -> None:
     number = rules['number-of-rooms']
 
     if type(number) == list:
-        number = dungeon.RANDOM.randint(number[0], number[1])
+        number = random.randint(number[0], number[1])
 
     number = max(number, 1)
     dungeon.current_room = room_generator.generate(rules['first-room'])
@@ -54,8 +55,8 @@ def create_layout(first_room: Room, number: int) -> None:
             break
 
         neighbours = previous_room.coordinates.neighbours()
-        direction = dungeon.RANDOM.choice([direction for direction, coordinates in neighbours.items()
-                                           if coordinates not in occupied_coordinates])
+        direction = random.choice([direction for direction, coordinates in neighbours.items()
+            if coordinates not in occupied_coordinates])
 
         previous_room.add_exit(direction, room)
 

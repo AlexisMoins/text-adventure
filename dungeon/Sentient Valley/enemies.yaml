@@ -9,12 +9,12 @@ wolf:
   name: wolf
   description: It's a wolf
   type: enemy
-  statistics: {health: 10, max-health: 10, strength: 4, resistance: 2, speed: 6}
-  inventory: [armor]
+  statistics: { health: 10, max-health: 10, strength: 4, resistance: 2, speed: 6 }
+  inventory: { armor: 1 }
 
 goblin scout:
   name: goblin scout
   description: It's a goblin
   type: enemy
-  statistics: {health: 12, max-health: 12, strength: 8, resistance: 5, speed: 4}
-  inventory: [armor, sword]
+  statistics: { health: 12, max-health: 12, strength: 8, resistance: 5, speed: 4 }
+  inventory: { armor: 1, sword: 1 }

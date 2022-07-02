@@ -1,5 +1,6 @@
 # Files
 .DS_Store
+Session.vim
 
 # Directories
 .venv/
