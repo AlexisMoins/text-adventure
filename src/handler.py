@@ -1,6 +1,7 @@
 from collections import deque
 from dataclasses import dataclass
 from typing import Any, Callable, Deque, Match, Pattern
+from colorama import Fore
 
 from src import dungeon, parser, view
 
@@ -99,10 +100,25 @@ def handle_input(user_input: str) -> None:
 
 @when('q')
 @when('quit')
-@when('leave')
 def quit() -> None:
-    """Leave the dungeon"""
+    """leave the dungeon"""
     dungeon.is_running = False
+
+
+@when('cl')
+@when('clear')
+def clear() -> None:
+    """leave the dungeon"""
+    view.clear_screen()
+
+
+@when('desc')
+@when('description')
+def description() -> None:
+    """
+    Display the description of the current room.
+    """
+    view.display_room(dungeon.current_room)
 
 
 @when('inv')
@@ -110,6 +126,15 @@ def quit() -> None:
 def inventory() -> None:
     """Display the content of the player's inventory"""
     view.display_inventory(dungeon.PLAYER)
+
+
+@when('stat')
+@when('statistics')
+def statistics() -> None:
+    """
+    Display the statistics of the player
+    """
+    view.display_statistics(dungeon.PLAYER)
 
 
 @when('look at ENTITY')
@@ -160,9 +185,8 @@ def take(item: str) -> None:
         print(f'There is no {item} here')
         return
 
-    # function = dungeon.PLAYER.add_to_inventory
-    # hook.execute('take', the_item, function, [the_item])
     dungeon.PLAYER.add_to_inventory(the_item)
+    print(f'You put the {item} in your inventory {Fore.YELLOW}({len(dungeon.PLAYER.inventory)}/{dungeon.PLAYER.inventory.size}){Fore.WHITE}')
 
 
 @when('get ITEM from CONTAINER')
@@ -186,25 +210,32 @@ def take_from(item: str, container: str) -> None:
 def drop(item: str) -> None:
     """"""
     the_item = dungeon.PLAYER.inventory.take(item)
+
     if the_item is None:
         print(f'What are you saying ? You don\'t even have that in your inventory!')
-    else:
-        dungeon.PLAYER.take_off(the_item)
-        dungeon.current_room.entities.append(the_item)
-        print('Done!')
+        return
+
+    dungeon.PLAYER.take_off(the_item)
+    dungeon.current_room.entities.append(the_item)
+    print(
+        f'You drop the {item} on the ground {Fore.YELLOW}({len(dungeon.PLAYER.inventory)}/{dungeon.PLAYER.inventory.size}){Fore.WHITE}')
 
 
 @when('wear ITEM')
+@when('equip ITEM')
 def wear(item: str) -> None:
     """"""
     the_item = dungeon.PLAYER.inventory.find(item)
+
     if the_item is None:
         print(f'You are not carrying any {item}')
-    elif not isinstance(the_item, Equipment):
+        return
+
+    if not isinstance(the_item, Equipment):
         print('Come on, how would you wear that ?!')
-    else:
-        dungeon.PLAYER.equip(the_item)
-        print('Done!')
+        return
+
+    dungeon.PLAYER.wear_or_equip(the_item)
 
 
 @when('cast SPELL')

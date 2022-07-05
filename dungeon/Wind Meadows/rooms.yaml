@@ -19,7 +19,7 @@ room1:
   description: You enter a long corridor. The floor seems to be covered with
     crushed bones and you smell a terrible sent of rotten flesh.
   items: [1, 2]
-  enemies: 
+  enemies:
     wolf: 1
 
 room2:

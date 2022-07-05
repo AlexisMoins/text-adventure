@@ -2,7 +2,7 @@ import os
 import textwrap
 from colorama import Fore
 
-from src import dungeon
+from src import dungeon, utils
 from src.models.locations.room import Room
 from src.models.items.items import Equipment, Item
 
@@ -15,19 +15,19 @@ def clear_screen() -> None:
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def get_bar(value: int, maximum: int, color, character: str) -> str:
+def get_bar(value: int, maximum: int, color, character: str, *, length: int = 15) -> str:
     """Return a status bar with the given values, color and character to fill the bar"""
-    percentage = round(value / maximum * 10)
-    bar = f'[{color}{character * percentage}{Fore.WHITE}{" " * (10 - percentage)}]'
+    percentage = round(value / maximum * length)
+    bar = f'[{color}{character * percentage}{Fore.WHITE}{" " * (length - percentage)}]'
     return f'{bar} {color}{value}{Fore.WHITE} ({color}{maximum}{Fore.WHITE})'
 
 
-def get_character_status(character: Character) -> str:
-    """Return the """
-    return 'health {}    mana: {}'.format(
-        get_bar(character.statistics['health'], character.statistics['max-health'], Fore.RED, '='),
-        get_bar(character.statistics['mana'], character.statistics['max-mana'], Fore.GREEN, '=')
-    )
+def get_character_status_bar(character: Character, statistics: dict[str, str]) -> dict[str, str]:
+    """
+    Return the
+    """
+    return {statistic: get_bar(character.statistics[statistic], character.statistics[f'max-{statistic}'], color, '=')
+            for statistic, color in statistics.items()}
 
 
 def display_room(room: Room, previous_direction: Direction | None = None) -> None:
@@ -69,32 +69,30 @@ def display_room_entities(room: Room) -> None:
 
 def display_item(item: Item) -> None:
     """
-    Display the given |item| on screen.
+    Display an item on screen.
 
     Argument:
     iten -- the item to display
     """
-    print(f'{Fore.RED}({item.name}){Fore.WHITE}')
     print(textwrap.fill(item.description))
 
-    price = f'price: {Fore.RED}{str(item.price)} gold{Fore.WHITE}'
-    quantity = f'quantity: {Fore.RED}x{str(item.quantity)}{Fore.WHITE}'
+    price = f'price: {Fore.CYAN}{str(item.price)} coins{Fore.WHITE}'
+    quantity = f'quantity: {Fore.CYAN}x{str(item.quantity)}{Fore.WHITE}'
     print(f'\n{price:<30}{quantity}')
 
     if 'equip' in item.actions:
         display_equipment(item)
 
 
-def display_equipment(item: Equipment) -> None:
+def display_equipment(equipment: Equipment) -> None:
     """Display the equipment's information"""
-    slot = f'slot: {Fore.RED}{item.slot}{Fore.WHITE}'
-    equipped = f'equipped: {Fore.RED}{"yes" if item.equipped else "no"}{Fore.WHITE}'
+    slot = f'slot: {Fore.CYAN}{equipment.slot}{Fore.WHITE}'
+    equipped = f'equipped: {Fore.CYAN}{"yes" if equipment.equipped else "no"}{Fore.WHITE}'
     print(f'{slot:<30}{equipped}')
 
-    statistics = f'statistics: {Fore.RED}'
-    statistics += ', '.join([f'{stat} +{value}' for stat, value in item.statistics.items()]) + Fore.WHITE
+    statistics = f'statistics: {Fore.MAGENTA}{equipment.statistics}{Fore.WHITE}'
 
-    print(f'\ndurability: {disply_durability(item)}')
+    print(f'\ndurability: {disply_durability(equipment)}')
     print(f'{statistics:<30}')
 
 
@@ -104,7 +102,7 @@ def disply_durability(item: Equipment) -> str:
     """
     value = item.durability[0]
     maximum = item.durability[1]
-    return get_bar(value, maximum, Fore.RED, '>')
+    return get_bar(value, maximum, Fore.YELLOW, '>')
 
 
 def display_slots(character: Character) -> None:
@@ -117,7 +115,7 @@ def display_slots(character: Character) -> None:
 def display_inventory(character: Character):
     """Display the player's inventory"""
     print('Your inventory is empty' if character.inventory.is_empty() else 'Your inventory contains:')
-    # dislpay_slot_bar(inventory)
+    # dislpay_slot_bar(character.inventory)
 
     if not character.inventory.is_empty():
         print()
@@ -125,3 +123,27 @@ def display_inventory(character: Character):
     for item in character.inventory:
         indicator = f'{Fore.RED}e{Fore.WHITE}' if item in character.equipments.values() else ' '
         print(f'[{indicator}] x{item.quantity} {item}')
+
+
+def display_statistics(character: Character) -> None:
+    """
+    Display the statistics of a character on screen.
+
+    Argument:
+    character -- the character whose statistics will be displayed
+    """
+    config = utils.get_content('config.yaml')
+    statistics = config['statistics']
+
+    status_bars = get_character_status_bar(character, {'health': Fore.RED, 'mana': Fore.MAGENTA})
+
+    for statistic, status_bar in status_bars.items():
+        statistic = statistic + ':'
+        print(f'{statistic:<10} {status_bar}')
+
+    print()
+    for i in range(0, len(statistics) - 1, 2):
+        stat_one = f'{statistics[i]}: {Fore.CYAN}{character.statistics[statistics[i]]}{Fore.WHITE}'
+
+        stat_two = f'{statistics[i+1]:>15}: {Fore.CYAN}{character.statistics[statistics[i+1]]}{Fore.WHITE}'
+        print(f'{stat_one}{stat_two}')

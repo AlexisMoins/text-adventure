@@ -1,19 +1,6 @@
-from typing import Any, Iterable, Iterator, MutableSequence, SupportsIndex
+from typing import Iterable, Iterator, MutableSequence, SupportsIndex
 
 from src.models.entity import Entity
-
-
-def choose_one(entities: list[Any]) -> Any | None:
-    """"""
-    if not entities:
-        print('I don\'t see that here!')
-        return None
-
-    if len(entities) == 1:
-        return entities[0]
-
-    # TODO
-    return entities[0]
 
 
 class Container(MutableSequence):
@@ -26,7 +13,7 @@ class Container(MutableSequence):
     def find(self, entity_name: str) -> Entity | None:
         """Return the entity matching the given name"""
         entities = [entity for entity in self._entities if entity_name in entity.name]
-        return choose_one(entities)
+        return entities[0]
 
     def take(self, entity_name: str) -> Entity | None:
         """Return and remove the entity matching the given name from the container"""

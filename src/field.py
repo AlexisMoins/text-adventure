@@ -1,11 +1,13 @@
 from __future__ import annotations
+from collections import defaultdict
 
 import random
-from collections import defaultdict
-from typing import Any, DefaultDict, Protocol
+from typing import Any, Protocol
 
 from src.models.entity import Entity
 from src.generators import item_generator
+
+from src.models.statistics import Statistics
 from src.models.collections import SizedContainer
 
 
@@ -109,11 +111,9 @@ def parse_inventory(inventory: Any, size: int = 8) -> SizedContainer:
     return SizedContainer(size, iterable=entities)
 
 
-def parse_statistics(statistics: dict[str, Any]) -> DefaultDict[str, int]:
+def parse_statistics(statistics: dict[str, Any]) -> Statistics:
     """
-    Return a dictionary of the given statistics. Each statistics
-    (even those not present in the dict) have a value of 0 by
-    default.
+    Return a Statistics object containing statistics.
 
     Argument:
     statistics -- a dictionary of a statistic name and the value
@@ -122,7 +122,7 @@ def parse_statistics(statistics: dict[str, Any]) -> DefaultDict[str, int]:
     of size 2.
 
     Return value:
-    A default dictionary representing a group of statistics
+    A new Statistics object
     """
     dictionary = defaultdict(int)
     for stat, value in statistics.items():
@@ -131,4 +131,4 @@ def parse_statistics(statistics: dict[str, Any]) -> DefaultDict[str, int]:
             value = random.randint(*value)
 
         dictionary[stat] = value
-    return dictionary
+    return Statistics(dictionary)
