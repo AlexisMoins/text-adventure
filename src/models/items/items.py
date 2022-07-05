@@ -1,10 +1,10 @@
 from colorama import Fore
-from typing import DefaultDict
-from collections import defaultdict
 from dataclasses import dataclass, field
 
 from src.factory import register
 from src.models.entity import Entity
+
+from src.models.statistics import Statistics
 from src.models.collections import SizedContainer
 
 
@@ -36,18 +36,19 @@ class Chest(Item):
 @dataclass(slots=True)
 class Consumable(Item):
     """Represents a general comsumable item such as a potion"""
-    statistics: DefaultDict[str, int] = field(default_factory=lambda: defaultdict(int))
+    statistics: Statistics = field(default_factory=Statistics)
 
 
 @register('equipment')
 @dataclass(kw_only=True)
 class Equipment(Item):
-    """Class representing a generic equipment"""
+    """
+    Class representing a generic equipment
+    """
     slot: str
-    statistics: dict[str, int] = field(default_factory=dict)
+    statistics: Statistics = field(default_factory=Statistics)
     equipped: bool = field(default=False, init=False)
 
     def __str__(self) -> str:
         """Return the string representation of the armor"""
-        statistics = ', '.join([f'{stat} +{value}' for stat, value in self.statistics.items()])
-        return f'{self.name} {Fore.MAGENTA}[{statistics}]{Fore.WHITE}'
+        return f'{self.name} {Fore.MAGENTA}[{self.statistics}]{Fore.WHITE}'

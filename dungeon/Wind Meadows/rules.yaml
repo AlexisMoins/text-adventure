@@ -1,5 +1,8 @@
 # General rules of the floor
 
+# Description
+# description: This is the description of the floor
+
 # Maximum number of rooms generated at this floor
 number-of-rooms: 4
 
@@ -8,3 +11,16 @@ first-room: start
 
 # Maximum number of enemies spawning at this floor
 # enemy-number: 2
+
+# Default statistics for characters
+default-statistics:
+  health: 15
+  max-health: 15
+
+  attack: 2
+  defense: 2
+
+  spirit: 2
+  wisdom: 2
+
+  speed: 2

@@ -1,6 +1,6 @@
 import random
 
-from src import dungeon, utils, factory
+from src import dungeon, utils, factory, field
 from src.models.items.items import Item
 
 
@@ -43,6 +43,9 @@ def generate(item_id: str, quantity: int = 1) -> Item:
     """
     item = items[item_id].copy()
     item['quantity'] = quantity
+
+    if 'statistics' in item:
+        item['statistics'] = field.parse_statistics(item['statistics'])
 
     return factory.create_entity(item)
 
