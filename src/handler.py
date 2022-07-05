@@ -112,6 +112,15 @@ def inventory() -> None:
     view.display_inventory(dungeon.PLAYER)
 
 
+@when('stat')
+@when('statistics')
+def statistics() -> None:
+    """
+    Display the statistics of the player
+    """
+    view.display_statistics(dungeon.PLAYER)
+
+
 @when('look at ENTITY')
 @when('examine ENTITY')
 def look_at(entity: str) -> None:
