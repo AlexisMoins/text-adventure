@@ -148,12 +148,21 @@ def look_at_from(entity: str, container: str) -> None:
 @when('get ITEM')
 @when('take ITEM')
 def take(item: str) -> None:
-    """Take an item from the room and put it in your inventory"""
+    """
+    Take an item from the room and put it in the player's inventory
+
+    Argument:
+    item -- the name or parts of the name of the considered item
+    """
     the_item = dungeon.current_room.entities.take(item)
+
     if the_item is None:
         print(f'There is no {item} here')
-    else:
-        dungeon.PLAYER.add_to_inventory(the_item)
+        return
+
+    # function = dungeon.PLAYER.add_to_inventory
+    # hook.execute('take', the_item, function, [the_item])
+    dungeon.PLAYER.add_to_inventory(the_item)
 
 
 @when('get ITEM from CONTAINER')

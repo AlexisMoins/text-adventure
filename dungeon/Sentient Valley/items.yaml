@@ -16,7 +16,7 @@ armor:
   type: equipment
   slot: chest
   actions: [take, equip]
-  durability: 20
+  durability: [20, 20]
   statistics: {'defense': 5}
 
 tunic:
@@ -26,7 +26,7 @@ tunic:
   type: equipment
   slot: chest
   actions: [take, equip]
-  durability: 10
+  durability: [10, 10]
   statistics: {'defense': 2}
 
 hat:
@@ -36,7 +36,7 @@ hat:
   type: equipment
   slot: head
   actions: [take, equip]
-  durability: 5
+  durability: [5, 5]
   statistics: {'defense': 2}
 
 
@@ -47,7 +47,7 @@ sword:
   type: equipment
   slot: hand
   actions: [take, attack, equip]
-  durability: 15
+  durability: [15, 15]
   statistics: {'attack': 5}
 
 staff:

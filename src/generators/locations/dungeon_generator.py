@@ -23,7 +23,7 @@ def floor_list(data: dict[str, Any]) -> deque[str]:
     return deque(iterable)
 
 
-def choose_one(selection: dict[str, int]) -> str | None:
+def choose_one(selection: dict[str, int]) -> str:
     """Returns a floor name after it has been randomly choosen from the items in the given selection"""
     population, weights = selection.keys(), selection.values()
     choice = random.choices(tuple(population), tuple(weights))

@@ -2,10 +2,14 @@ from src import dungeon, handler, view, utils
 from src.generators.locations import dungeon_generator
 
 
-def open_dungeon() -> None:
+def main() -> None:
     """
     Open the doors of the dungeon and start the game!
     """
+
+    dungeon_generator.generate()
+    dungeon.PLAYER = utils.get_player()
+
     dungeon.current_room.explored = True
     view.display_room(dungeon.current_room)
 
@@ -19,8 +23,4 @@ def open_dungeon() -> None:
 
 
 if __name__ == '__main__':
-
-    dungeon_generator.generate()
-    dungeon.PLAYER = utils.get_player()
-
-    open_dungeon()
+    main()
