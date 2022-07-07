@@ -73,7 +73,7 @@ class Character(Entity):
         self.statistics.add(equipment.statistics.dump)
 
         if not silent:
-            print(f'You wear your {equipment.name} {Fore.GREEN}[{equipment.statistics}]{Fore.WHITE}')
+            print(f'You wear the {equipment.name} {Fore.GREEN}({equipment.statistics}){Fore.WHITE}')
 
     def take_off(self, equipment: Equipment, *, silent: bool = False) -> None:
         """"""
@@ -82,6 +82,6 @@ class Character(Entity):
             self.statistics.add(reverse_stats.dump)
 
             if not silent:
-                print(f'You take off your {equipment.name} {Fore.RED}[{reverse_stats}]{Fore.WHITE}')
+                print(f'You take off your {equipment.name} {Fore.RED}({reverse_stats}){Fore.WHITE}')
 
             del self.equipments[equipment.slot]

@@ -179,14 +179,14 @@ def take(item: str) -> None:
     Argument:
     item -- the name or parts of the name of the considered item
     """
-    the_item = dungeon.current_room.entities.take(item)
+    _item = dungeon.current_room.entities.take(item)
 
-    if the_item is None:
+    if _item is None:
         print(f'There is no {item} here')
         return
 
-    dungeon.PLAYER.add_to_inventory(the_item)
-    print(f'You put the {item} in your inventory {Fore.YELLOW}({len(dungeon.PLAYER.inventory)}/{dungeon.PLAYER.inventory.size}){Fore.WHITE}')
+    dungeon.PLAYER.add_to_inventory(_item)
+    print(f'You put the {_item.name} in your inventory {Fore.YELLOW}({len(dungeon.PLAYER.inventory)}/{dungeon.PLAYER.inventory.size}){Fore.WHITE}')
 
 
 @when('get ITEM from CONTAINER')
@@ -209,16 +209,16 @@ def take_from(item: str, container: str) -> None:
 @when('drop ITEM')
 def drop(item: str) -> None:
     """"""
-    the_item = dungeon.PLAYER.inventory.take(item)
+    _item = dungeon.PLAYER.inventory.take(item)
 
-    if the_item is None:
+    if _item is None:
         print(f'What are you saying ? You don\'t even have that in your inventory!')
         return
 
-    dungeon.PLAYER.take_off(the_item)
-    dungeon.current_room.entities.append(the_item)
+    dungeon.PLAYER.take_off(_item)
+    dungeon.current_room.entities.append(_item)
     print(
-        f'You drop the {item} on the ground {Fore.YELLOW}({len(dungeon.PLAYER.inventory)}/{dungeon.PLAYER.inventory.size}){Fore.WHITE}')
+        f'You drop the {_item.name} on the ground {Fore.YELLOW}({len(dungeon.PLAYER.inventory)}/{dungeon.PLAYER.inventory.size}){Fore.WHITE}')
 
 
 @when('wear ITEM')
