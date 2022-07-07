@@ -10,6 +10,8 @@ def main() -> None:
     dungeon_generator.generate()
     dungeon.PLAYER = utils.get_player()
 
+    view.clear_screen()
+
     dungeon.current_room.explored = True
     view.display_room(dungeon.current_room)
 
