@@ -114,15 +114,16 @@ def display_slots(character: Character) -> None:
 
 def display_inventory(character: Character):
     """Display the player's inventory"""
-    print('Your inventory is empty' if character.inventory.is_empty() else 'Your inventory contains:')
-    # dislpay_slot_bar(character.inventory)
+    indicator = f'{Fore.YELLOW}({len(character.inventory)}/{character.inventory.size}){Fore.WHITE}'
+    print(f'Your inventory is empty {indicator}' if character.inventory.is_empty()
+          else f'Your inventory contains {indicator}')
 
     if not character.inventory.is_empty():
         print()
 
     for item in character.inventory:
-        indicator = f'{Fore.RED}e{Fore.WHITE}' if item in character.equipments.values() else ' '
-        print(f'[{indicator}] x{item.quantity} {item}')
+        indicator = f'{Fore.RED}*{Fore.WHITE}' if item in character.equipments.values() else ' '
+        print(f'{indicator} {Fore.CYAN}x{item.quantity}{Fore.WHITE} {item}')
 
 
 def display_statistics(character: Character) -> None:
@@ -139,7 +140,7 @@ def display_statistics(character: Character) -> None:
 
     for statistic, status_bar in status_bars.items():
         statistic = statistic + ':'
-        print(f'{statistic:<10} {status_bar}')
+        print(f'{statistic}\n{status_bar}')
 
     print()
     for i in range(0, len(statistics) - 1, 2):
