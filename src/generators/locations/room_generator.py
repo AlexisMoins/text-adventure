@@ -1,84 +1,131 @@
 import random
 from typing import Any
-from types import ModuleType
 
-from src import utils, dungeon
+from src import utils
 from src.field import parse_field
+
+from src.generators.abc import RandomGenerator
 
 from src.models.locations.room import Room
 from src.models.collections import Container
-
-from src.generators import item_generator
-from src.generators.characters import npc_generator
-from src.generators.characters import enemy_generator
+from src.models.locations.coordinates import Coordinates
 
 
-# Mapping room name -> properties
-rooms: dict[str, Any] = {}
+class RoomGenerator(RandomGenerator):
+    """
 
-# List of the possible room names
-population: list[str] = []
+    """
 
-# List of the chances of generating corresponding room in the population
-weights: list[int] = []
+    def __init__(self, path: str, generators: dict[str, RandomGenerator]) -> None:
+        """
+        Initialize a new (empty) room generator. To use the generator, call the
+        'parse_floor' method on a floor name.
 
-#
-FIELDS: dict[str, ModuleType] = {
-    'items': item_generator, 'enemies': enemy_generator, 'npc': npc_generator}
+        Arguments:
+        path -- the path to the dungeon directory containing the generation files
+        for each floor
 
+        generators -- the dictionary of generators used to parse fields
+        """
+        super().__init__(path)
 
-def parse_floor(floor: str) -> None:
-    """Load the given floor's room generation file"""
-    global rooms
+        self.generators = generators
 
-    rooms = utils.get_content(dungeon.PATH, floor, 'rooms.yaml')
-    generation = rooms.pop('generation')
+        # Mapping room name and its properties
+        self.rooms: dict[str, dict] = {}
 
-    global weights
-    global population
+        # List of the possible room names
+        self.population: list[str] = []
 
-    weights = list(generation.values())
-    population = list(generation.keys())
+        # List of the chances of generating the corresponding room in the population
+        self.weights: list[int] = []
 
+    def parse_floor(self, floor_name: str) -> None:
+        """
+        Parse a floor and load the files required by this generator. All
+        generators must parse the new floors before starting to generate
+        any entity.
 
-def generate(room_id: str) -> Room:
-    """Returns the given room after it has been generated"""
-    data = pop_room(room_id)
-    return deserialize_room(data)
+        Argument:
+        floor_name -- the name of the floor. The name must match the name
+        of the floor directory containing all generation-related files.
+        """
+        self.rooms = utils.get_content(self.PATH, floor_name, 'rooms.yaml')
+        generation = self.rooms.pop('generation')
 
+        self.weights = list(generation.values())
+        self.population = list(generation.keys())
 
-def generate_one() -> Room | None:
-    """Generates a random room"""
-    number = random.randint(1, sum(weights))
-    for room, weight in zip(population, weights):
-        if number <= weight:
-            return generate(room)
-        number -= weight
+    def get_entity_data(self, entity_id: str) -> dict[str, Any]:
+        """
 
+        """
+        entity = self.rooms[entity_id]
+        return entity.copy()
 
-def generate_many(k: int) -> list[Room]:
-    """Generates k randomly generated rooms"""
-    number = min(len(population), k)
-    return [generate_one() for _ in range(number)]
+    def generate(self, entity_id: str) -> Room:
+        """
+        Generate the entity corresponding to an entity ID.
 
+        Argument:
+        entity_id -- the identifier of the entity
 
-def deserialize_room(field: dict[str, Any]) -> Room:
-    """Returns the room deserialized from the given data"""
-    entities = []
-    for name, generator in FIELDS.items():
-        if name in field:
-            data = field.pop(name)
-            entities.extend(parse_field(data, generator))  # type: ignore
+        Return value:
+        An entity (or sub-class)
+        """
+        data = self._pop_room(entity_id)
+        return self._deserialize_room(data)
 
-    return Room(**field, entities=Container(entities))
+    def generate_all(self, entities: dict[str, int]) -> list[Room]:
+        """
+        Generate all the items in a dictionary.
 
+        Argument:
+        entities -- a dictionary of entity IDs and their quantity
 
-def pop_room(room_id) -> dict[str, Any]:
-    """Returns the given room's data and remove it from the generator"""
-    if room_id in population:
-        index = population.index(room_id)
+        Return value:
+        A list of entities
+        """
+        return [self.generate(item_id) for item_id in entities]
 
-        del weights[index]
-        population.remove(room_id)
+    def generate_many(self, k: int) -> list[Room]:
+        """
 
-    return rooms.pop(room_id)
+        """
+        number = min(len(self.population), k)
+        return [self._generate_one() for _ in range(number)]
+
+    def _generate_one(self) -> Room:
+        """
+
+        """
+        number = random.randint(1, sum(self.weights))
+        for room, weight in zip(self.population, self.weights):
+
+            if number <= weight:
+                return self.generate(room)
+
+            number -= weight
+        raise Exception
+
+    def _deserialize_room(self, field: dict[str, Any]) -> Room:
+        """Returns the room deserialized from the given data"""
+        entities = []
+        for generator in self.generators.values():
+            if generator.FIELD_NAME in field:
+                data = field.pop(generator.FIELD_NAME)
+                entities.extend(parse_field(data, generator))
+
+        return Room(**field, entities=Container(entities))
+
+    def _pop_room(self, room_id) -> dict[str, Any]:
+        """
+        Returns the given room's data and remove it from the generator
+        """
+        if room_id in self.population:
+            index = self.population.index(room_id)
+
+            del self.weights[index]
+            self.population.remove(room_id)
+
+        return self.rooms.pop(room_id)

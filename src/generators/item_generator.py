@@ -1,71 +1,100 @@
 import random
+from typing import Any
 
-from src import dungeon, utils, factory, field
-from src.models.items.items import Item
-
-
-# Mapping item name and its properties
-items: dict[str, dict] = {}
-
-# List of the possible item names
-population: list[str] = []
-
-# List of the chances of generating the corresponding item in the population
-weights: list[int] = []
+from src import utils, field
+from src.generators.abc import RandomGenerator
+from src.models.items.items import Chest, Equipment, Item
 
 
-def parse_floor(floor: str) -> None:
-    """Load the given floor's item generation file"""
-    global items
-
-    items = utils.get_content(dungeon.PATH, floor, 'items.yaml')
-    generation = items.pop('generation')
-
-    global weights
-    global population
-
-    weights = list(generation.values())
-    population = list(generation.keys())
-
-
-def generate(item_id: str, quantity: int = 1) -> Item:
+class ItemGenerator(RandomGenerator):
     """
-    Generate the item corresponding to an item ID.
 
-    Argument:
-    item_id -- the identifier
-
-    Keyword argument:
-    quantity -- the quantity of the item
-
-    Return value:
-    An item
     """
-    item = items[item_id].copy()
-    item['quantity'] = quantity
 
-    if 'statistics' in item:
-        item['statistics'] = field.parse_statistics(item['statistics'])
+    def __init__(self, path: str) -> None:
+        """
+        Initialize a new (empty) item generator. To use the generator, call the
+        'parse_floor' method on a floor name.
 
-    return factory.create_entity(item)
+        Argument:
+        path -- the path to the dungeon directory containing the generation files
+        for each floor
+        """
+        super().__init__(path, field='items')
 
+        # Mapping item name and its properties
+        self.items: dict[str, dict] = {}
 
-def generate_many(k: int) -> list[Item]:
-    """Generates k randomly generated items"""
-    number = min(len(population), k)
-    return [generate(item_id) for item_id
-            in random.choices(population, weights=weights, k=number)]
+        # List of the possible item names
+        self.population: list[str] = []
 
+        # List of the chances of generating the corresponding item in the population
+        self.weights: list[int] = []
 
-def generate_all(items: dict[str, int]) -> list[Item]:
-    """
-    Generate all the elements in a dictionary.
+    def parse_floor(self, floor_name: str) -> None:
+        """
+        Parse a floor and load the files required by this generator. All
+        generators must parse the new floors before starting to generate
+        any entity.
 
-    Argument:
-    entities -- a dictionary of item IDs and their corresponding quantity
+        Argument:
+        floor_name -- the name of the floor. The name must match the name
+        of the floor directory containing all generation-related files.
+        """
+        self.items = utils.get_content(self.PATH, floor_name, 'items.yaml')
+        generation = self.items.pop('generation')
 
-    Return value:
-    A list of items
-    """
-    return [generate(item_id, quantity)
-            for item_id, quantity in items.items()]
+        self.weights = list(generation.values())
+        self.population = list(generation.keys())
+
+    def get_entity_data(self, entity_id: str) -> dict[str, Any]:
+        """
+
+        """
+        entity = self.items[entity_id]
+        return entity.copy()
+
+    def generate(self, entity_id: str) -> Item:
+        """
+        Generate the entity corresponding to an entity ID.
+
+        Argument:
+        entity_id -- the identifier of the entity
+
+        Return value:
+        An entity (or sub-class)
+        """
+        item = self.get_entity_data(entity_id)
+
+        if 'statistics' in item:
+            item['statistics'] = field.parse_statistics(item['statistics'])
+
+        _type = item.pop('type').lower()
+
+        if _type == 'chest':
+            return Chest(**item)
+
+        if _type == 'equipment':
+            return Equipment(**item)
+
+        return Item(**item)
+
+    def generate_all(self, entities: dict[str, int]) -> list[Item]:
+        """
+        Generate all the items in a dictionary.
+
+        Argument:
+        entities -- a dictionary of entity IDs and their quantity
+
+        Return value:
+        A list of entities
+        """
+        return [self.generate(item_id) for item_id in entities]
+
+    def generate_many(self, k: int) -> list[Item]:
+        """
+
+        """
+        number = min(len(self.population), k)
+        return [self.generate(item_id) for item_id
+                in random.choices(self.population, weights=self.weights, k=number)]

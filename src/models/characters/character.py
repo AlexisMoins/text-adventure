@@ -27,6 +27,7 @@ class Character(Entity):
         for item in self.inventory.filter('equip'):  # TODO inventory.filter_action(action, _type=Equipment)
             self.wear_or_equip(item, silent=True)
 
+    @property
     def is_alive(self) -> bool:
         """
         Return true wether this character is alive or not.

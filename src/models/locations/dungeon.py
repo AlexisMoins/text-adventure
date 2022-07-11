@@ -1,35 +1,68 @@
-from src.factories import generator_factory as factory
-from src.models.locations.coordinates import Direction
+from src import view
+from src.generators.abc import RandomGenerator
+
 from src.models.locations.floor import Floor
-from src.models.locations.room import Room
+from src.models.characters.character import Character
 
 
 class Dungeon:
-    """Model representing a dungeon with its list of floors"""
+    """
 
-    def __init__(self, floors: list[str]) -> None:
-        """Parameterised constructor creating a new dungeon"""
-        self.floors: list[str] = floors
-        self.floor_generator = factory.generators['floor']
-        self.current_floor: Floor
-        self.next_floor()
+    """
 
-    @property
-    def current_room(self) -> Room:
-        """Return the current room"""
-        return self.current_floor.current_room()
+    def __init__(self, floors: list[Floor], player: Character, generators: dict[str, RandomGenerator]) -> None:
+        """
 
-    def next_floor(self) -> None:
-        """Ascend to the next floor"""
-        new_floor = self.floors.pop(0)
-        factory.change_floor(new_floor)
-        self.current_floor = self.floor_generator.generate_one()
+        """
+        self.floors = floors
+        self.player = player
+        self.generators = generators
 
-    def travel(self, direction: Direction) -> bool:
-        """Travel to another room"""
-        coordinates = self.current_room.coordinates.in_direction(direction)
-        if coordinates in self.current_floor.rooms.keys():
-            self.current_floor.player_position = coordinates
-            self.current_room.visited = True
-            return True
-        return False
+        self.is_open = True
+        self.floor_number = 0
+
+        floor = self.floors[self.floor_number]
+        self.current_room = floor.start
+
+    def open(self) -> None:
+        """
+        Open the doors of the dungeon and start exploring.
+        """
+        view.clear_screen()
+        view.display_room(self.current_room)
+
+        while self.is_open and self.player.is_alive:
+
+            user_input = self.get_input()
+            self.handle_input(user_input)
+
+    def get_input(self) -> str:
+        """
+        Return the raw command typed by the player.
+
+        Return value:
+        A string
+        """
+        user_input = input('\n> ')
+        return user_input.lower().strip()
+
+    def handle_input(self, user_input: str) -> None:
+        """
+        Handle the given user input.
+
+        Argument:
+        user_input -- the raw command typed by the player
+        """
+        match user_input.split():
+
+            case ['q' | 'quit']:
+                self.is_open = False
+
+            case ['cl' | 'clear']:
+                view.clear_screen()
+
+            case ['desc' | 'description']:
+                print(self.current_room)
+
+            case _:
+                print('I don\'t understand that')

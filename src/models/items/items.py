@@ -1,17 +1,16 @@
 from colorama import Fore
 from dataclasses import dataclass, field
 
-from src.factory import register
 from src.models.entity import Entity
-
 from src.models.statistics import Statistics
 from src.models.collections import SizedContainer
 
 
-@register('item')
 @dataclass(kw_only=True)
 class Item(Entity):
-    """Represents a generic item"""
+    """
+    Class representing a generic item
+    """
     durability: list[int]
     price: int = 0
 
@@ -20,7 +19,6 @@ class Item(Entity):
         return self.name
 
 
-@register('chest')
 @dataclass(kw_only=True)
 class Chest(Item):
     """Represents any container item with a size"""
@@ -32,14 +30,6 @@ class Chest(Item):
         return f'{self.name} {Fore.MAGENTA}[{self.items.indicator}]{Fore.WHITE}'
 
 
-@register('consumable')
-@dataclass(slots=True)
-class Consumable(Item):
-    """Represents a general comsumable item such as a potion"""
-    statistics: Statistics = field(default_factory=Statistics)
-
-
-@register('equipment')
 @dataclass(kw_only=True)
 class Equipment(Item):
     """

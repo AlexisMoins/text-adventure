@@ -2,36 +2,18 @@ from __future__ import annotations
 from collections import defaultdict
 
 import random
-from typing import Any, Protocol
+from typing import Any
+from src.models.items.items import Item
 
 from src.models.entity import Entity
-from src.generators import item_generator
+
+from src.generators.abc import RandomGenerator
 
 from src.models.statistics import Statistics
 from src.models.collections import SizedContainer
 
 
-class Generator(Protocol):
-    """"""
-
-    def generate_many(self, quantity: int) -> list[Entity]:  # type: ignore
-        """"""
-        pass
-
-    def generate_all(self, entities: dict[str, int]) -> list[Entity]:  # type: ignore
-        """
-        Generate all the elements in a dictionary.
-
-        Argument:
-        entities -- a dictionary of entity IDs and their corresponding quantity
-
-        Return value:
-        A list of entities
-        """
-        pass
-
-
-def parse_field(field: Any, generator: Generator) -> list[Entity]:
+def parse_field(field: Any, generator: RandomGenerator) -> list[Entity]:
     """
     Parse the given data and return a new field.
 
@@ -70,7 +52,7 @@ def parse_field(field: Any, generator: Generator) -> list[Entity]:
     raise Exception('field type accepts only int, list or dict')
 
 
-def _parse_dict_field(field: dict[str, Any], generator: Generator) -> list[Entity]:
+def _parse_dict_field(field: dict[str, Any], generator: RandomGenerator) -> list[Entity]:
     """
 
     """
@@ -90,7 +72,7 @@ def _parse_dict_field(field: dict[str, Any], generator: Generator) -> list[Entit
     return generator.generate_all(field)
 
 
-def parse_inventory(inventory: Any, size: int = 8) -> SizedContainer:
+def parse_inventory(inventory: Any, item_generator: RandomGenerator[Item], size: int = 8) -> SizedContainer:
     """
     Return a new container of the given size. The container will be
     filled with the entities generated from the 'inventory' argument.
@@ -107,7 +89,7 @@ def parse_inventory(inventory: Any, size: int = 8) -> SizedContainer:
     Return value:
     A container with a maximim size
     """
-    entities = parse_field(inventory, item_generator)  # type: ignore
+    entities = parse_field(inventory, item_generator)
     return SizedContainer(size, iterable=entities)
 
 

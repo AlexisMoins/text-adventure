@@ -2,7 +2,7 @@ import os
 import textwrap
 from colorama import Fore
 
-from src import dungeon, utils
+from src import utils
 from src.models.locations.room import Room
 from src.models.items.items import Equipment, Item
 
@@ -50,9 +50,9 @@ def display_room_exits(room: Room, previous_direction: Direction | None) -> None
     Argument:
     previous_direction -- the direction the player entered the room from
     """
-    print('\nVisible exits:' if len(dungeon.current_room.exits) > 1 else '\nVisible exit:')
+    print('\nVisible exits:' if len(room.exits) > 1 else '\nVisible exit:')
 
-    for direction, room in dungeon.current_room.exits.items():
+    for direction, room in room.exits.items():
         sign = f'{Fore.YELLOW}*{Fore.WHITE}' if direction is previous_direction else ' '
         explored = f' {Fore.YELLOW}(explored){Fore.WHITE}' if room.explored else ''
         print(f'{sign} {direction}{explored}')
@@ -63,7 +63,7 @@ def display_room_entities(room: Room) -> None:
     word = 'are' if len(room.entities) > 1 else 'is'
     print(f'\nAround you {word}:')
 
-    for item in dungeon.current_room.entities:
+    for item in room.entities:
         print(f'{Fore.CYAN}x{item.quantity}{Fore.WHITE} {item}')
 
 

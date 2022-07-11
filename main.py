@@ -1,27 +1,12 @@
-from src import dungeon, handler, view, utils
-from src.generators.locations import dungeon_generator
+from src.generators.locations.dungeon_generator import generate_dungeon
 
 
 def main() -> None:
     """
-    Open the doors of the dungeon and start the game!
+    Start a new run in the dungeon
     """
-
-    dungeon_generator.generate()
-    dungeon.PLAYER = utils.get_player()
-
-    view.clear_screen()
-
-    dungeon.current_room.explored = True
-    view.display_room(dungeon.current_room)
-
-    while dungeon.is_running:
-        user_input = handler.get_input()
-        handler.handle_input(user_input)
-
-        if not dungeon.PLAYER.is_alive():
-            print('*** You died ***')
-            break
+    dungeon = generate_dungeon()
+    dungeon.open()
 
 
 if __name__ == '__main__':
